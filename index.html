@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MLTutor - 个性化学习助手</title>
+    <title>个性化学习助手</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -11,11 +11,10 @@
             color: #d0e0f0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            padding: 20px;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1200px; margin: 0 auto; }
         
-        header { text-align: center; margin-bottom: 40px; }
+        header { text-align: center; padding: 40px 20px 20px; }
         header h1 {
             font-size: 42px;
             margin-bottom: 10px;
@@ -33,6 +32,7 @@
             gap: 10px;
             margin-bottom: 30px;
             flex-wrap: wrap;
+            padding: 0 20px;
         }
         .tab {
             padding: 8px 20px;
@@ -50,7 +50,7 @@
             background: rgba(30, 40, 60, 0.6);
             border-radius: 16px;
             padding: 30px;
-            margin-bottom: 30px;
+            margin: 0 20px 30px;
             border: 1px solid rgba(80, 120, 180, 0.2);
         }
         .graph-header {
@@ -94,20 +94,24 @@
             transition: all 0.3s;
             position: relative;
             font-size: 14px;
+            border: 1px solid transparent;
         }
-        .graph-node:hover { transform: translateY(-3px); }
-        .graph-node.level-1 { background: rgba(100, 180, 140, 0.3); color: #80e0c0; border: 1px solid rgba(100, 180, 140, 0.3); }
-        .graph-node.level-2 { background: rgba(100, 160, 220, 0.3); color: #80c0f0; border: 1px solid rgba(100, 160, 220, 0.3); }
-        .graph-node.level-3 { background: rgba(180, 140, 220, 0.3); color: #a080e0; border: 1px solid rgba(180, 140, 220, 0.3); }
-        .graph-node.level-4 { background: rgba(220, 140, 100, 0.3); color: #e08060; border: 1px solid rgba(220, 140, 100, 0.3); }
-        .graph-node.level-5 { background: rgba(220, 100, 160, 0.3); color: #e060a0; border: 1px solid rgba(220, 100, 160, 0.3); }
+        .graph-node:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(60, 140, 200, 0.2);
+        }
+        .graph-node.level-1 { background: rgba(100, 180, 140, 0.3); color: #80e0c0; border-color: rgba(100, 180, 140, 0.3); }
+        .graph-node.level-2 { background: rgba(100, 160, 220, 0.3); color: #80c0f0; border-color: rgba(100, 160, 220, 0.3); }
+        .graph-node.level-3 { background: rgba(180, 140, 220, 0.3); color: #a080e0; border-color: rgba(180, 140, 220, 0.3); }
+        .graph-node.level-4 { background: rgba(220, 140, 100, 0.3); color: #e08060; border-color: rgba(220, 140, 100, 0.3); }
+        .graph-node.level-5 { background: rgba(220, 100, 160, 0.3); color: #e060a0; border-color: rgba(220, 100, 160, 0.3); }
 
         /* 课程卡片 */
         .courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
-            margin-bottom: 30px;
+            margin: 0 20px 30px;
         }
         .course-card {
             background: rgba(30, 40, 60, 0.6);
@@ -151,140 +155,242 @@
             color: #a0c0e0;
         }
 
-        /* 学习风格评估 */
-        .learning-style-section {
-            background: rgba(30, 40, 60, 0.6);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(80, 120, 180, 0.2);
-        }
-        .style-title { font-size: 18px; color: #a0c0e0; margin-bottom: 20px; }
-        .style-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-        .style-card {
-            background: rgba(60, 80, 120, 0.4);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .style-card:hover { transform: scale(1.05); }
-        .style-icon { font-size: 28px; margin-bottom: 8px; }
-        .style-name { font-size: 13px; color: #a0c0e0; }
-
-        /* 雷达图 */
-        .radar-container {
-            width: 300px;
-            height: 300px;
-            margin: 20px auto;
-            position: relative;
-        }
-        .radar-bg {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                rgba(100, 180, 140, 0.3) 0deg,
-                rgba(100, 160, 220, 0.3) 60deg,
-                rgba(180, 140, 220, 0.3) 120deg,
-                rgba(220, 140, 100, 0.3) 180deg,
-                rgba(220, 100, 160, 0.3) 240deg,
-                rgba(200, 200, 100, 0.3) 300deg,
-                rgba(100, 180, 140, 0.3) 360deg
-            );
-        }
-        .radar-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: rgba(30, 40, 60, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            text-align: center;
-            color: #80a0c0;
-        }
-
-        /* 练习题册入口 */
-        .exercise-section {
-            background: linear-gradient(135deg, rgba(60, 180, 140, 0.2), rgba(60, 140, 180, 0.2));
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            border: 1px solid rgba(60, 180, 140, 0.3);
-        }
-        .exercise-title { font-size: 20px; color: #80e0c0; margin-bottom: 10px; }
-        .exercise-desc { color: #80a0c0; font-size: 14px; margin-bottom: 20px; }
-        .exercise-btn {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #40c0e0, #60c0a0);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .exercise-btn:hover { transform: scale(1.05); }
-
-        /* 模态框 */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        /* 知识点详情页面 */
+        .topic-detail {
             padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
         }
-        .modal {
-            background: linear-gradient(135deg, #1a1f35, #0f1623);
-            border-radius: 16px;
-            padding: 30px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid rgba(80, 120, 180, 0.3);
+        .detail-header {
+            margin-bottom: 30px;
+            text-align: center;
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .detail-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #40c0e0, #80e0c0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .modal-header h3 { font-size: 22px; color: #d0e0f0; }
-        .close-btn {
-            font-size: 24px;
-            cursor: pointer;
-            color: #80a0c0;
-        }
-        .modal-body { color: #d0e0f0; }
-        .info-box {
-            background: rgba(60, 80, 120, 0.4);
-            padding: 15px;
-            border-radius: 8px;
+        .detail-level {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 13px;
             margin-bottom: 15px;
         }
-        .info-title { font-size: 14px; color: #80c0f0; margin-bottom: 8px; }
-        .info-content { font-size: 13px; color: #a0c0e0; line-height: 1.6; }
+
+        /* 内容卡片 */
+        .content-card {
+            background: rgba(30, 40, 60, 0.6);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+        }
+        .card-title {
+            font-size: 18px;
+            color: #80c0f0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-content {
+            color: #a0c0e0;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        .card-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        .card-content li {
+            margin-bottom: 8px;
+        }
+
+        /* 适用场景标签 */
+        .scenario-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .scenario-tag {
+            padding: 6px 14px;
+            background: rgba(60, 180, 140, 0.2);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #80e0c0;
+            border: 1px solid rgba(60, 180, 140, 0.3);
+        }
+
+        /* 发展脉络 */
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(60, 80, 120, 0.3);
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timeline-year {
+            padding: 4px 10px;
+            background: rgba(60, 140, 200, 0.4);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #80c0f0;
+        }
+        .timeline-arrow {
+            color: #6080a0;
+        }
+        .timeline-link {
+            padding: 4px 10px;
+            background: rgba(100, 140, 180, 0.3);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .timeline-link:hover { background: rgba(100, 140, 180, 0.5); }
+
+        /* 数学公式 */
+        .math-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+            font-size: 16px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        /* 交互式滑块 */
+        .slider-container {
+            margin: 20px 0;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .slider-value {
+            color: #40c0e0;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            background: rgba(60, 100, 160, 0.5);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #40c0e0;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* 可视化区域 */
+        .visualization-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        .canvas-container {
+            width: 100%;
+            height: 280px;
+            position: relative;
+        }
+        .canvas-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #80c0f0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+        }
+        .canvas-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #40c0e0, #80e0c0);
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            transition: all 0.3s;
+        }
+        .canvas-axis {
+            position: absolute;
+            background: rgba(100, 140, 180, 0.3);
+        }
+        .axis-x {
+            height: 1px;
+            bottom: 20px;
+            left: 10%;
+            right: 10%;
+        }
+        .axis-y {
+            width: 1px;
+            left: 10%;
+            top: 20px;
+            bottom: 20px;
+        }
+
+        /* 相关知识点 */
+        .related-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .related-tag {
+            padding: 6px 14px;
+            background: rgba(180, 140, 220, 0.2);
+            border-radius: 20px;
+            font-size: 13px;
+            color: #a080e0;
+            border: 1px solid rgba(180, 140, 220, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .related-tag:hover { background: rgba(180, 140, 220, 0.3); }
+
+        /* 返回按钮 */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(60, 100, 160, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover { background: rgba(60, 140, 200, 0.4); }
 
         /* 页脚 */
         footer {
             text-align: center;
-            margin-top: 40px;
+            padding: 40px 20px;
             color: #6080a0;
             font-size: 14px;
         }
@@ -292,439 +398,835 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>🧠 MLTutor 个性化学习助手</h1>
-            <p>基于学习风格的自适应学习平台</p>
-        </header>
+        <!-- 首页内容 -->
+        <div id="home-page">
+            <header>
+                <h1>🧠 个性化学习助手</h1>
+                <p>基于学习风格的自适应学习平台</p>
+            </header>
 
-        <!-- 导航标签 -->
-        <div class="tabs">
-            <span class="tab active" onclick="showTab('knowledge')">📊 知识图谱</span>
-            <span class="tab" onclick="showTab('courses')">📚 课程中心</span>
-            <span class="tab" onclick="showTab('learning-style')">🎯 学习风格</span>
-            <span class="tab" onclick="showTab('exercises')">✏️ 练习题册</span>
-        </div>
+            <div class="tabs">
+                <span class="tab active" onclick="showTab('knowledge')">📊 知识图谱</span>
+                <span class="tab" onclick="showTab('courses')">📚 课程中心</span>
+                <span class="tab" onclick="showTab('exercises')">✏️ 练习题册</span>
+            </div>
 
-        <!-- 知识图谱 -->
-        <div id="knowledge" class="knowledge-graph">
-            <div class="graph-header">
-                <div class="graph-title">📊 知识体系图谱</div>
-                <div class="legend">
-                    <span class="legend-item"><span class="legend-dot level-1"></span> 基础</span>
-                    <span class="legend-item"><span class="legend-dot level-2"></span> 进阶</span>
-                    <span class="legend-item"><span class="legend-dot level-3"></span> 高级</span>
-                    <span class="legend-item"><span class="legend-dot level-4"></span> 深度学习</span>
-                    <span class="legend-item"><span class="legend-dot level-5"></span> 专家级</span>
+            <div id="knowledge" class="knowledge-graph">
+                <div class="graph-header">
+                    <div class="graph-title">📊 知识体系图谱</div>
+                    <div class="legend">
+                        <span class="legend-item"><span class="legend-dot level-1"></span> 基础</span>
+                        <span class="legend-item"><span class="legend-dot level-2"></span> 进阶</span>
+                        <span class="legend-item"><span class="legend-dot level-3"></span> 高级</span>
+                        <span class="legend-item"><span class="legend-dot level-4"></span> 深度学习</span>
+                        <span class="legend-item"><span class="legend-dot level-5"></span> 专家级</span>
+                    </div>
+                </div>
+                <div class="graph-nodes" id="graphNodes">
                 </div>
             </div>
-            <div class="graph-nodes" id="graphNodes">
-                <!-- 节点由JS生成 -->
-            </div>
-        </div>
 
-        <!-- 课程中心 -->
-        <div id="courses" style="display: none;" class="courses-grid" id="coursesGrid">
-            <!-- 课程卡片由JS生成 -->
-        </div>
-
-        <!-- 学习风格评估 -->
-        <div id="learning-style" style="display: none;" class="learning-style-section">
-            <div class="style-title">🎯 学习风格评估</div>
-            <div class="style-grid">
-                <div class="style-card" onclick="selectStyle('visual')">
-                    <div class="style-icon">🎨</div>
-                    <div class="style-name">视觉型</div>
-                </div>
-                <div class="style-card" onclick="selectStyle('verbal')">
-                    <div class="style-icon">📖</div>
-                    <div class="style-name">语言型</div>
-                </div>
-                <div class="style-card" onclick="selectStyle('logical')">
-                    <div class="style-icon">🧮</div>
-                    <div class="style-name">逻辑型</div>
-                </div>
-                <div class="style-card" onclick="selectStyle('practical')">
-                    <div class="style-icon">🔧</div>
-                    <div class="style-name">实践型</div>
-                </div>
-                <div class="style-card" onclick="selectStyle('social')">
-                    <div class="style-icon">👥</div>
-                    <div class="style-name">社交型</div>
-                </div>
-                <div class="style-card" onclick="selectStyle('solitary')">
-                    <div class="style-icon">🙋</div>
-                    <div class="style-name">自主型</div>
-                </div>
+            <div id="courses" style="display: none;" class="courses-grid">
             </div>
-            <div class="radar-container">
-                <div class="radar-bg"></div>
-                <div class="radar-center">
-                    点击上方<br/>选择学习风格
+
+            <div id="exercises" style="display: none; padding: 0 20px;">
+                <div style="background: linear-gradient(135deg, rgba(60, 180, 140, 0.2), rgba(60, 140, 180, 0.2)); border-radius: 16px; padding: 30px; text-align: center; border: 1px solid rgba(60, 180, 140, 0.3);">
+                    <div style="font-size: 20px; color: #80e0c0; margin-bottom: 10px;">✏️ 精选练习题册</div>
+                    <div style="color: #80a0c0; font-size: 14px; margin-bottom: 20px;">涵盖5门核心课程的精选题目，包含详细解析和个性化学习建议</div>
+                    <button onclick="openExerciseBook()" style="padding: 12px 30px; background: linear-gradient(135deg, #40c0e0, #60c0a0); border: none; border-radius: 25px; color: white; font-size: 16px; cursor: pointer; transition: all 0.3s;">📚 开始练习</button>
                 </div>
             </div>
         </div>
 
-        <!-- 练习题册入口 -->
-        <div id="exercises" style="display: none;" class="exercise-section">
-            <div class="exercise-title">✏️ 精选练习题册</div>
-            <div class="exercise-desc">涵盖5门核心课程的精选题目，包含详细解析和个性化学习建议</div>
-            <button class="exercise-btn" onclick="openExerciseBook()">📚 开始练习</button>
-        </div>
-
-        <!-- 课程详情模态框 -->
-        <div class="modal-overlay" id="courseModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 id="courseModalTitle">课程详情</h3>
-                    <span class="close-btn" onclick="closeModal('courseModal')">&times;</span>
-                </div>
-                <div class="modal-body" id="courseModalContent"></div>
-            </div>
-        </div>
-
-        <!-- 知识点详情模态框 -->
-        <div class="modal-overlay" id="topicModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 id="topicModalTitle">知识点详情</h3>
-                    <span class="close-btn" onclick="closeModal('topicModal')">&times;</span>
-                </div>
-                <div class="modal-body" id="topicModalContent"></div>
+        <!-- 知识点详情页 -->
+        <div id="topic-page" style="display: none;">
+            <div class="topic-detail" id="topicDetailContent">
             </div>
         </div>
 
         <footer>
-            <p>MLTutor 个性化学习助手 | 基于学习风格的自适应学习平台</p>
+            <p>个性化学习助手 | 基于学习风格的自适应学习平台</p>
         </footer>
     </div>
 
     <script>
         // 知识图谱数据
         const knowledgeNodes = [
-            // AI数学思维
-            { name: '人工智能概述', level: 1, category: 'ai_math', desc: 'AI发展历程与核心概念' },
-            { name: '机器学习基础', level: 2, category: 'ai_math', desc: '监督/无监督/强化学习' },
-            { name: '神经网络', level: 3, category: 'ai_math', desc: '感知器、多层神经网络' },
-            { name: '深度学习', level: 4, category: 'ai_math', desc: '深层网络架构与训练' },
-            { name: '卷积神经网络', level: 4, category: 'ai_math', desc: 'CNN原理与应用' },
-            // 数据结构
-            { name: '栈和队列', level: 1, category: 'data_struct', desc: '基本线性数据结构' },
-            { name: '链表', level: 1, category: 'data_struct', desc: '单链表、双链表' },
-            { name: '树结构', level: 2, category: 'data_struct', desc: '二叉树、BST、AVL' },
-            { name: '图算法', level: 3, category: 'data_struct', desc: '图的遍历与最短路径' },
-            { name: '排序算法', level: 2, category: 'data_struct', desc: '快速排序、归并排序等' },
-            { name: '查找算法', level: 2, category: 'data_struct', desc: '二分查找、哈希查找' },
-            // 离散数学
-            { name: '集合论', level: 1, category: 'discrete', desc: '集合运算与关系' },
-            { name: '命题逻辑', level: 1, category: 'discrete', desc: '命题与真值表' },
-            { name: '谓词逻辑', level: 2, category: 'discrete', desc: '量词与推理' },
-            { name: '图论', level: 2, category: 'discrete', desc: '图的基本概念' },
-            { name: '代数结构', level: 3, category: 'discrete', desc: '群、环、域' },
-            // 计算机系统
-            { name: '信息表示', level: 1, category: 'computer', desc: '二进制与编码' },
-            { name: '浮点数', level: 2, category: 'computer', desc: 'IEEE 754标准' },
-            { name: '机器指令', level: 2, category: 'computer', desc: '指令格式与寻址' },
-            { name: '程序优化', level: 3, category: 'computer', desc: '性能优化技术' },
-            { name: '虚拟内存', level: 3, category: 'computer', desc: '分页与分段' },
-            // 算法分析
-            { name: '动态规划', level: 3, category: 'algorithm', desc: '最优子结构与重叠子问题' },
-            { name: '贪心算法', level: 3, category: 'algorithm', desc: '局部最优选择' },
-            { name: '复杂度分析', level: 2, category: 'algorithm', desc: '时间/空间复杂度' },
-            { name: 'Dijkstra', level: 3, category: 'algorithm', desc: '最短路径算法' },
-            { name: 'NP问题', level: 5, category: 'algorithm', desc: '计算复杂性理论' }
+            { name: '线性回归', level: 1, category: 'ai_math', shortDesc: '最基础的回归算法' },
+            { name: '机器学习基础', level: 2, category: 'ai_math', shortDesc: '监督/无监督/强化学习' },
+            { name: '神经网络', level: 3, category: 'ai_math', shortDesc: '多层神经网络模型' },
+            { name: '深度学习', level: 4, category: 'ai_math', shortDesc: '深层网络架构' },
+            { name: '卷积神经网络', level: 4, category: 'ai_math', shortDesc: 'CNN原理与应用' },
+            { name: '逻辑回归', level: 1, category: 'ai_math', shortDesc: '二分类算法' },
+            { name: 'KNN', level: 1, category: 'ai_math', shortDesc: 'K近邻算法' },
+            { name: 'SVM', level: 3, category: 'ai_math', shortDesc: '支持向量机' },
+            { name: '决策树', level: 2, category: 'data_struct', shortDesc: '树形分类模型' },
+            { name: '随机森林', level: 3, category: 'data_struct', shortDesc: '集成学习算法' },
+            { name: '栈和队列', level: 1, category: 'data_struct', shortDesc: '线性数据结构' },
+            { name: '链表', level: 1, category: 'data_struct', shortDesc: '链式存储结构' },
+            { name: '树结构', level: 2, category: 'data_struct', shortDesc: '层次化数据结构' },
+            { name: '图算法', level: 3, category: 'data_struct', shortDesc: '图的遍历与路径' },
+            { name: '排序算法', level: 2, category: 'data_struct', shortDesc: '快速/归并排序' },
+            { name: '查找算法', level: 2, category: 'data_struct', shortDesc: '二分/哈希查找' },
+            { name: '集合论', level: 1, category: 'discrete', shortDesc: '集合运算与关系' },
+            { name: '命题逻辑', level: 1, category: 'discrete', shortDesc: '命题与真值表' },
+            { name: '谓词逻辑', level: 2, category: 'discrete', shortDesc: '量词与推理' },
+            { name: '图论', level: 2, category: 'discrete', shortDesc: '图的基本概念' },
+            { name: '信息表示', level: 1, category: 'computer', shortDesc: '二进制与编码' },
+            { name: '浮点数', level: 2, category: 'computer', shortDesc: 'IEEE 754标准' },
+            { name: '动态规划', level: 3, category: 'algorithm', shortDesc: '最优子结构' },
+            { name: '贪心算法', level: 3, category: 'algorithm', shortDesc: '局部最优选择' },
+            { name: '复杂度分析', level: 2, category: 'algorithm', shortDesc: '时间/空间复杂度' }
         ];
 
         // 课程数据
         const courses = [
-            {
-                id: 'ai_math_thinking',
-                name: '人工智能数学思维',
-                difficulty: 'medium',
-                topics: ['人工智能概述', '机器学习基础', '神经网络', '深度学习', '卷积神经网络'],
-                desc: '培养AI领域的数学思维能力',
-                estimatedTime: 180,
-                prerequisites: []
-            },
-            {
-                id: 'data_structures',
-                name: '数据结构与算法',
-                difficulty: 'hard',
-                topics: ['栈和队列', '链表', '树结构', '图算法', '排序算法', '查找算法'],
-                desc: '掌握核心数据结构与算法设计',
-                estimatedTime: 240,
-                prerequisites: ['编程基础']
-            },
-            {
-                id: 'discrete_math',
-                name: '离散数学',
-                difficulty: 'easy',
-                topics: ['集合论', '图论', '命题逻辑', '谓词逻辑', '代数结构'],
-                desc: '计算机科学的数学基础',
-                estimatedTime: 200,
-                prerequisites: []
-            },
-            {
-                id: 'computer_systems',
-                name: '计算机系统',
-                difficulty: 'medium',
-                topics: ['信息表示', '浮点数', '机器指令', '程序优化', '虚拟内存'],
-                desc: '深入理解计算机系统底层原理',
-                estimatedTime: 190,
-                prerequisites: ['编程基础']
-            },
-            {
-                id: 'algorithm_analysis',
-                name: '算法设计与分析',
-                difficulty: 'hard',
-                topics: ['排序算法', '动态规划', '贪心算法', '复杂度分析', 'Dijkstra'],
-                desc: '高级算法设计与复杂度分析',
-                estimatedTime: 220,
-                prerequisites: ['数据结构基础']
-            }
+            { id: 'ai_math', name: '人工智能数学思维', difficulty: 'medium', topics: ['线性回归', '机器学习基础', '神经网络', '深度学习', '卷积神经网络'], desc: '培养AI领域的数学思维能力', time: 180 },
+            { id: 'data_struct', name: '数据结构与算法', difficulty: 'hard', topics: ['栈和队列', '链表', '树结构', '图算法', '排序算法', '查找算法'], desc: '掌握核心数据结构与算法设计', time: 240 },
+            { id: 'discrete', name: '离散数学', difficulty: 'easy', topics: ['集合论', '图论', '命题逻辑', '谓词逻辑'], desc: '计算机科学的数学基础', time: 200 },
+            { id: 'computer', name: '计算机系统', difficulty: 'medium', topics: ['信息表示', '浮点数', '机器指令', '程序优化'], desc: '深入理解计算机系统底层原理', time: 190 },
+            { id: 'algorithm', name: '算法设计与分析', difficulty: 'hard', topics: ['动态规划', '贪心算法', '复杂度分析', '排序算法'], desc: '高级算法设计与复杂度分析', time: 220 }
         ];
 
-        // 知识点详情
+        // 知识点详细内容
         const topicDetails = {
-            '人工智能概述': {
-                concept: '人工智能是计算机科学的一个分支，致力于研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统。',
-                questions: ['AI的主要应用领域有哪些？', '强AI和弱AI的区别是什么？']
+            '线性回归': {
+                level: 1,
+                definition: '线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。',
+                intuition: '想象你在散点图中画一条线，让所有点到这条线的距离平方和最小。这条线就是最佳拟合线。',
+                scenarios: ['房价预测', '销量预测', '成绩预测', '趋势分析'],
+                history: {
+                    year: 1805,
+                    origin: '法国数学家勒让德发表最小二乘法',
+                    milestone: '高斯在1795年独立发现并给出概率论证明'
+                },
+                development: [
+                    { year: '1805', name: '线性回归', desc: '最小二乘法' },
+                    { year: '1815', name: '多项式回归', desc: '曲线拟合' },
+                    { year: '1970', name: 'Ridge回归', desc: 'L2正则化' },
+                    { year: '1996', name: 'Lasso回归', desc: 'L1正则化' }
+                ],
+                limitations: ['只能拟合线性关系', '对异常值敏感', '假设特征独立', '容易过拟合'],
+                formula: 'ŷ = wx + b',
+                loss: 'J(w,b) = (1/n)Σ(yᵢ - ŷᵢ)²',
+                related: ['逻辑回归', 'Ridge回归', 'Lasso回归', '神经网络'],
+                hasVisualization: true
             },
             '机器学习基础': {
-                concept: '机器学习是一种人工智能技术，使计算机能够从数据中学习模式，而无需显式编程。',
-                questions: ['监督学习和无监督学习的区别？', '什么是过拟合？如何避免？']
+                level: 2,
+                definition: '机器学习是人工智能的一个分支，它使计算机能够从数据中学习模式，而无需显式编程。',
+                intuition: '让计算机像人类一样从经验中学习，通过大量数据训练模型来做出预测或决策。',
+                scenarios: ['图像识别', '自然语言处理', '推荐系统', '异常检测'],
+                history: {
+                    year: 1959,
+                    origin: 'Arthur Samuel首次提出机器学习概念',
+                    milestone: '1997年IBM深蓝战胜国际象棋世界冠军'
+                },
+                development: [
+                    { year: '1959', name: '机器学习', desc: '概念提出' },
+                    { year: '1986', name: '反向传播', desc: '深度学习基础' },
+                    { year: '2012', name: '深度学习', desc: 'AlexNet突破' },
+                    { year: '2018', name: 'Transformer', desc: 'NLP革命' }
+                ],
+                limitations: ['需要大量标注数据', '黑盒模型难以解释', '计算资源需求高', '数据偏差问题'],
+                formula: '',
+                loss: '',
+                related: ['神经网络', '深度学习', '监督学习', '无监督学习'],
+                hasVisualization: false
             },
             '神经网络': {
-                concept: '神经网络是由大量人工神经元相互连接组成的计算模型，模拟生物神经网络的结构和功能。',
-                questions: ['神经网络的基本组成单元是什么？', '反向传播算法的原理是什么？']
+                level: 3,
+                definition: '神经网络是由大量人工神经元相互连接组成的计算模型，模拟生物神经网络的结构和功能。',
+                intuition: '就像大脑中的神经元网络，每个神经元接收输入，进行简单计算，然后传递给下一层。',
+                scenarios: ['图像识别', '语音识别', '机器翻译', '游戏AI'],
+                history: {
+                    year: 1943,
+                    origin: 'McCulloch-Pitts神经元模型',
+                    milestone: '1986年反向传播算法成熟'
+                },
+                development: [
+                    { year: '1943', name: 'MP神经元', desc: '神经元模型' },
+                    { year: '1958', name: '感知机', desc: '单层神经网络' },
+                    { year: '1986', name: 'BP算法', desc: '训练突破' },
+                    { year: '1998', name: 'LeNet', desc: 'CNN诞生' }
+                ],
+                limitations: ['梯度消失问题', '需要大量数据', '训练时间长', '可解释性差'],
+                formula: 'a = σ(z), z = Σ(wᵢxᵢ) + b',
+                loss: '交叉熵损失',
+                related: ['深度学习', 'CNN', 'RNN', 'Transformer'],
+                hasVisualization: true
             },
             '深度学习': {
-                concept: '深度学习是机器学习的一个子领域，使用多层神经网络来学习数据的多层次抽象表示。',
-                questions: ['深度学习与传统机器学习的区别？', '梯度消失问题如何解决？']
+                level: 4,
+                definition: '深度学习是机器学习的一个子领域，使用多层神经网络来学习数据的多层次抽象表示。',
+                intuition: '就像剥洋葱一样，每一层学习数据的不同层次特征，从简单到复杂逐步抽象。',
+                scenarios: ['自动驾驶', '生成式AI', '药物发现', '语音助手'],
+                history: {
+                    year: 2006,
+                    origin: 'Hinton提出深度信念网络',
+                    milestone: '2012年AlexNet在ImageNet夺冠'
+                },
+                development: [
+                    { year: '2006', name: '深度信念网络', desc: '预训练方法' },
+                    { year: '2012', name: 'AlexNet', desc: '深度学习爆发' },
+                    { year: '2015', name: 'ResNet', desc: '残差网络' },
+                    { year: '2017', name: 'Transformer', desc: '注意力机制' }
+                ],
+                limitations: ['数据需求极高', '计算资源昂贵', '能耗问题', '泛化能力有限'],
+                formula: '',
+                loss: '',
+                related: ['神经网络', 'CNN', 'RNN', 'GPT'],
+                hasVisualization: false
             },
             '卷积神经网络': {
-                concept: 'CNN是一种专门用于处理网格状数据（如图像）的深度学习模型，使用卷积操作提取特征。',
-                questions: ['卷积操作的作用是什么？', '为什么需要池化层？']
+                level: 4,
+                definition: 'CNN是一种专门用于处理网格状数据（如图像）的深度学习模型，使用卷积操作提取特征。',
+                intuition: '就像用放大镜观察图像的不同区域，逐步提取边缘、纹理、形状等特征。',
+                scenarios: ['图像分类', '目标检测', '图像分割', '人脸识别'],
+                history: {
+                    year: 1998,
+                    origin: 'LeCun提出LeNet',
+                    milestone: '2012年AlexNet证明CNN有效性'
+                },
+                development: [
+                    { year: '1998', name: 'LeNet', desc: '首个CNN' },
+                    { year: '2012', name: 'AlexNet', desc: '深度学习突破' },
+                    { year: '2014', name: 'VGG', desc: '深度网络' },
+                    { year: '2015', name: 'ResNet', desc: '残差学习' }
+                ],
+                limitations: ['需要大量图像数据', '计算复杂度高', '对旋转平移敏感', '小目标检测困难'],
+                formula: '(f * g)[n] = Σf[k]g[n-k]',
+                loss: '',
+                related: ['神经网络', '深度学习', 'RNN', '目标检测'],
+                hasVisualization: true
+            },
+            '逻辑回归': {
+                level: 1,
+                definition: '逻辑回归是一种用于二分类问题的监督学习算法，输出概率值表示样本属于某一类的可能性。',
+                intuition: '在线性回归的基础上，使用sigmoid函数将输出映射到0-1之间，表示概率。',
+                scenarios: ['垃圾邮件检测', '疾病诊断', '信用评分', '广告点击率预估'],
+                history: {
+                    year: 1958,
+                    origin: 'David Cox提出',
+                    milestone: '广泛应用于统计学和机器学习'
+                },
+                development: [
+                    { year: '1958', name: '逻辑回归', desc: '概率分类' },
+                    { year: '1998', name: '多分类LR', desc: 'Softmax回归' },
+                    { year: '2011', name: '正则化LR', desc: 'L1/L2正则' }
+                ],
+                limitations: ['只能处理线性可分问题', '对异常值敏感', '特征需要手动设计', '不适合多分类'],
+                formula: 'σ(z) = 1 / (1 + e^(-z)), z = Σwᵢxᵢ + b',
+                loss: '交叉熵',
+                related: ['线性回归', 'SVM', '神经网络', '朴素贝叶斯'],
+                hasVisualization: true
+            },
+            'KNN': {
+                level: 1,
+                definition: 'K近邻算法是一种简单的监督学习算法，通过找到最近的K个邻居来进行分类或回归。',
+                intuition: '物以类聚，人以群分。一个样本的类别由它周围最近的邻居决定。',
+                scenarios: ['推荐系统', '图像分类', '异常检测', '缺失值填充'],
+                history: {
+                    year: 1967,
+                    origin: 'Cover and Hart提出',
+                    milestone: '最简单的机器学习算法之一'
+                },
+                development: [
+                    { year: '1967', name: 'KNN', desc: '基本算法' },
+                    { year: '1980', name: 'KD树', desc: '加速搜索' },
+                    { year: '1994', name: 'Ball树', desc: '高效搜索' }
+                ],
+                limitations: ['计算量大', '对高维数据效果差', '对K值敏感', '需要存储所有数据'],
+                formula: '距离 = √Σ(xᵢ - yᵢ)²',
+                loss: '',
+                related: ['决策树', 'SVM', '聚类算法', '距离度量'],
+                hasVisualization: true
+            },
+            'SVM': {
+                level: 3,
+                definition: '支持向量机是一种强大的分类算法，在高维空间中寻找最优超平面来分隔不同类别的数据。',
+                intuition: '找到一条最宽的街道，让街道两边的样本尽可能远离街道。',
+                scenarios: ['文本分类', '图像分类', '生物信息学', '金融风控'],
+                history: {
+                    year: 1963,
+                    origin: 'Vapnik提出',
+                    milestone: '1995年引入核技巧'
+                },
+                development: [
+                    { year: '1963', name: 'SVM', desc: '基本概念' },
+                    { year: '1995', name: '软间隔SVM', desc: '允许错误' },
+                    { year: '1998', name: '核SVM', desc: '非线性分类' }
+                ],
+                limitations: ['对大规模数据训练慢', '参数选择复杂', '不适合多分类', '可解释性差'],
+                formula: 'max margin, y(w·x + b) ≥ 1',
+                loss: '铰链损失',
+                related: ['逻辑回归', '神经网络', '核方法', '正则化'],
+                hasVisualization: true
+            },
+            '决策树': {
+                level: 2,
+                definition: '决策树是一种树形结构的分类模型，通过递归划分特征空间来进行决策。',
+                intuition: '就像玩20问游戏，每次根据一个特征进行提问，逐步缩小范围直到得到答案。',
+                scenarios: ['信用评分', '医疗诊断', '客户流失预测', '营销决策'],
+                history: {
+                    year: 1966,
+                    origin: 'Hunt提出CLS算法',
+                    milestone: '1986年ID3算法引入信息增益'
+                },
+                development: [
+                    { year: '1966', name: 'CLS', desc: '首个决策树' },
+                    { year: '1986', name: 'ID3', desc: '信息增益' },
+                    { year: '1993', name: 'C4.5', desc: '信息增益比' },
+                    { year: '1995', name: 'CART', desc: '分类回归树' }
+                ],
+                limitations: ['容易过拟合', '对数据变化敏感', '不擅长处理连续变量', '偏向多值特征'],
+                formula: '信息增益 = 熵(父节点) - Σ权重×熵(子节点)',
+                loss: '',
+                related: ['随机森林', '梯度提升树', 'XGBoost', '特征选择'],
+                hasVisualization: true
+            },
+            '随机森林': {
+                level: 3,
+                definition: '随机森林是一种集成学习算法，通过构建多个决策树并综合它们的预测结果来提高准确性和稳定性。',
+                intuition: '三个臭皮匠赛过诸葛亮。多个弱分类器组合成一个强分类器。',
+                scenarios: ['金融风控', '医疗诊断', '图像分类', '推荐系统'],
+                history: {
+                    year: 1995,
+                    origin: 'Ho提出随机子空间方法',
+                    milestone: '2001年Breiman正式提出随机森林'
+                },
+                development: [
+                    { year: '1995', name: '随机子空间', desc: '基础思想' },
+                    { year: '2001', name: '随机森林', desc: '正式提出' },
+                    { year: '2006', name: 'ExtraTrees', desc: '极端随机树' }
+                ],
+                limitations: ['训练时间长', '模型复杂难以解释', '对噪声敏感', '内存占用大'],
+                formula: '',
+                loss: '',
+                related: ['决策树', '梯度提升树', 'XGBoost', '集成学习'],
+                hasVisualization: false
             },
             '栈和队列': {
-                concept: '栈是后进先出(LIFO)的数据结构，队列是先进先出(FIFO)的数据结构。',
-                questions: ['栈和队列的实际应用场景？', '如何用栈实现队列？']
+                level: 1,
+                definition: '栈是后进先出(LIFO)的数据结构，队列是先进先出(FIFO)的数据结构。',
+                intuition: '栈就像一叠盘子，只能从最上面取；队列就像排队，先来的先服务。',
+                scenarios: ['表达式求值', '括号匹配', '广度优先搜索', '任务调度'],
+                history: {
+                    year: 1946,
+                    origin: '冯·诺依曼在EDVAC中使用',
+                    milestone: '成为计算机科学基础数据结构'
+                },
+                development: [
+                    { year: '1946', name: '栈', desc: 'LIFO结构' },
+                    { year: '1950', name: '队列', desc: 'FIFO结构' },
+                    { year: '1960', name: '双端队列', desc: 'Deque' }
+                ],
+                limitations: ['栈只能访问栈顶', '队列只能访问队首', '容量固定时会溢出', '不支持随机访问'],
+                formula: '',
+                loss: '',
+                related: ['链表', '数组', '优先队列', '图遍历'],
+                hasVisualization: true
             },
             '链表': {
-                concept: '链表是由节点组成的线性数据结构，每个节点包含数据和指向下一个节点的指针。',
-                questions: ['链表和数组的区别？', '如何反转链表？']
+                level: 1,
+                definition: '链表是由节点组成的线性数据结构，每个节点包含数据和指向下一个节点的指针。',
+                intuition: '就像一串珠子，每个珠子都知道下一个珠子在哪里。',
+                scenarios: ['内存管理', '动态数组', 'LRU缓存', '图的邻接表'],
+                history: {
+                    year: 1955,
+                    origin: 'Newell, Shaw, Simon提出',
+                    milestone: '成为动态数据结构的基础'
+                },
+                development: [
+                    { year: '1955', name: '单链表', desc: '单向链接' },
+                    { year: '1960', name: '双链表', desc: '双向链接' },
+                    { year: '1970', name: '循环链表', desc: '首尾相连' }
+                ],
+                limitations: ['随机访问慢', '额外指针开销', '缓存不友好', '难以反向遍历'],
+                formula: '',
+                loss: '',
+                related: ['栈', '队列', '树', '图'],
+                hasVisualization: true
             },
             '树结构': {
-                concept: '树是一种层次化的数据结构，由节点和边组成，具有根节点、子节点和叶子节点。',
-                questions: ['二叉搜索树的性质？', '如何进行二叉树的遍历？']
+                level: 2,
+                definition: '树是一种层次化的数据结构，由节点和边组成，具有根节点、子节点和叶子节点。',
+                intuition: '就像一棵倒过来的树，有一个根，然后分叉出多个子节点。',
+                scenarios: ['文件系统', '数据库索引', '决策树', 'XML/HTML文档'],
+                history: {
+                    year: 1956,
+                    origin: '用于数据存储和检索',
+                    milestone: 'B树的发明使数据库高效查询成为可能'
+                },
+                development: [
+                    { year: '1956', name: '二叉树', desc: '基础结构' },
+                    { year: '1962', name: 'B树', desc: '数据库索引' },
+                    { year: '1962', name: 'AVL树', desc: '自平衡树' },
+                    { year: '1972', name: '红黑树', desc: '高效平衡树' }
+                ],
+                limitations: ['删除操作复杂', '不平衡时退化成链表', '内存占用大', '不适合并行处理'],
+                formula: '',
+                loss: '',
+                related: ['二叉搜索树', 'B树', '堆', '图'],
+                hasVisualization: true
             },
             '图算法': {
-                concept: '图是由顶点和边组成的数据结构，图算法用于解决图上的各种问题。',
-                questions: ['BFS和DFS的区别？', '什么是拓扑排序？']
+                level: 3,
+                definition: '图是由顶点和边组成的数据结构，图算法用于解决图上的各种问题如路径查找、连通性等。',
+                intuition: '图就像一张地图，顶点是城市，边是道路，算法帮助找到最佳路线。',
+                scenarios: ['导航系统', '社交网络', '电路设计', '网络路由'],
+                history: {
+                    year: 1736,
+                    origin: '欧拉解决哥尼斯堡七桥问题',
+                    milestone: '图论成为数学和计算机科学的重要分支'
+                },
+                development: [
+                    { year: '1736', name: '图论', desc: '欧拉定理' },
+                    { year: '1959', name: 'Dijkstra', desc: '最短路径' },
+                    { year: '1962', name: 'BFS/DFS', desc: '图遍历' },
+                    { year: '1972', name: 'Floyd-Warshall', desc: '多源最短路径' }
+                ],
+                limitations: ['时间复杂度高', '空间复杂度高', 'NP难问题多', '不适合大规模图'],
+                formula: '',
+                loss: '',
+                related: ['最短路径', '最小生成树', '网络流', '社交网络分析'],
+                hasVisualization: true
             },
             '排序算法': {
-                concept: '排序算法是将一组数据按照特定顺序排列的算法。',
-                questions: ['快速排序的时间复杂度？', '归并排序的空间复杂度？']
+                level: 2,
+                definition: '排序算法是将一组数据按照特定顺序排列的算法，常见顺序包括升序和降序。',
+                intuition: '就像整理扑克牌，按照一定规则排列整齐。',
+                scenarios: ['数据检索', '数据分析', '数据库查询', '推荐系统'],
+                history: {
+                    year: 1951,
+                    origin: '早期计算机排序程序',
+                    milestone: '快速排序的发明大幅提升排序效率'
+                },
+                development: [
+                    { year: '1951', name: '冒泡排序', desc: '基础算法' },
+                    { year: '1959', name: '快速排序', desc: '高效排序' },
+                    { year: '1964', name: '堆排序', desc: '原地排序' },
+                    { year: '1945', name: '归并排序', desc: '稳定排序' }
+                ],
+                limitations: ['某些算法时间复杂度高', '空间复杂度高', '不稳定排序问题', '对特定数据分布敏感'],
+                formula: '',
+                loss: '',
+                related: ['查找算法', '数据结构', '复杂度分析', '算法设计'],
+                hasVisualization: true
             },
             '查找算法': {
-                concept: '查找算法用于在数据集中查找特定元素的位置。',
-                questions: ['二分查找的前提条件？', '哈希表的冲突解决方法？']
+                level: 2,
+                definition: '查找算法用于在数据集中查找特定元素的位置或判断元素是否存在。',
+                intuition: '就像在字典中查找一个单词，可以从头开始找，也可以按字母顺序快速定位。',
+                scenarios: ['数据库查询', '搜索引擎', '编译器', '文本编辑器'],
+                history: {
+                    year: 1946,
+                    origin: '二分查找思想',
+                    milestone: '哈希表的发明实现O(1)查找'
+                },
+                development: [
+                    { year: '1946', name: '线性查找', desc: '顺序查找' },
+                    { year: '1946', name: '二分查找', desc: '对数时间' },
+                    { year: '1953', name: '哈希表', desc: '常数时间' },
+                    { year: '1973', name: 'B+树', desc: '数据库索引' }
+                ],
+                limitations: ['二分查找需要有序数据', '哈希表有冲突问题', '动态数据维护难', '内存占用大'],
+                formula: '',
+                loss: '',
+                related: ['排序算法', '哈希表', '索引结构', '数据库'],
+                hasVisualization: false
             },
             '集合论': {
-                concept: '集合论是研究集合的数学分支，集合是由确定的、互不相同的对象组成的整体。',
-                questions: ['集合的基本运算有哪些？', '什么是幂集？']
+                level: 1,
+                definition: '集合论是研究集合的数学分支，集合是由确定的、互不相同的对象组成的整体。',
+                intuition: '就像一个盒子，可以装各种东西，但每个东西只能装一次。',
+                scenarios: ['数据库查询优化', '数据去重', '权限管理', '数学证明'],
+                history: {
+                    year: 1874,
+                    origin: '康托尔创立集合论',
+                    milestone: '成为现代数学的基础'
+                },
+                development: [
+                    { year: '1874', name: '朴素集合论', desc: '康托尔理论' },
+                    { year: '1908', name: 'ZF公理系统', desc: '公理化集合论' },
+                    { year: '1925', name: 'NBG系统', desc: '替代公理系统' }
+                ],
+                limitations: ['罗素悖论问题', '不可数集合难以处理', '直观理解困难', '应用场景有限'],
+                formula: 'A ∪ B, A ∩ B, A - B',
+                loss: '',
+                related: ['逻辑', '关系代数', '数据库', '离散数学'],
+                hasVisualization: true
             },
             '命题逻辑': {
-                concept: '命题逻辑是研究命题及其推理的逻辑分支。',
-                questions: ['什么是命题？', '真值表的作用是什么？']
+                level: 1,
+                definition: '命题逻辑是研究命题及其推理的逻辑分支，命题是具有真假值的陈述句。',
+                intuition: '就像玩逻辑拼图，用AND、OR、NOT等连接词组合命题，判断真假。',
+                scenarios: ['数字电路设计', '人工智能推理', '程序验证', '数学证明'],
+                history: {
+                    year: 1854,
+                    origin: '布尔代数',
+                    milestone: '成为计算机科学的基础'
+                },
+                development: [
+                    { year: '1854', name: '布尔代数', desc: '逻辑代数' },
+                    { year: '1917', name: '真值表', desc: '真值计算' },
+                    { year: '1928', name: '命题演算', desc: '形式系统' }
+                ],
+                limitations: ['无法处理量词', '不能表达复杂关系', '缺乏谓词', '推理能力有限'],
+                formula: '¬P, P ∧ Q, P ∨ Q, P → Q',
+                loss: '',
+                related: ['谓词逻辑', '数字电路', '人工智能', '证明理论'],
+                hasVisualization: true
             },
             '谓词逻辑': {
-                concept: '谓词逻辑扩展了命题逻辑，引入了量词和谓词。',
-                questions: ['全称量词和存在量词的区别？', '如何进行谓词逻辑推理？']
+                level: 2,
+                definition: '谓词逻辑扩展了命题逻辑，引入了量词和谓词，可以表达更复杂的逻辑关系。',
+                intuition: '不仅能说"天下雨"，还能说"所有人都会死"、"存在一个数大于5"。',
+                scenarios: ['数据库查询语言', '人工智能推理', '程序验证', '知识表示'],
+                history: {
+                    year: 1879,
+                    origin: '弗雷格的概念文字',
+                    milestone: '成为现代逻辑的基础'
+                },
+                development: [
+                    { year: '1879', name: '谓词演算', desc: '弗雷格系统' },
+                    { year: '1910', name: 'PM系统', desc: '怀特海-罗素' },
+                    { year: '1930', name: '哥德尔完备性', desc: '逻辑基础' }
+                ],
+                limitations: ['判定问题不可解', '复杂度高', '难以自动化推理', '表达能力仍有限'],
+                formula: '∀x P(x), ∃x Q(x)',
+                loss: '',
+                related: ['命题逻辑', '模态逻辑', '知识表示', '人工智能'],
+                hasVisualization: false
             },
             '图论': {
-                concept: '图论是研究图的性质和应用的数学分支。',
-                questions: ['图的基本概念有哪些？', '欧拉图和哈密顿图的区别？']
-            },
-            '代数结构': {
-                concept: '代数结构是带有运算的集合，如群、环、域等。',
-                questions: ['什么是群？', '环和域的区别？']
+                level: 2,
+                definition: '图论是研究图的性质和应用的数学分支，图由顶点和边组成。',
+                intuition: '图就像一张关系网，顶点代表事物，边代表事物之间的关系。',
+                scenarios: ['社交网络分析', '网络路由', '电路设计', '生物网络'],
+                history: {
+                    year: 1736,
+                    origin: '欧拉解决七桥问题',
+                    milestone: '成为组合数学的重要分支'
+                },
+                development: [
+                    { year: '1736', name: '欧拉定理', desc: '图论起源' },
+                    { year: '1847', name: '基尔霍夫定律', desc: '电路应用' },
+                    { year: '1936', name: '现代图论', desc: '系统发展' }
+                ],
+                limitations: ['NP难问题多', '大规模图处理难', '动态图维护难', '可视化挑战'],
+                formula: '|V| - |E| + |F| = 2 (欧拉公式)',
+                loss: '',
+                related: ['图算法', '网络分析', '社交网络', '组合优化'],
+                hasVisualization: true
             },
             '信息表示': {
-                concept: '计算机中信息的表示方法，包括二进制、编码等。',
-                questions: ['二进制如何表示负数？', 'ASCII码和Unicode的区别？']
+                level: 1,
+                definition: '计算机中信息的表示方法，包括二进制、编码、数据类型等。',
+                intuition: '计算机只认识0和1，所有信息都要转换成二进制表示。',
+                scenarios: ['数据存储', '网络传输', '加密解密', '压缩算法'],
+                history: {
+                    year: 1946,
+                    origin: '冯·诺依曼体系结构',
+                    milestone: 'ASCII编码标准化'
+                },
+                development: [
+                    { year: '1963', name: 'ASCII', desc: '字符编码' },
+                    { year: '1993', name: 'Unicode', desc: '统一编码' },
+                    { year: '1985', name: 'UTF-8', desc: '变长编码' }
+                ],
+                limitations: ['编码冲突问题', '不同编码不兼容', '存储空间限制', '精度问题'],
+                formula: '',
+                loss: '',
+                related: ['浮点数', '编码理论', '数据压缩', '加密'],
+                hasVisualization: false
             },
             '浮点数': {
-                concept: '浮点数是用于表示实数的一种数据类型，遵循IEEE 754标准。',
-                questions: ['浮点数的表示格式？', '为什么浮点数运算有精度问题？']
-            },
-            '机器指令': {
-                concept: '机器指令是计算机能够直接执行的指令，由操作码和操作数组成。',
-                questions: ['指令的基本格式？', '寻址方式有哪些？']
-            },
-            '程序优化': {
-                concept: '通过各种技术提高程序的性能和效率。',
-                questions: ['程序优化的基本原则？', '缓存优化的方法？']
-            },
-            '虚拟内存': {
-                concept: '虚拟内存是操作系统提供的一种内存管理技术，将磁盘空间当作内存使用。',
-                questions: ['分页和分段的区别？', '页面置换算法有哪些？']
+                level: 2,
+                definition: '浮点数是用于表示实数的一种数据类型，遵循IEEE 754标准。',
+                intuition: '就像科学计数法，用尾数和指数表示很大或很小的数。',
+                scenarios: ['科学计算', '图形处理', '金融计算', '物理模拟'],
+                history: {
+                    year: 1985,
+                    origin: 'IEEE 754标准制定',
+                    milestone: '成为计算机浮点运算的统一标准'
+                },
+                development: [
+                    { year: '1985', name: 'IEEE 754', desc: '单精度' },
+                    { year: '1985', name: '双精度', desc: '扩展精度' },
+                    { year: '2008', name: 'IEEE 754-2008', desc: '新标准' }
+                ],
+                limitations: ['精度有限', '存在舍入误差', '特殊值处理复杂', '比较困难'],
+                formula: 'sign × mantissa × 2^exponent',
+                loss: '',
+                related: ['信息表示', '数值计算', '误差分析', '计算机系统'],
+                hasVisualization: true
             },
             '动态规划': {
-                concept: '动态规划是一种将复杂问题分解为子问题来求解的算法设计方法。',
-                questions: ['动态规划的适用条件？', '最优子结构和重叠子问题的含义？']
+                level: 3,
+                definition: '动态规划是一种将复杂问题分解为子问题来求解的算法设计方法，利用重叠子问题和最优子结构性质。',
+                intuition: '不要重复计算相同的问题，把答案记下来下次直接用。',
+                scenarios: ['最短路径', '序列比对', '资源分配', '字符串编辑距离'],
+                history: {
+                    year: 1953,
+                    origin: '贝尔曼提出',
+                    milestone: '广泛应用于优化问题'
+                },
+                development: [
+                    { year: '1953', name: '贝尔曼方程', desc: '动态规划基础' },
+                    { year: '1957', name: 'Floyd-Warshall', desc: '图算法' },
+                    { year: '1970', name: '背包问题', desc: '经典应用' }
+                ],
+                limitations: ['状态空间爆炸', '难以找到状态转移', '内存占用大', '不适合在线问题'],
+                formula: 'dp[i] = min(dp[j] + cost(j,i))',
+                loss: '',
+                related: ['贪心算法', '分治算法', '图算法', '优化问题'],
+                hasVisualization: true
             },
             '贪心算法': {
-                concept: '贪心算法在每一步都做出当前最优的选择，希望最终得到全局最优解。',
-                questions: ['贪心算法的适用条件？', '与动态规划的区别？']
+                level: 3,
+                definition: '贪心算法在每一步都做出当前最优的选择，希望最终得到全局最优解。',
+                intuition: '走一步看一步，每次都选看起来最好的选项。',
+                scenarios: ['找零钱', '区间调度', '最小生成树', '哈夫曼编码'],
+                history: {
+                    year: 1950,
+                    origin: '早期组合优化',
+                    milestone: 'Dijkstra算法是典型应用'
+                },
+                development: [
+                    { year: '1959', name: 'Dijkstra', desc: '最短路径' },
+                    { year: '1965', name: 'Prim', desc: '最小生成树' },
+                    { year: '1952', name: '哈夫曼编码', desc: '数据压缩' }
+                ],
+                limitations: ['不一定得到全局最优', '需要证明贪心选择性质', '不适合复杂问题', '局部最优陷阱'],
+                formula: '',
+                loss: '',
+                related: ['动态规划', '图算法', '优化问题', '近似算法'],
+                hasVisualization: true
             },
             '复杂度分析': {
-                concept: '复杂度分析用于评估算法的时间和空间效率。',
-                questions: ['时间复杂度的表示方法？', '什么是NP问题？']
-            },
-            'Dijkstra': {
-                concept: 'Dijkstra算法用于在加权图中寻找单源最短路径。',
-                questions: ['Dijkstra算法的时间复杂度？', '能否处理负权边？']
-            },
-            'NP问题': {
-                concept: 'NP问题是指可以在多项式时间内验证解的正确性但尚未找到多项式时间算法的问题。',
-                questions: ['P问题和NP问题的区别？', '什么是NP完全问题？']
+                level: 2,
+                definition: '复杂度分析用于评估算法的时间和空间效率，通常用大O表示法。',
+                intuition: '评估算法的快慢和占用空间大小，帮助选择最合适的算法。',
+                scenarios: ['算法选择', '性能优化', '系统设计', '资源规划'],
+                history: {
+                    year: 1965,
+                    origin: 'Knuth引入大O表示法',
+                    milestone: '成为算法分析的标准方法'
+                },
+                development: [
+                    { year: '1965', name: '大O表示法', desc: '渐近分析' },
+                    { year: '1976', name: 'NP完全性', desc: '复杂度分类' },
+                    { year: '1990', name: '随机算法', desc: '期望复杂度' }
+                ],
+                limitations: ['忽略常数因子', '最坏情况分析保守', '实际性能受数据影响', '难以分析复杂算法'],
+                formula: 'O(1), O(log n), O(n), O(n log n), O(n²)',
+                loss: '',
+                related: ['算法设计', '数据结构', '算法分析', '计算复杂性'],
+                hasVisualization: true
             }
         };
 
-        // 渲染知识图谱
         function renderKnowledgeGraph() {
             const container = document.getElementById('graphNodes');
             container.innerHTML = knowledgeNodes.map(node => `
-                <div class="graph-node level-${node.level}" onclick="openTopicDetail('${node.name}')" title="${node.desc}">
+                <div class="graph-node level-${node.level}" onclick="showTopicDetail('${node.name}')" title="${node.shortDesc}">
                     ${node.name}
                 </div>
             `).join('');
         }
 
-        // 渲染课程卡片
         function renderCourses() {
             const container = document.getElementById('courses');
             container.innerHTML = courses.map(course => `
-                <div class="course-card" onclick="openCourseDetail('${course.id}')">
+                <div class="course-card" onclick="filterByCategory('${course.id}')">
                     <div class="course-header">
                         <span class="course-name">${course.name}</span>
                         <span class="course-difficulty ${course.difficulty}">${course.difficulty === 'easy' ? '简单' : course.difficulty === 'medium' ? '中等' : '困难'}</span>
                     </div>
                     <div style="color:#80a0c0;font-size:13px;margin-bottom:10px;">${course.desc}</div>
-                    <div style="color:#6080a0;font-size:12px;">预计学习时间: ${course.estimatedTime}分钟</div>
+                    <div style="color:#6080a0;font-size:12px;">预计学习时间: ${course.time}分钟</div>
                     <div class="course-topics">
-                        ${course.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                        ${course.topics.slice(0, 4).map(t => `<span class="topic-tag">${t}</span>`).join('')}
                     </div>
                 </div>
             `).join('');
         }
 
-        // 切换标签
         function showTab(tabName) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
             
             document.getElementById('knowledge').style.display = tabName === 'knowledge' ? 'block' : 'none';
             document.getElementById('courses').style.display = tabName === 'courses' ? 'grid' : 'none';
-            document.getElementById('learning-style').style.display = tabName === 'learning-style' ? 'block' : 'none';
             document.getElementById('exercises').style.display = tabName === 'exercises' ? 'block' : 'none';
         }
 
-        // 打开课程详情
-        function openCourseDetail(courseId) {
-            const course = courses.find(c => c.id === courseId);
-            if (!course) return;
-            
-            document.getElementById('courseModalTitle').textContent = course.name;
-            document.getElementById('courseModalContent').innerHTML = `
-                <div class="info-box">
-                    <div class="info-title">📖 课程简介</div>
-                    <div class="info-content">${course.desc}</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-title">⏱️ 预计学习时间</div>
-                    <div class="info-content">${course.estimatedTime}分钟</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-title">📊 难度等级</div>
-                    <div class="info-content">${course.difficulty === 'easy' ? '简单' : course.difficulty === 'medium' ? '中等' : '困难'}</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-title">📚 学习内容</div>
-                    <div class="info-content">${course.topics.join(' → ')}</div>
-                </div>
-                <div class="info-box">
-                    <div class="info-title">📋 前置知识</div>
-                    <div class="info-content">${course.prerequisites.length > 0 ? course.prerequisites.join('、') : '无'}</div>
-                </div>
-            `;
-            document.getElementById('courseModal').style.display = 'flex';
+        function filterByCategory(category) {
+            const nodes = document.querySelectorAll('.graph-node');
+            nodes.forEach(node => {
+                node.style.display = node.getAttribute('onclick').includes(category) ? 'block' : 'none';
+            });
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab:first-child').classList.add('active');
         }
 
-        // 打开知识点详情
-        function openTopicDetail(topicName) {
+        function showTopicDetail(topicName) {
             const detail = topicDetails[topicName];
             if (!detail) return;
             
-            document.getElementById('topicModalTitle').textContent = topicName;
-            document.getElementById('topicModalContent').innerHTML = `
-                <div class="info-box">
-                    <div class="info-title">💡 核心概念</div>
-                    <div class="info-content">${detail.concept}</div>
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('topic-page').style.display = 'block';
+            
+            const levelColors = ['', '#60c0a0', '#60c0f0', '#a080e0', '#e08060', '#e060a0'];
+            const levelLabels = ['', '基础', '进阶', '高级', '深度学习', '专家级'];
+            
+            let content = `
+                <div class="back-btn" onclick="goBack()">
+                    ← 返回知识图谱
                 </div>
-                <div class="info-box">
-                    <div class="info-title">🤔 思考题</div>
-                    <div class="info-content">
-                        ${detail.questions.map((q, i) => `${i+1}. ${q}`).join('<br/>')}
+                <div class="detail-header">
+                    <h2 class="detail-title">${topicName}</h2>
+                    <span class="detail-level" style="background: rgba(${levelColors[detail.level]}, 0.2); color: ${levelColors[detail.level]}; border: 1px solid ${levelColors[detail.level]};">
+                        Level ${detail.level} - ${levelLabels[detail.level]}
+                    </span>
+                </div>
+                
+                <div class="content-card">
+                    <div class="card-title">📖 什么是${topicName}？</div>
+                    <div class="card-content">
+                        ${detail.definition}
+                        <div style="margin-top: 15px; padding: 15px; background: rgba(60, 140, 200, 0.2); border-radius: 8px;">
+                            <strong style="color: #40c0e0;">💡 核心直觉：</strong>${detail.intuition}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <div class="card-title">🎯 适用场景</div>
+                    <div class="card-content">
+                        <div class="scenario-tags">
+                            ${detail.scenarios.map(s => `<span class="scenario-tag">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <div class="card-title">📜 历史渊源</div>
+                    <div class="card-content">
+                        <strong style="color: #80c0f0;">起源：</strong>${detail.history.origin}（${detail.history.year}年）<br/>
+                        <strong style="color: #80c0f0;">里程碑：</strong>${detail.history.milestone}
+                        <div class="timeline">
+                            ${detail.development.map((item, i) => `
+                                <div class="timeline-item">
+                                    <span class="timeline-year">${item.year}</span>
+                                    <span class="timeline-link" onclick="showTopicDetail('${item.name}')">${item.name}</span>
+                                </div>
+                                ${i < detail.development.length - 1 ? '<span class="timeline-arrow">→</span>' : ''}
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <div class="card-title">⚠️ 局限性</div>
+                    <div class="card-content">
+                        <ul>
+                            ${detail.limitations.map(l => `<li>${l}</li>`).join('')}
+                        </ul>
                     </div>
                 </div>
             `;
-            document.getElementById('topicModal').style.display = 'flex';
-        }
-
-        // 选择学习风格
-        function selectStyle(style) {
-            const styleNames = {
-                visual: '视觉型学习者',
-                verbal: '语言型学习者',
-                logical: '逻辑型学习者',
-                practical: '实践型学习者',
-                social: '社交型学习者',
-                solitary: '自主型学习者'
-            };
             
-            const suggestions = {
-                visual: '建议：多使用图表、思维导图、视频教程进行学习',
-                verbal: '建议：多阅读教材、笔记，通过文字理解概念',
-                logical: '建议：注重理论推导，通过数学证明加深理解',
-                practical: '建议：多进行实践操作，通过代码实现巩固知识',
-                social: '建议：参与学习小组，通过讨论交流加深理解',
-                solitary: '建议：制定个人学习计划，独立深入研究'
-            };
-
-            alert(`${styleNames[style]}\n\n${suggestions[style]}`);
+            if (detail.formula || detail.loss) {
+                content += `
+                    <div class="content-card">
+                        <div class="card-title">📐 数学原理</div>
+                        <div class="card-content">
+                            ${detail.formula ? `<div class="math-box">模型：${detail.formula}</div>` : ''}
+                            ${detail.loss ? `<div class="math-box">损失函数：${detail.loss}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (detail.hasVisualization) {
+                content += `
+                    <div class="content-card">
+                        <div class="card-title">🎮 交互式可视化</div>
+                        <div class="card-content">
+                            <div class="visualization-area">
+                                <div class="canvas-container">
+                                    <div class="canvas-axis axis-x"></div>
+                                    <div class="canvas-axis axis-y"></div>
+                                    <div class="canvas-line" id="visLine" style="width: 80%;"></div>
+                                </div>
+                                <div class="slider-container">
+                                    <div class="slider-label">
+                                        <span>参数调整</span>
+                                        <span class="slider-value" id="sliderVal">50</span>
+                                    </div>
+                                    <input type="range" min="1" max="100" value="50" oninput="updateVisualization(this.value)" id="visSlider">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            content += `
+                <div class="content-card">
+                    <div class="card-title">🔗 相关知识点</div>
+                    <div class="card-content">
+                        <div class="related-topics">
+                            ${detail.related.map(r => `<span class="related-tag" onclick="showTopicDetail('${r}')">${r}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('topicDetailContent').innerHTML = content;
+            
+            if (detail.hasVisualization) {
+                initVisualization();
+            }
         }
 
-        // 打开练习题册
+        function initVisualization() {
+            const canvas = document.querySelector('.canvas-container');
+            for (let i = 0; i < 15; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'canvas-dot';
+                dot.style.left = `${10 + Math.random() * 80}%`;
+                dot.style.top = `${20 + Math.random() * 60}%`;
+                canvas.appendChild(dot);
+            }
+            updateVisualization(50);
+        }
+
+        function updateVisualization(value) {
+            document.getElementById('sliderVal').textContent = value;
+            const line = document.getElementById('visLine');
+            line.style.width = `${value}%`;
+            line.style.background = `linear-gradient(90deg, #40c0e0, ${value > 70 ? '#80e0c0' : '#80c0f0'})`;
+            
+            const dots = document.querySelectorAll('.canvas-dot');
+            dots.forEach((dot, i) => {
+                const offset = (value - 50) * 0.3;
+                dot.style.transform = `translate(-50%, -50%) translateY(${offset * (i % 3 - 1)}px)`;
+            });
+        }
+
+        function goBack() {
+            document.getElementById('topic-page').style.display = 'none';
+            document.getElementById('home-page').style.display = 'block';
+            renderKnowledgeGraph();
+        }
+
         function openExerciseBook() {
             window.open('learning-terminal.html', '_blank');
         }
 
-        // 关闭模态框
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // 点击模态框外部关闭
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        });
-
-        // 初始化
         renderKnowledgeGraph();
         renderCourses();
     </script>
