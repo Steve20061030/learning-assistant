@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-[README.md](https://github.com/user-attachments/files/28263707/README.md)
->>>>>>> 7d85fa111d83b286a88af1dbeef80f8dff3736c4
 # 🧠 个性化学习助手
 
 Personalized Learning Assistant - 为你的学习之路保驾护航
@@ -153,8 +149,4 @@ MIT License
 
 ## 📧 联系方式
 
-<<<<<<< HEAD
 GitHub: [@king157419](https://github.com/king157419)
-=======
-GitHub: [@king157419](https://github.com/king157419)
->>>>>>> 7d85fa111d83b286a88af1dbeef80f8dff3736c4
