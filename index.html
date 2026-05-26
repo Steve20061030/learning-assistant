@@ -3,90 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MLTutor - 机器学习可视化教学平台</title>
+    <title>MLTutor - 个性化学习助手</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #0a0e1a 0%, #1a1f35 50%, #0d1321 100%);
+            background: linear-gradient(135deg, #0a0e18 0%, #111a28 50%, #0d1321 100%);
             color: #d0e0f0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1400px; margin: 0 auto; }
         
-        header { text-align: center; margin-bottom: 60px; }
+        header { text-align: center; margin-bottom: 40px; }
         header h1 {
-            font-size: 48px;
+            font-size: 42px;
             margin-bottom: 10px;
             background: linear-gradient(90deg, #40c0e0, #80e0c0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        header p { color: #80a0c0; font-size: 18px; }
-        
+        header p { color: #80a0c0; font-size: 16px; }
+
+        /* 导航标签 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 8px 20px;
+            background: rgba(60, 100, 160, 0.3);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .tab:hover { background: rgba(80, 140, 200, 0.4); }
+        .tab.active { background: rgba(60, 180, 220, 0.5); }
+
         /* 知识图谱 */
         .knowledge-graph {
             background: rgba(30, 40, 60, 0.6);
             border-radius: 16px;
             padding: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border: 1px solid rgba(80, 120, 180, 0.2);
         }
-        .graph-title {
-            font-size: 20px;
-            color: #a0c0e0;
-            margin-bottom: 20px;
-            text-align: center;
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
-        .knowledge-map {
+        .graph-title { font-size: 18px; color: #a0c0e0; }
+        .legend {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .legend-dot.level-1 { background: #60c0a0; }
+        .legend-dot.level-2 { background: #60c0f0; }
+        .legend-dot.level-3 { background: #a080e0; }
+        .legend-dot.level-4 { background: #e08060; }
+        .legend-dot.level-5 { background: #e060a0; }
+
+        /* 知识图谱节点 */
+        .graph-nodes {
             display: flex;
             flex-wrap: wrap;
+            gap: 12px;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 25px;
         }
-        .knowledge-item {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 14px;
+        .graph-node {
+            padding: 10px 16px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            font-size: 14px;
         }
-        .knowledge-item.level-1 { background: rgba(100, 180, 140, 0.3); color: #60c0a0; }
-        .knowledge-item.level-2 { background: rgba(100, 160, 220, 0.3); color: #60c0f0; }
-        .knowledge-item.level-3 { background: rgba(180, 140, 220, 0.3); color: #a080e0; }
-        .knowledge-item.level-4 { background: rgba(220, 140, 100, 0.3); color: #e08060; }
-        .knowledge-item.level-5 { background: rgba(220, 100, 160, 0.3); color: #e060a0; }
-        .knowledge-item:hover { transform: translateY(-2px); }
-        
-        /* 分类标签 */
-        .categories {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
+        .graph-node:hover { transform: translateY(-3px); }
+        .graph-node.level-1 { background: rgba(100, 180, 140, 0.3); color: #80e0c0; border: 1px solid rgba(100, 180, 140, 0.3); }
+        .graph-node.level-2 { background: rgba(100, 160, 220, 0.3); color: #80c0f0; border: 1px solid rgba(100, 160, 220, 0.3); }
+        .graph-node.level-3 { background: rgba(180, 140, 220, 0.3); color: #a080e0; border: 1px solid rgba(180, 140, 220, 0.3); }
+        .graph-node.level-4 { background: rgba(220, 140, 100, 0.3); color: #e08060; border: 1px solid rgba(220, 140, 100, 0.3); }
+        .graph-node.level-5 { background: rgba(220, 100, 160, 0.3); color: #e060a0; border: 1px solid rgba(220, 100, 160, 0.3); }
+
+        /* 课程卡片 */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
             margin-bottom: 30px;
         }
-        .category-tag {
-            padding: 5px 16px;
-            background: rgba(60, 100, 160, 0.3);
-            border-radius: 20px;
-            font-size: 13px;
-            color: #80c0f0;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .category-tag:hover { background: rgba(80, 140, 200, 0.4); }
-        
-        /* 算法列表 */
-        .algorithms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        .algorithm-card {
+        .course-card {
             background: rgba(30, 40, 60, 0.6);
             border-radius: 12px;
             padding: 20px;
@@ -94,46 +117,127 @@
             transition: all 0.3s;
             cursor: pointer;
         }
-        .algorithm-card:hover {
+        .course-card:hover {
             transform: translateY(-3px);
             border-color: rgba(100, 180, 220, 0.4);
             box-shadow: 0 10px 30px rgba(60, 140, 200, 0.1);
         }
-        .algorithm-header {
+        .course-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
-        .algorithm-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #d0e0f0;
-        }
-        .algorithm-level {
+        .course-name { font-size: 18px; font-weight: 600; color: #d0e0f0; }
+        .course-difficulty {
             padding: 3px 10px;
             border-radius: 10px;
             font-size: 12px;
         }
-        .level-1 { background: rgba(100, 180, 140, 0.3); color: #60c0a0; }
-        .level-2 { background: rgba(100, 160, 220, 0.3); color: #60c0f0; }
-        .level-3 { background: rgba(180, 140, 220, 0.3); color: #a080e0; }
-        .level-4 { background: rgba(220, 140, 100, 0.3); color: #e08060; }
-        .level-5 { background: rgba(220, 100, 160, 0.3); color: #e060a0; }
-        .algorithm-desc {
-            font-size: 13px;
-            color: #80a0c0;
-            line-height: 1.6;
+        .course-difficulty.easy { background: rgba(100, 180, 140, 0.3); color: #60c0a0; }
+        .course-difficulty.medium { background: rgba(100, 160, 220, 0.3); color: #60c0f0; }
+        .course-difficulty.hard { background: rgba(220, 140, 100, 0.3); color: #e08060; }
+        .course-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
         }
-        
-        /* 页脚 */
-        footer {
+        .topic-tag {
+            padding: 3px 10px;
+            background: rgba(60, 80, 120, 0.5);
+            border-radius: 10px;
+            font-size: 12px;
+            color: #a0c0e0;
+        }
+
+        /* 学习风格评估 */
+        .learning-style-section {
+            background: rgba(30, 40, 60, 0.6);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+        }
+        .style-title { font-size: 18px; color: #a0c0e0; margin-bottom: 20px; }
+        .style-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        .style-card {
+            background: rgba(60, 80, 120, 0.4);
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
-            margin-top: 60px;
-            color: #6080a0;
-            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        
+        .style-card:hover { transform: scale(1.05); }
+        .style-icon { font-size: 28px; margin-bottom: 8px; }
+        .style-name { font-size: 13px; color: #a0c0e0; }
+
+        /* 雷达图 */
+        .radar-container {
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .radar-bg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                rgba(100, 180, 140, 0.3) 0deg,
+                rgba(100, 160, 220, 0.3) 60deg,
+                rgba(180, 140, 220, 0.3) 120deg,
+                rgba(220, 140, 100, 0.3) 180deg,
+                rgba(220, 100, 160, 0.3) 240deg,
+                rgba(200, 200, 100, 0.3) 300deg,
+                rgba(100, 180, 140, 0.3) 360deg
+            );
+        }
+        .radar-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(30, 40, 60, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            color: #80a0c0;
+        }
+
+        /* 练习题册入口 */
+        .exercise-section {
+            background: linear-gradient(135deg, rgba(60, 180, 140, 0.2), rgba(60, 140, 180, 0.2));
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(60, 180, 140, 0.3);
+        }
+        .exercise-title { font-size: 20px; color: #80e0c0; margin-bottom: 10px; }
+        .exercise-desc { color: #80a0c0; font-size: 14px; margin-bottom: 20px; }
+        .exercise-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #40c0e0, #60c0a0);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .exercise-btn:hover { transform: scale(1.05); }
+
         /* 模态框 */
         .modal-overlay {
             position: fixed;
@@ -143,13 +247,16 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            padding: 20px;
         }
         .modal {
             background: linear-gradient(135deg, #1a1f35, #0f1623);
             border-radius: 16px;
             padding: 30px;
-            max-width: 500px;
-            width: 90%;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
             border: 1px solid rgba(80, 120, 180, 0.3);
         }
         .modal-header {
@@ -165,179 +272,461 @@
             color: #80a0c0;
         }
         .modal-body { color: #d0e0f0; }
-        .concept-box {
+        .info-box {
             background: rgba(60, 80, 120, 0.4);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
-            font-family: monospace;
         }
-        .questions-box {
-            background: rgba(60, 80, 120, 0.4);
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .question-item {
-            margin-bottom: 10px;
-            color: #a0c0e0;
+        .info-title { font-size: 14px; color: #80c0f0; margin-bottom: 8px; }
+        .info-content { font-size: 13px; color: #a0c0e0; line-height: 1.6; }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6080a0;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🧠 MLTutor</h1>
-            <p>建立直觉，理解算法，掌握机器学习</p>
+            <h1>🧠 MLTutor 个性化学习助手</h1>
+            <p>基于学习风格的自适应学习平台</p>
         </header>
 
-        <!-- 知识图谱 -->
-        <section class="knowledge-graph">
-            <div class="graph-title">📊 知识图谱进化史</div>
-            <div class="knowledge-map">
-                <span class="knowledge-item level-1">Lv1 线性回归</span>
-                <span class="knowledge-item level-1">Lv1 多项式回归</span>
-                <span class="knowledge-item level-2">Lv2 Ridge</span>
-                <span class="knowledge-item level-2">Lv2 Lasso</span>
-                <span class="knowledge-item level-1">Lv1 逻辑回归</span>
-                <span class="knowledge-item level-1">Lv1 KNN</span>
-                <span class="knowledge-item level-2">Lv2 决策树</span>
-                <span class="knowledge-item level-3">Lv3 随机森林</span>
-                <span class="knowledge-item level-3">Lv3 SVM</span>
-                <span class="knowledge-item level-2">Lv2 朴素贝叶斯</span>
-                <span class="knowledge-item level-3">Lv3 前馈网络</span>
-                <span class="knowledge-item level-4">Lv4 CNN</span>
-                <span class="knowledge-item level-4">Lv4 RNN</span>
-                <span class="knowledge-item level-4">Lv4 Attention</span>
-                <span class="knowledge-item level-1">Lv1 K-Means</span>
-                <span class="knowledge-item level-2">Lv2 DBSCAN</span>
-                <span class="knowledge-item level-2">Lv2 层次聚类</span>
-                <span class="knowledge-item level-2">Lv2 PCA</span>
-                <span class="knowledge-item level-2">Lv2 LDA</span>
-                <span class="knowledge-item level-2">Lv2 t-SNE</span>
-                <span class="knowledge-item level-5">Lv5 Q-Learning</span>
-                <span class="knowledge-item level-5">Lv5 策略梯度</span>
-                <span class="knowledge-item level-5">Lv5 Actor-Critic</span>
-            </div>
-            <div class="categories">
-                <span class="category-tag" onclick="filterByCategory('回归')">回归</span>
-                <span class="category-tag" onclick="filterByCategory('分类')">分类</span>
-                <span class="category-tag" onclick="filterByCategory('神经网络')">神经网络</span>
-                <span class="category-tag" onclick="filterByCategory('聚类')">聚类</span>
-                <span class="category-tag" onclick="filterByCategory('降维')">降维</span>
-                <span class="category-tag" onclick="filterByCategory('强化学习')">强化学习</span>
-            </div>
-        </section>
+        <!-- 导航标签 -->
+        <div class="tabs">
+            <span class="tab active" onclick="showTab('knowledge')">📊 知识图谱</span>
+            <span class="tab" onclick="showTab('courses')">📚 课程中心</span>
+            <span class="tab" onclick="showTab('learning-style')">🎯 学习风格</span>
+            <span class="tab" onclick="showTab('exercises')">✏️ 练习题册</span>
+        </div>
 
-        <!-- 算法列表 -->
-        <section class="algorithms-grid" id="algorithmsGrid">
-            <!-- 算法卡片将通过JS生成 -->
-        </section>
+        <!-- 知识图谱 -->
+        <div id="knowledge" class="knowledge-graph">
+            <div class="graph-header">
+                <div class="graph-title">📊 知识体系图谱</div>
+                <div class="legend">
+                    <span class="legend-item"><span class="legend-dot level-1"></span> 基础</span>
+                    <span class="legend-item"><span class="legend-dot level-2"></span> 进阶</span>
+                    <span class="legend-item"><span class="legend-dot level-3"></span> 高级</span>
+                    <span class="legend-item"><span class="legend-dot level-4"></span> 深度学习</span>
+                    <span class="legend-item"><span class="legend-dot level-5"></span> 专家级</span>
+                </div>
+            </div>
+            <div class="graph-nodes" id="graphNodes">
+                <!-- 节点由JS生成 -->
+            </div>
+        </div>
+
+        <!-- 课程中心 -->
+        <div id="courses" style="display: none;" class="courses-grid" id="coursesGrid">
+            <!-- 课程卡片由JS生成 -->
+        </div>
+
+        <!-- 学习风格评估 -->
+        <div id="learning-style" style="display: none;" class="learning-style-section">
+            <div class="style-title">🎯 学习风格评估</div>
+            <div class="style-grid">
+                <div class="style-card" onclick="selectStyle('visual')">
+                    <div class="style-icon">🎨</div>
+                    <div class="style-name">视觉型</div>
+                </div>
+                <div class="style-card" onclick="selectStyle('verbal')">
+                    <div class="style-icon">📖</div>
+                    <div class="style-name">语言型</div>
+                </div>
+                <div class="style-card" onclick="selectStyle('logical')">
+                    <div class="style-icon">🧮</div>
+                    <div class="style-name">逻辑型</div>
+                </div>
+                <div class="style-card" onclick="selectStyle('practical')">
+                    <div class="style-icon">🔧</div>
+                    <div class="style-name">实践型</div>
+                </div>
+                <div class="style-card" onclick="selectStyle('social')">
+                    <div class="style-icon">👥</div>
+                    <div class="style-name">社交型</div>
+                </div>
+                <div class="style-card" onclick="selectStyle('solitary')">
+                    <div class="style-icon">🙋</div>
+                    <div class="style-name">自主型</div>
+                </div>
+            </div>
+            <div class="radar-container">
+                <div class="radar-bg"></div>
+                <div class="radar-center">
+                    点击上方<br/>选择学习风格
+                </div>
+            </div>
+        </div>
+
+        <!-- 练习题册入口 -->
+        <div id="exercises" style="display: none;" class="exercise-section">
+            <div class="exercise-title">✏️ 精选练习题册</div>
+            <div class="exercise-desc">涵盖5门核心课程的精选题目，包含详细解析和个性化学习建议</div>
+            <button class="exercise-btn" onclick="openExerciseBook()">📚 开始练习</button>
+        </div>
+
+        <!-- 课程详情模态框 -->
+        <div class="modal-overlay" id="courseModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="courseModalTitle">课程详情</h3>
+                    <span class="close-btn" onclick="closeModal('courseModal')">&times;</span>
+                </div>
+                <div class="modal-body" id="courseModalContent"></div>
+            </div>
+        </div>
+
+        <!-- 知识点详情模态框 -->
+        <div class="modal-overlay" id="topicModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="topicModalTitle">知识点详情</h3>
+                    <span class="close-btn" onclick="closeModal('topicModal')">&times;</span>
+                </div>
+                <div class="modal-body" id="topicModalContent"></div>
+            </div>
+        </div>
 
         <footer>
-            <p>MLTutor - 机器学习可视化教学平台</p>
+            <p>MLTutor 个性化学习助手 | 基于学习风格的自适应学习平台</p>
         </footer>
     </div>
 
-    <!-- 算法详情模态框 -->
-    <div class="modal-overlay" id="algorithmModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="modalTitle">算法详情</h3>
-                <span class="close-btn" onclick="closeModal()">&times;</span>
-            </div>
-            <div class="modal-body" id="modalContent"></div>
-        </div>
-    </div>
-
     <script>
-        const algorithms = [
-            { name: '线性回归', level: 1, category: '回归', desc: '最基础的回归算法，用于预测连续数值', concept: 'y = ax + b', questions: ['为什么需要回归分析？', '如何评估回归模型的好坏？'] },
-            { name: '逻辑回归', level: 1, category: '分类', desc: '用于二分类问题，输出概率值', concept: 'sigmoid(z) = 1 / (1 + e^(-z))', questions: ['逻辑回归为什么叫回归？', 'sigmoid函数的作用是什么？'] },
-            { name: 'KNN', level: 1, category: '分类', desc: '通过最近的K个邻居进行分类', concept: '距离度量 + 投票机制', questions: ['K值如何选择？', '距离度量方法有哪些？'] },
-            { name: 'K-Means', level: 1, category: '聚类', desc: '无监督学习中最常用的聚类算法', concept: '质心更新 + 分配', questions: ['如何确定K值？', 'K-Means的优缺点是什么？'] },
-            { name: 'PCA', level: 2, category: '降维', desc: '主成分分析用于数据降维和特征提取', concept: '协方差矩阵 + 特征值分解', questions: ['PCA的数学原理是什么？', '为什么要进行数据标准化？'] },
-            { name: '决策树', level: 2, category: '分类', desc: '通过递归划分特征空间进行分类', concept: '信息增益 + 剪枝', questions: ['如何选择分裂特征？', '过拟合如何处理？'] },
-            { name: 'SVM', level: 3, category: '分类', desc: '在高维空间中寻找最优超平面', concept: '最大间隔 + 核函数', questions: ['核函数的作用是什么？', '软间隔和硬间隔的区别？'] },
-            { name: '神经网络', level: 3, category: '神经网络', desc: '多层感知机是深度学习的基础模型', concept: '前向传播 + 反向传播', questions: ['梯度消失问题如何解决？', '激活函数的作用？'] },
-            { name: 'CNN', level: 4, category: '神经网络', desc: '专门处理图像数据的卷积神经网络', concept: '卷积 + 池化', questions: ['卷积操作的作用是什么？', '为什么需要池化层？'] },
-            { name: 'RNN', level: 4, category: '神经网络', desc: '处理序列数据的循环神经网络', concept: '隐藏状态 + 时间步', questions: ['RNN的梯度消失问题？', 'LSTM如何改进RNN？'] },
-            { name: 'Attention', level: 4, category: '神经网络', desc: '让模型关注输入的不同部分', concept: 'QKV + 缩放点积', questions: ['Transformer为什么需要多头注意力？', '自注意力的计算复杂度？'] },
-            { name: 'Q-Learning', level: 5, category: '强化学习', desc: '一种值迭代的强化学习算法', concept: 'Q值更新 + ε-greedy', questions: ['探索与利用的平衡？', '折扣因子的作用？'] },
-            { name: 'Ridge回归', level: 2, category: '回归', desc: '带L2正则化的线性回归', concept: 'min ||y - Xβ||² + λ||β||²', questions: ['正则化的作用是什么？', 'Ridge和Lasso的区别？'] },
-            { name: 'Lasso回归', level: 2, category: '回归', desc: '带L1正则化的线性回归，可做特征选择', concept: 'min ||y - Xβ||² + λ||β||₁', questions: ['L1正则化为什么能做特征选择？', '何时选择Lasso？'] },
-            { name: '多项式回归', level: 1, category: '回归', desc: '处理非线性关系的回归模型', concept: 'y = a₀ + a₁x + a₂x² + ...', questions: ['多项式次数如何选择？', '过拟合风险如何控制？'] },
-            { name: '朴素贝叶斯', level: 2, category: '分类', desc: '基于贝叶斯定理的分类算法', concept: 'P(C|X) ∝ P(X|C)P(C)', questions: ['朴素假设是什么？', '为什么朴素贝叶斯效果好？'] },
-            { name: '随机森林', level: 3, category: '分类', desc: '集成学习方法，多个决策树投票', concept: 'Bootstrap + 随机特征选择', questions: ['随机森林如何减少过拟合？', '为什么需要随机性？'] },
-            { name: 'DBSCAN', level: 2, category: '聚类', desc: '基于密度的聚类算法', concept: 'ε邻域 + 核心点', questions: ['DBSCAN如何处理噪声？', '参数如何选择？'] },
-            { name: '层次聚类', level: 2, category: '聚类', desc: '构建层次化的聚类树', concept: '凝聚式/分裂式', questions: ['凝聚式和分裂式的区别？', '如何确定聚类数量？'] },
-            { name: 'LDA', level: 2, category: '降维', desc: '线性判别分析，有监督降维', concept: '最大化类间距离，最小化类内距离', questions: ['LDA和PCA的区别？', 'LDA的假设是什么？'] },
-            { name: 't-SNE', level: 2, category: '降维', desc: '非线性降维，用于可视化', concept: '保留局部结构', questions: ['t-SNE的优缺点？', '为什么适合可视化？'] },
-            { name: '策略梯度', level: 5, category: '强化学习', desc: '直接优化策略函数', concept: '∇J(θ) = E[∇logπ(a|s)A(s,a)]', questions: ['策略梯度的方差问题？', '优势函数的作用？'] },
-            { name: 'Actor-Critic', level: 5, category: '强化学习', desc: '结合策略梯度和值函数', concept: 'Actor策略网络 + Critic价值网络', questions: ['Actor-Critic的优势？', '如何稳定训练？'] }
+        // 知识图谱数据
+        const knowledgeNodes = [
+            // AI数学思维
+            { name: '人工智能概述', level: 1, category: 'ai_math', desc: 'AI发展历程与核心概念' },
+            { name: '机器学习基础', level: 2, category: 'ai_math', desc: '监督/无监督/强化学习' },
+            { name: '神经网络', level: 3, category: 'ai_math', desc: '感知器、多层神经网络' },
+            { name: '深度学习', level: 4, category: 'ai_math', desc: '深层网络架构与训练' },
+            { name: '卷积神经网络', level: 4, category: 'ai_math', desc: 'CNN原理与应用' },
+            // 数据结构
+            { name: '栈和队列', level: 1, category: 'data_struct', desc: '基本线性数据结构' },
+            { name: '链表', level: 1, category: 'data_struct', desc: '单链表、双链表' },
+            { name: '树结构', level: 2, category: 'data_struct', desc: '二叉树、BST、AVL' },
+            { name: '图算法', level: 3, category: 'data_struct', desc: '图的遍历与最短路径' },
+            { name: '排序算法', level: 2, category: 'data_struct', desc: '快速排序、归并排序等' },
+            { name: '查找算法', level: 2, category: 'data_struct', desc: '二分查找、哈希查找' },
+            // 离散数学
+            { name: '集合论', level: 1, category: 'discrete', desc: '集合运算与关系' },
+            { name: '命题逻辑', level: 1, category: 'discrete', desc: '命题与真值表' },
+            { name: '谓词逻辑', level: 2, category: 'discrete', desc: '量词与推理' },
+            { name: '图论', level: 2, category: 'discrete', desc: '图的基本概念' },
+            { name: '代数结构', level: 3, category: 'discrete', desc: '群、环、域' },
+            // 计算机系统
+            { name: '信息表示', level: 1, category: 'computer', desc: '二进制与编码' },
+            { name: '浮点数', level: 2, category: 'computer', desc: 'IEEE 754标准' },
+            { name: '机器指令', level: 2, category: 'computer', desc: '指令格式与寻址' },
+            { name: '程序优化', level: 3, category: 'computer', desc: '性能优化技术' },
+            { name: '虚拟内存', level: 3, category: 'computer', desc: '分页与分段' },
+            // 算法分析
+            { name: '动态规划', level: 3, category: 'algorithm', desc: '最优子结构与重叠子问题' },
+            { name: '贪心算法', level: 3, category: 'algorithm', desc: '局部最优选择' },
+            { name: '复杂度分析', level: 2, category: 'algorithm', desc: '时间/空间复杂度' },
+            { name: 'Dijkstra', level: 3, category: 'algorithm', desc: '最短路径算法' },
+            { name: 'NP问题', level: 5, category: 'algorithm', desc: '计算复杂性理论' }
         ];
 
-        function renderAlgorithms(filterCategory = null) {
-            const grid = document.getElementById('algorithmsGrid');
-            const filtered = filterCategory 
-                ? algorithms.filter(a => a.category === filterCategory)
-                : algorithms;
-            
-            grid.innerHTML = filtered.map(alg => `
-                <div class="algorithm-card" onclick="openAlgorithm('${alg.name}')">
-                    <div class="algorithm-header">
-                        <span class="algorithm-name">${alg.name}</span>
-                        <span class="algorithm-level level-${alg.level}">Lv${alg.level}</span>
-                    </div>
-                    <div class="algorithm-desc">${alg.desc}</div>
+        // 课程数据
+        const courses = [
+            {
+                id: 'ai_math_thinking',
+                name: '人工智能数学思维',
+                difficulty: 'medium',
+                topics: ['人工智能概述', '机器学习基础', '神经网络', '深度学习', '卷积神经网络'],
+                desc: '培养AI领域的数学思维能力',
+                estimatedTime: 180,
+                prerequisites: []
+            },
+            {
+                id: 'data_structures',
+                name: '数据结构与算法',
+                difficulty: 'hard',
+                topics: ['栈和队列', '链表', '树结构', '图算法', '排序算法', '查找算法'],
+                desc: '掌握核心数据结构与算法设计',
+                estimatedTime: 240,
+                prerequisites: ['编程基础']
+            },
+            {
+                id: 'discrete_math',
+                name: '离散数学',
+                difficulty: 'easy',
+                topics: ['集合论', '图论', '命题逻辑', '谓词逻辑', '代数结构'],
+                desc: '计算机科学的数学基础',
+                estimatedTime: 200,
+                prerequisites: []
+            },
+            {
+                id: 'computer_systems',
+                name: '计算机系统',
+                difficulty: 'medium',
+                topics: ['信息表示', '浮点数', '机器指令', '程序优化', '虚拟内存'],
+                desc: '深入理解计算机系统底层原理',
+                estimatedTime: 190,
+                prerequisites: ['编程基础']
+            },
+            {
+                id: 'algorithm_analysis',
+                name: '算法设计与分析',
+                difficulty: 'hard',
+                topics: ['排序算法', '动态规划', '贪心算法', '复杂度分析', 'Dijkstra'],
+                desc: '高级算法设计与复杂度分析',
+                estimatedTime: 220,
+                prerequisites: ['数据结构基础']
+            }
+        ];
+
+        // 知识点详情
+        const topicDetails = {
+            '人工智能概述': {
+                concept: '人工智能是计算机科学的一个分支，致力于研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统。',
+                questions: ['AI的主要应用领域有哪些？', '强AI和弱AI的区别是什么？']
+            },
+            '机器学习基础': {
+                concept: '机器学习是一种人工智能技术，使计算机能够从数据中学习模式，而无需显式编程。',
+                questions: ['监督学习和无监督学习的区别？', '什么是过拟合？如何避免？']
+            },
+            '神经网络': {
+                concept: '神经网络是由大量人工神经元相互连接组成的计算模型，模拟生物神经网络的结构和功能。',
+                questions: ['神经网络的基本组成单元是什么？', '反向传播算法的原理是什么？']
+            },
+            '深度学习': {
+                concept: '深度学习是机器学习的一个子领域，使用多层神经网络来学习数据的多层次抽象表示。',
+                questions: ['深度学习与传统机器学习的区别？', '梯度消失问题如何解决？']
+            },
+            '卷积神经网络': {
+                concept: 'CNN是一种专门用于处理网格状数据（如图像）的深度学习模型，使用卷积操作提取特征。',
+                questions: ['卷积操作的作用是什么？', '为什么需要池化层？']
+            },
+            '栈和队列': {
+                concept: '栈是后进先出(LIFO)的数据结构，队列是先进先出(FIFO)的数据结构。',
+                questions: ['栈和队列的实际应用场景？', '如何用栈实现队列？']
+            },
+            '链表': {
+                concept: '链表是由节点组成的线性数据结构，每个节点包含数据和指向下一个节点的指针。',
+                questions: ['链表和数组的区别？', '如何反转链表？']
+            },
+            '树结构': {
+                concept: '树是一种层次化的数据结构，由节点和边组成，具有根节点、子节点和叶子节点。',
+                questions: ['二叉搜索树的性质？', '如何进行二叉树的遍历？']
+            },
+            '图算法': {
+                concept: '图是由顶点和边组成的数据结构，图算法用于解决图上的各种问题。',
+                questions: ['BFS和DFS的区别？', '什么是拓扑排序？']
+            },
+            '排序算法': {
+                concept: '排序算法是将一组数据按照特定顺序排列的算法。',
+                questions: ['快速排序的时间复杂度？', '归并排序的空间复杂度？']
+            },
+            '查找算法': {
+                concept: '查找算法用于在数据集中查找特定元素的位置。',
+                questions: ['二分查找的前提条件？', '哈希表的冲突解决方法？']
+            },
+            '集合论': {
+                concept: '集合论是研究集合的数学分支，集合是由确定的、互不相同的对象组成的整体。',
+                questions: ['集合的基本运算有哪些？', '什么是幂集？']
+            },
+            '命题逻辑': {
+                concept: '命题逻辑是研究命题及其推理的逻辑分支。',
+                questions: ['什么是命题？', '真值表的作用是什么？']
+            },
+            '谓词逻辑': {
+                concept: '谓词逻辑扩展了命题逻辑，引入了量词和谓词。',
+                questions: ['全称量词和存在量词的区别？', '如何进行谓词逻辑推理？']
+            },
+            '图论': {
+                concept: '图论是研究图的性质和应用的数学分支。',
+                questions: ['图的基本概念有哪些？', '欧拉图和哈密顿图的区别？']
+            },
+            '代数结构': {
+                concept: '代数结构是带有运算的集合，如群、环、域等。',
+                questions: ['什么是群？', '环和域的区别？']
+            },
+            '信息表示': {
+                concept: '计算机中信息的表示方法，包括二进制、编码等。',
+                questions: ['二进制如何表示负数？', 'ASCII码和Unicode的区别？']
+            },
+            '浮点数': {
+                concept: '浮点数是用于表示实数的一种数据类型，遵循IEEE 754标准。',
+                questions: ['浮点数的表示格式？', '为什么浮点数运算有精度问题？']
+            },
+            '机器指令': {
+                concept: '机器指令是计算机能够直接执行的指令，由操作码和操作数组成。',
+                questions: ['指令的基本格式？', '寻址方式有哪些？']
+            },
+            '程序优化': {
+                concept: '通过各种技术提高程序的性能和效率。',
+                questions: ['程序优化的基本原则？', '缓存优化的方法？']
+            },
+            '虚拟内存': {
+                concept: '虚拟内存是操作系统提供的一种内存管理技术，将磁盘空间当作内存使用。',
+                questions: ['分页和分段的区别？', '页面置换算法有哪些？']
+            },
+            '动态规划': {
+                concept: '动态规划是一种将复杂问题分解为子问题来求解的算法设计方法。',
+                questions: ['动态规划的适用条件？', '最优子结构和重叠子问题的含义？']
+            },
+            '贪心算法': {
+                concept: '贪心算法在每一步都做出当前最优的选择，希望最终得到全局最优解。',
+                questions: ['贪心算法的适用条件？', '与动态规划的区别？']
+            },
+            '复杂度分析': {
+                concept: '复杂度分析用于评估算法的时间和空间效率。',
+                questions: ['时间复杂度的表示方法？', '什么是NP问题？']
+            },
+            'Dijkstra': {
+                concept: 'Dijkstra算法用于在加权图中寻找单源最短路径。',
+                questions: ['Dijkstra算法的时间复杂度？', '能否处理负权边？']
+            },
+            'NP问题': {
+                concept: 'NP问题是指可以在多项式时间内验证解的正确性但尚未找到多项式时间算法的问题。',
+                questions: ['P问题和NP问题的区别？', '什么是NP完全问题？']
+            }
+        };
+
+        // 渲染知识图谱
+        function renderKnowledgeGraph() {
+            const container = document.getElementById('graphNodes');
+            container.innerHTML = knowledgeNodes.map(node => `
+                <div class="graph-node level-${node.level}" onclick="openTopicDetail('${node.name}')" title="${node.desc}">
+                    ${node.name}
                 </div>
             `).join('');
         }
 
-        function filterByCategory(category) {
-            renderAlgorithms(category);
+        // 渲染课程卡片
+        function renderCourses() {
+            const container = document.getElementById('courses');
+            container.innerHTML = courses.map(course => `
+                <div class="course-card" onclick="openCourseDetail('${course.id}')">
+                    <div class="course-header">
+                        <span class="course-name">${course.name}</span>
+                        <span class="course-difficulty ${course.difficulty}">${course.difficulty === 'easy' ? '简单' : course.difficulty === 'medium' ? '中等' : '困难'}</span>
+                    </div>
+                    <div style="color:#80a0c0;font-size:13px;margin-bottom:10px;">${course.desc}</div>
+                    <div style="color:#6080a0;font-size:12px;">预计学习时间: ${course.estimatedTime}分钟</div>
+                    <div class="course-topics">
+                        ${course.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function openAlgorithm(name) {
-            const alg = algorithms.find(a => a.name === name);
-            if (!alg) return;
+        // 切换标签
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
             
-            document.getElementById('modalTitle').textContent = `📚 ${alg.name}`;
-            document.getElementById('modalContent').innerHTML = `
-                <div style="display:flex;gap:10px;margin-bottom:15px;">
-                    <span class="algorithm-level level-${alg.level}">Lv${alg.level}</span>
-                    <span class="category-tag">${alg.category}</span>
+            document.getElementById('knowledge').style.display = tabName === 'knowledge' ? 'block' : 'none';
+            document.getElementById('courses').style.display = tabName === 'courses' ? 'grid' : 'none';
+            document.getElementById('learning-style').style.display = tabName === 'learning-style' ? 'block' : 'none';
+            document.getElementById('exercises').style.display = tabName === 'exercises' ? 'block' : 'none';
+        }
+
+        // 打开课程详情
+        function openCourseDetail(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+            
+            document.getElementById('courseModalTitle').textContent = course.name;
+            document.getElementById('courseModalContent').innerHTML = `
+                <div class="info-box">
+                    <div class="info-title">📖 课程简介</div>
+                    <div class="info-content">${course.desc}</div>
                 </div>
-                <div style="margin-bottom:15px;">
-                    <div style="font-size:13px;color:#80a0c0;margin-bottom:8px;">💡 核心概念</div>
-                    <div class="concept-box">${alg.concept}</div>
+                <div class="info-box">
+                    <div class="info-title">⏱️ 预计学习时间</div>
+                    <div class="info-content">${course.estimatedTime}分钟</div>
                 </div>
-                <div style="margin-bottom:15px;">
-                    <div style="font-size:13px;color:#80a0c0;margin-bottom:8px;">📖 算法介绍</div>
-                    <div style="color:#a0c0e0;">${alg.desc}</div>
+                <div class="info-box">
+                    <div class="info-title">📊 难度等级</div>
+                    <div class="info-content">${course.difficulty === 'easy' ? '简单' : course.difficulty === 'medium' ? '中等' : '困难'}</div>
                 </div>
-                <div>
-                    <div style="font-size:13px;color:#80a0c0;margin-bottom:8px;">🤔 思考题</div>
-                    <div class="questions-box">
-                        ${alg.questions.map((q, i) => `<div class="question-item">${i+1}. ${q}</div>`).join('')}
+                <div class="info-box">
+                    <div class="info-title">📚 学习内容</div>
+                    <div class="info-content">${course.topics.join(' → ')}</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-title">📋 前置知识</div>
+                    <div class="info-content">${course.prerequisites.length > 0 ? course.prerequisites.join('、') : '无'}</div>
+                </div>
+            `;
+            document.getElementById('courseModal').style.display = 'flex';
+        }
+
+        // 打开知识点详情
+        function openTopicDetail(topicName) {
+            const detail = topicDetails[topicName];
+            if (!detail) return;
+            
+            document.getElementById('topicModalTitle').textContent = topicName;
+            document.getElementById('topicModalContent').innerHTML = `
+                <div class="info-box">
+                    <div class="info-title">💡 核心概念</div>
+                    <div class="info-content">${detail.concept}</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-title">🤔 思考题</div>
+                    <div class="info-content">
+                        ${detail.questions.map((q, i) => `${i+1}. ${q}`).join('<br/>')}
                     </div>
                 </div>
             `;
-            document.getElementById('algorithmModal').style.display = 'flex';
+            document.getElementById('topicModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('algorithmModal').style.display = 'none';
+        // 选择学习风格
+        function selectStyle(style) {
+            const styleNames = {
+                visual: '视觉型学习者',
+                verbal: '语言型学习者',
+                logical: '逻辑型学习者',
+                practical: '实践型学习者',
+                social: '社交型学习者',
+                solitary: '自主型学习者'
+            };
+            
+            const suggestions = {
+                visual: '建议：多使用图表、思维导图、视频教程进行学习',
+                verbal: '建议：多阅读教材、笔记，通过文字理解概念',
+                logical: '建议：注重理论推导，通过数学证明加深理解',
+                practical: '建议：多进行实践操作，通过代码实现巩固知识',
+                social: '建议：参与学习小组，通过讨论交流加深理解',
+                solitary: '建议：制定个人学习计划，独立深入研究'
+            };
+
+            alert(`${styleNames[style]}\n\n${suggestions[style]}`);
+        }
+
+        // 打开练习题册
+        function openExerciseBook() {
+            window.open('learning-terminal.html', '_blank');
+        }
+
+        // 关闭模态框
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
         // 点击模态框外部关闭
-        document.getElementById('algorithmModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('algorithmModal')) {
-                closeModal();
-            }
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         });
 
         // 初始化
-        renderAlgorithms();
+        renderKnowledgeGraph();
+        renderCourses();
     </script>
 </body>
 </html>
