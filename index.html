@@ -8,193 +8,407 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: linear-gradient(135deg, #0a0e18 0%, #111a28 50%, #0d1321 100%);
-            color: #d0e0f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0f0ff;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
         }
         .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
         
         header { 
             text-align: center; 
             padding: 60px 20px 30px;
+            position: relative;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #40c0e0, transparent);
         }
         header h1 {
-            font-size: 52px;
+            font-size: 56px;
             margin-bottom: 15px;
-            background: linear-gradient(90deg, #40c0e0, #80e0c0, #40c0e0);
-            background-size: 200% auto;
+            background: linear-gradient(90deg, #40c0e0, #80e0c0, #a080e0, #40c0e0);
+            background-size: 300% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: shimmer 3s linear infinite;
+            animation: shimmer 4s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(64, 192, 224, 0.3);
+            letter-spacing: 4px;
         }
         @keyframes shimmer {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            0%, 100% { background-position: 0% center; }
+            50% { background-position: 200% center; }
         }
-        header p { color: #80a0c0; font-size: 18px; }
+        header p { 
+            color: #80b0d0; 
+            font-size: 20px;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
 
         .knowledge-graph {
-            background: rgba(30, 40, 60, 0.6);
-            border-radius: 20px;
-            padding: 30px;
+            background: rgba(30, 40, 60, 0.7);
+            border-radius: 24px;
+            padding: 40px;
             margin-bottom: 30px;
-            border: 1px solid rgba(80, 120, 180, 0.2);
+            border: 1px solid rgba(80, 120, 180, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
         .graph-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             flex-wrap: wrap;
             gap: 15px;
         }
-        .graph-title { font-size: 20px; color: #a0c0e0; }
-        .legend { display: flex; gap: 15px; flex-wrap: wrap; font-size: 13px; }
-        .legend-item { display: flex; align-items: center; gap: 8px; }
-        .legend-dot { width: 14px; height: 14px; border-radius: 50%; }
-        .legend-dot.level-1 { background: #60c0a0; }
-        .legend-dot.level-2 { background: #60c0f0; }
-        .legend-dot.level-3 { background: #a080e0; }
-        .legend-dot.level-4 { background: #e08060; }
-        .legend-dot.level-5 { background: #e060a0; }
+        .graph-title { 
+            font-size: 24px; 
+            color: #a0c0e0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .legend { 
+            display: flex; 
+            gap: 20px; 
+            flex-wrap: wrap; 
+            font-size: 14px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+        .legend-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            padding: 6px 12px;
+            background: rgba(60, 100, 160, 0.2);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        .legend-item:hover {
+            background: rgba(60, 100, 160, 0.4);
+            transform: translateY(-2px);
+        }
+        .legend-dot { 
+            width: 16px; 
+            height: 16px; 
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+        .legend-dot.level-1 { background: #60c0a0; color: #60c0a0; }
+        .legend-dot.level-2 { background: #60c0f0; color: #60c0f0; }
+        .legend-dot.level-3 { background: #a080e0; color: #a080e0; }
+        .legend-dot.level-4 { background: #e08060; color: #e08060; }
+        .legend-dot.level-5 { background: #e060a0; color: #e060a0; }
 
         .graph-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 18px;
             justify-items: center;
         }
         .graph-node {
-            padding: 12px 20px;
-            border-radius: 12px;
+            padding: 16px 24px;
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px;
             text-align: center;
             border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
-        .graph-node:hover { transform: translateY(-5px); }
-        .graph-node.level-1 { background: rgba(96, 192, 160, 0.3); color: #60c0a0; border-color: rgba(96, 192, 160, 0.5); }
-        .graph-node.level-2 { background: rgba(96, 192, 240, 0.3); color: #60c0f0; border-color: rgba(96, 192, 240, 0.5); }
-        .graph-node.level-3 { background: rgba(160, 128, 224, 0.3); color: #a080e0; border-color: rgba(160, 128, 224, 0.5); }
-        .graph-node.level-4 { background: rgba(224, 128, 96, 0.3); color: #e08060; border-color: rgba(224, 128, 96, 0.5); }
-        .graph-node.level-5 { background: rgba(224, 96, 160, 0.3); color: #e060a0; border-color: rgba(224, 96, 160, 0.5); }
+        .graph-node::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        .graph-node:hover::before {
+            left: 100%;
+        }
+        .graph-node:hover { 
+            transform: translateY(-8px) scale(1.05); 
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(64, 192, 224, 0.3);
+        }
+        .graph-node.level-1 { 
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.25), rgba(96, 192, 160, 0.1)); 
+            color: #60c0a0; 
+            border-color: rgba(96, 192, 160, 0.6);
+        }
+        .graph-node.level-2 { 
+            background: linear-gradient(135deg, rgba(96, 192, 240, 0.25), rgba(96, 192, 240, 0.1)); 
+            color: #60c0f0; 
+            border-color: rgba(96, 192, 240, 0.6);
+        }
+        .graph-node.level-3 { 
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.25), rgba(160, 128, 224, 0.1)); 
+            color: #a080e0; 
+            border-color: rgba(160, 128, 224, 0.6);
+        }
+        .graph-node.level-4 { 
+            background: linear-gradient(135deg, rgba(224, 128, 96, 0.25), rgba(224, 128, 96, 0.1)); 
+            color: #e08060; 
+            border-color: rgba(224, 128, 96, 0.6);
+        }
+        .graph-node.level-5 { 
+            background: linear-gradient(135deg, rgba(224, 96, 160, 0.25), rgba(224, 96, 160, 0.1)); 
+            color: #e060a0; 
+            border-color: rgba(224, 96, 160, 0.6);
+        }
 
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(10, 14, 24, 0.98);
             display: none;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             z-index: 1000;
-            padding: 20px;
+            padding: 30px;
+            backdrop-filter: blur(20px);
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .modal {
-            background: linear-gradient(135deg, #1a1f35, #0f1623);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 900px;
             width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(80, 120, 180, 0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: 30px;
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(80, 120, 180, 0.3);
         }
-        .modal-header h3 { font-size: 24px; color: #d0e0f0; }
+        .modal-header h3 { 
+            font-size: 32px; 
+            color: #f0f8ff;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
         .close-btn {
-            font-size: 28px;
+            font-size: 40px;
             cursor: pointer;
             color: #80a0c0;
             transition: all 0.3s;
-        }
-        .close-btn:hover { color: #fff; }
-
-        .content-card {
-            background: rgba(60, 80, 120, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(80, 120, 180, 0.2);
-        }
-        .card-title {
-            font-size: 16px;
-            color: #80c0f0;
-            margin-bottom: 12px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
         }
-        .card-content {
-            color: #a0c0e0;
-            line-height: 1.7;
-            font-size: 14px;
+        .close-btn:hover { 
+            color: #fff; 
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
         }
 
-        .slider-section { margin-top: 20px; }
+        .content-card {
+            background: linear-gradient(135deg, rgba(40, 55, 80, 0.6), rgba(25, 35, 55, 0.4));
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(80, 120, 180, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        .card-title {
+            font-size: 20px;
+            color: #40c0e0;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .card-content {
+            color: #c0d0e0;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        .card-content p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+        .card-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .slider-section { margin-top: 25px; }
         .slider-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #a0c0e0;
         }
         .slider-value {
             color: #40c0e0;
             font-weight: bold;
-            font-family: monospace;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 18px;
         }
         input[type="range"] {
             width: 100%;
-            height: 8px;
-            background: rgba(60, 100, 160, 0.5);
-            border-radius: 4px;
+            height: 10px;
+            background: linear-gradient(90deg, rgba(60, 100, 160, 0.6), rgba(64, 192, 224, 0.3));
+            border-radius: 5px;
             outline: none;
             cursor: pointer;
             -webkit-appearance: none;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             background: linear-gradient(135deg, #40c0e0, #80e0c0);
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(64, 192, 224, 0.5);
+            transition: all 0.3s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(64, 192, 224, 0.7);
         }
 
         .related-topics {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 18px;
         }
         .related-tag {
-            padding: 6px 16px;
-            background: rgba(180, 140, 220, 0.2);
-            border-radius: 20px;
-            font-size: 13px;
-            color: #a080e0;
-            border: 1px solid rgba(180, 140, 220, 0.3);
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.2), rgba(140, 100, 200, 0.1));
+            border-radius: 25px;
+            font-size: 14px;
+            color: #b090f0;
+            border: 1px solid rgba(180, 140, 220, 0.4);
             cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+        }
+        .related-tag:hover { 
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.35), rgba(140, 100, 200, 0.25));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(160, 128, 224, 0.35);
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(20, 30, 50, 0.4));
+            padding: 24px;
+            border-radius: 14px;
+            border-left: 5px solid #40c0e0;
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 17px;
+            color: #c0e0f0;
+            white-space: pre-wrap;
+            line-height: 2;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(64, 192, 224, 0.2);
             transition: all 0.3s;
         }
-        .related-tag:hover { background: rgba(180, 140, 220, 0.3); }
+        .stat-card:hover {
+            background: rgba(0, 0, 0, 0.45);
+            border-color: rgba(64, 192, 224, 0.4);
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #80a0c0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scenario-tag {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.2), rgba(96, 192, 160, 0.1));
+            border-radius: 18px;
+            font-size: 14px;
+            color: #70d0b0;
+            border: 1px solid rgba(96, 192, 160, 0.3);
+            transition: all 0.3s;
+        }
+        .scenario-tag:hover {
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.3), rgba(96, 192, 160, 0.15));
+            transform: translateY(-2px);
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(60, 140, 200, 0.2), rgba(60, 140, 200, 0.1));
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 4px solid #40c0e0;
+        }
+        .intuition-box strong {
+            color: #50d0f0;
+            font-weight: 600;
+        }
 
         footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 50px 20px;
             color: #6080a0;
-            font-size: 14px;
+            font-size: 15px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            margin-top: 30px;
         }
 
         @media (max-width: 768px) {
-            header h1 { font-size: 36px; }
+            header h1 { font-size: 36px; letter-spacing: 2px; }
+            header p { font-size: 16px; }
+            .graph-container { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
+            .graph-node { padding: 12px 16px; font-size: 13px; }
+            .modal-header h3 { font-size: 24px; }
+            .stats-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -266,327 +480,330 @@
         const topicDetails = {
             '线性回归': {
                 level: 1,
-                definition: '线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。',
-                intuition: '想象你在散点图中画一条线，让所有点到这条线的距离平方和最小。这条线就是最佳拟合线。',
-                formula: 'ŷ = wx + b',
-                loss: 'J(w,b) = (1/n)Σ(yᵢ - ŷᵢ)²',
-                scenarios: ['房价预测', '销量预测', '成绩预测'],
-                related: ['逻辑回归', '岭回归', 'SVM'],
+                definition: '线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。通过最小化预测值与实际值之间的均方误差来训练模型。',
+                intuition: '想象你在散点图中画一条线，让所有点到这条线的距离平方和最小。这条线就是最佳拟合线，能够最好地代表数据的趋势。',
+                formula: 'ŷ = w₁x₁ + w₂x₂ + ... + wₙxₙ + b\n= Σwᵢxᵢ + b',
+                loss: 'J(w,b) = (1/(2n)) Σ(yᵢ - ŷᵢ)²',
+                scenarios: ['房价预测', '销量预测', '成绩预测', '温度预测'],
+                related: ['逻辑回归', '岭回归', 'SVM', '多元线性回归'],
                 hasVisualization: true,
                 vizType: 'regression',
-                history: '线性回归由弗朗西斯·高尔顿在19世纪末提出，用于研究父子身高关系。',
-                limitations: '只能捕捉线性关系，对异常值敏感，需要假设数据服从正态分布。',
+                history: '线性回归由弗朗西斯·高尔顿在19世纪末提出，用于研究父子身高关系。后来被卡尔·皮尔逊发展完善，成为统计学的核心方法。',
+                limitations: '只能捕捉线性关系，对异常值敏感，需要假设数据服从正态分布，无法处理非线性问题。',
                 stats: { accuracy: 92, complexity: 'O(n)', usage: '广泛' }
             },
             '逻辑回归': {
                 level: 1,
-                definition: '逻辑回归是一种用于二分类问题的监督学习算法，输出概率值表示样本属于某一类的可能性。',
-                intuition: '在线性回归的基础上，使用sigmoid函数将输出映射到0-1之间，表示概率。',
-                formula: 'σ(z) = 1 / (1 + e^(-z))',
+                definition: '逻辑回归是一种用于二分类问题的监督学习算法，输出概率值表示样本属于某一类的可能性。通过sigmoid函数将线性组合映射到0-1区间。',
+                intuition: '在线性回归的基础上，使用sigmoid函数将输出压缩到0-1之间，表示样本属于正类的概率。概率大于0.5则预测为正类，否则为负类。',
+                formula: 'σ(z) = 1 / (1 + e^(-z))\n其中 z = w·x + b',
                 loss: '交叉熵损失: L = -[y·log(ŷ) + (1-y)·log(1-ŷ)]',
-                scenarios: ['垃圾邮件检测', '疾病诊断', '信用评分'],
-                related: ['线性回归', 'SVM', '神经网络'],
+                scenarios: ['垃圾邮件检测', '疾病诊断', '信用评分', '欺诈检测'],
+                related: ['线性回归', 'SVM', '神经网络', 'Softmax回归'],
                 hasVisualization: true,
                 vizType: 'sigmoid',
-                history: '逻辑回归由统计学家大卫·考克斯在1958年提出，最初用于生物统计分析。',
-                limitations: '只能处理二分类问题，对特征线性可分假设较强。',
+                history: '逻辑回归由统计学家大卫·考克斯在1958年提出，最初用于生物统计分析，现已成为分类问题的标准方法。',
+                limitations: '只能处理二分类问题，对特征线性可分假设较强，无法直接处理多分类问题（需扩展为Softmax回归）。',
                 stats: { accuracy: 88, complexity: 'O(n)', usage: '广泛' }
             },
             'KNN': {
                 level: 1,
-                definition: 'K近邻算法是一种简单的监督学习算法，通过找到最近的K个邻居来进行分类或回归。',
-                intuition: '物以类聚，人以群分。一个样本的类别由它周围最近的邻居投票决定。',
-                formula: '距离 = √Σ(xᵢ - yᵢ)²',
-                scenarios: ['推荐系统', '图像分类', '异常检测'],
-                related: ['决策树', 'K-Means', 'SVM'],
+                definition: 'K近邻算法是一种简单的监督学习算法，通过找到最近的K个邻居来进行分类或回归。分类时采用多数投票，回归时采用平均。',
+                intuition: '物以类聚，人以群分。一个样本的类别由它周围最近的K个邻居投票决定，距离越近的邻居权重越高。',
+                formula: '欧氏距离: d(x,y) = √Σ(xᵢ - yᵢ)²\n曼哈顿距离: d(x,y) = Σ|xᵢ - yᵢ|',
+                scenarios: ['推荐系统', '图像分类', '异常检测', '手写识别'],
+                related: ['决策树', 'K-Means', 'SVM', '距离度量学习'],
                 hasVisualization: true,
                 vizType: 'knn',
-                history: 'KNN算法由Cover和Hart在1967年正式提出，是最经典的机器学习算法之一。',
-                limitations: '计算复杂度高，需要大量内存，K值选择敏感。',
+                history: 'KNN算法由Cover和Hart在1967年正式提出，是最经典的机器学习算法之一，因其简单直观而被广泛应用。',
+                limitations: '计算复杂度高（预测时需遍历所有样本），需要大量内存，K值选择敏感，对高维数据效果差。',
                 stats: { accuracy: 85, complexity: 'O(n)', usage: '中等' }
             },
             '机器学习基础': {
                 level: 2,
-                definition: '机器学习是人工智能的一个分支，它使计算机能够从数据中学习模式，而无需显式编程。主要分为监督学习、无监督学习和强化学习。',
-                intuition: '让计算机像人类一样从经验中学习，通过大量数据训练模型来做出预测或决策。',
+                definition: '机器学习是人工智能的一个分支，它使计算机能够从数据中学习模式，而无需显式编程。主要分为监督学习、无监督学习和强化学习三大类。',
+                intuition: '让计算机像人类一样从经验中学习，通过大量数据训练模型来做出预测或决策，而不是编写固定的规则。',
+                formula: '模型: y = f(x; θ)\n学习目标: min_θ L(f(x;θ), y)',
                 scenarios: ['图像识别', '自然语言处理', '推荐系统', '自动驾驶'],
-                related: ['神经网络', '深度学习', '监督学习'],
+                related: ['神经网络', '深度学习', '监督学习', '无监督学习'],
                 hasVisualization: false,
-                history: '1959年，Arthur Samuel编写了第一个跳棋程序，标志着机器学习的诞生。',
-                limitations: '需要大量数据，模型可解释性差，容易过拟合。',
+                history: '1959年，Arthur Samuel编写了第一个跳棋程序，标志着机器学习的诞生。1997年IBM深蓝击败国际象棋世界冠军。',
+                limitations: '需要大量标注数据，模型可解释性差，容易过拟合，对数据质量要求高。',
                 stats: { accuracy: '-', complexity: 'Varies', usage: '核心' }
             },
             '决策树': {
                 level: 2,
-                definition: '决策树是一种树形结构的分类和回归模型，通过递归划分特征空间来进行决策。每个内部节点代表一个特征上的判断条件。',
-                intuition: '就像玩20问游戏，每次根据一个特征进行提问，逐步缩小范围直到得到答案。',
-                formula: '信息增益 = 熵(父节点) - Σ(权重)×熵(子节点)\n熵 = -Σpᵢ×log₂(pᵢ)',
+                definition: '决策树是一种树形结构的分类和回归模型，通过递归划分特征空间来进行决策。每个内部节点代表一个特征上的判断条件，叶节点代表类别或回归值。',
+                intuition: '就像玩20问游戏，每次根据一个特征进行提问（如"年龄是否大于30？"），逐步缩小范围直到得到答案。',
+                formula: '信息增益 = 熵(父节点) - Σ(权重)×熵(子节点)\n熵 H(S) = -Σpᵢ×log₂(pᵢ)',
                 scenarios: ['信用评分', '医疗诊断', '客户流失预测', '故障诊断'],
-                related: ['随机森林', 'XGBoost', '梯度提升树'],
+                related: ['随机森林', 'XGBoost', '梯度提升树', '决策规则'],
                 hasVisualization: true,
                 vizType: 'decision-tree',
-                history: '决策树起源于CLS系统，1986年Quinlan提出了ID3算法，1993年进一步发展为C4.5算法。',
-                limitations: '容易过拟合，对连续特征处理不佳，容易陷入局部最优。',
+                history: '决策树起源于CLS系统，1986年Quinlan提出了ID3算法，1993年进一步发展为C4.5算法，2001年Breiman提出随机森林。',
+                limitations: '容易过拟合，对连续特征处理不佳，容易陷入局部最优，对数据中的噪声敏感。',
                 stats: { accuracy: 82, complexity: 'O(n log n)', usage: '广泛' }
             },
             '神经网络': {
                 level: 3,
-                definition: '神经网络是由大量人工神经元相互连接组成的计算模型，模拟生物神经网络的结构和功能。多层网络可以学习复杂模式。',
-                intuition: '就像大脑中的神经元网络，每个神经元接收输入，进行简单计算，然后传递给下一层。',
-                formula: 'a = σ(z), z = Σ(wᵢxᵢ) + b',
-                loss: '交叉熵损失或均方误差',
+                definition: '神经网络是由大量人工神经元相互连接组成的计算模型，模拟生物神经网络的结构和功能。多层网络可以学习复杂的非线性模式。',
+                intuition: '就像大脑中的神经元网络，每个神经元接收输入，进行简单计算（加权求和+激活），然后传递给下一层。多层叠加可以学习复杂特征。',
+                formula: 'zᵢ = Σ(wᵢⱼxⱼ) + bᵢ\naᵢ = σ(zᵢ) = 1/(1+e^(-zᵢ))',
+                loss: '交叉熵损失或均方误差\nL = -Σy·log(ŷ) 或 L = (1/n)Σ(y-ŷ)²',
                 scenarios: ['图像识别', '语音识别', '机器翻译', '游戏AI'],
-                related: ['深度学习', 'CNN', 'RNN'],
+                related: ['深度学习', 'CNN', 'RNN', 'Transformer'],
                 hasVisualization: true,
                 vizType: 'neural-network',
-                history: '1943年McCulloch和Pitts提出第一个神经元模型，1958年Rosenblatt发明感知机，1986年Hinton提出反向传播。',
-                limitations: '训练时间长，需要大量数据，参数调优困难，可解释性差。',
+                history: '1943年McCulloch和Pitts提出第一个神经元模型，1958年Rosenblatt发明感知机，1986年Hinton提出反向传播算法。',
+                limitations: '训练时间长，需要大量数据，参数调优困难，可解释性差（黑盒模型），计算资源需求大。',
                 stats: { accuracy: 96, complexity: 'O(n)', usage: '核心' }
             },
             'SVM': {
                 level: 3,
                 definition: '支持向量机是一种强大的分类算法，在高维空间中寻找最优超平面来分隔不同类别的数据。核函数使其能够处理非线性问题。',
-                intuition: '找到一条最宽的"街道"，让街道两边的样本尽可能远离街道边界。',
-                formula: 'max margin, y(w·x + b) ≥ 1',
-                loss: '铰链损失: max(0, 1 - y·f(x))',
+                intuition: '找到一条最宽的"街道"（margin），让街道两边的样本尽可能远离街道边界。支持向量是距离边界最近的样本。',
+                formula: '优化目标: max(2/||w||) s.t. yᵢ(w·xᵢ + b) ≥ 1\n核函数: K(x,x\') = φ(x)·φ(x\')',
+                loss: '铰链损失: L = max(0, 1 - y·f(x))',
                 scenarios: ['文本分类', '图像分类', '生物信息学', '手写识别'],
-                related: ['逻辑回归', '神经网络', '核方法'],
+                related: ['逻辑回归', '神经网络', '核方法', '软间隔SVM'],
                 hasVisualization: true,
                 vizType: 'svm',
-                history: 'SVM由Vapnik在1995年提出，是统计学习理论的核心算法。',
-                limitations: '对大规模数据训练慢，核函数选择困难，对噪声敏感。',
+                history: 'SVM由Vapnik在1995年提出，是统计学习理论的核心算法，在2000年代前是最流行的机器学习算法之一。',
+                limitations: '对大规模数据训练慢，核函数选择困难，对噪声敏感，难以解释模型决策过程。',
                 stats: { accuracy: 90, complexity: 'O(n²)', usage: '中等' }
             },
             '随机森林': {
                 level: 3,
-                definition: '随机森林是一种集成学习算法，通过构建多棵决策树并综合它们的预测结果来提高准确性和稳定性。',
-                intuition: '三个臭皮匠赛过诸葛亮。多棵树的预测投票比单棵树更可靠。',
+                definition: '随机森林是一种集成学习算法，通过构建多棵决策树并综合它们的预测结果来提高准确性和稳定性。采用Bagging策略和随机特征选择。',
+                intuition: '三个臭皮匠赛过诸葛亮。多棵树的预测投票比单棵树更可靠，通过随机选择特征和样本增加多样性。',
+                formula: '预测: majority_vote(T₁(x), T₂(x), ..., Tₙ(x))\n每棵树: Tᵢ = DecisionTree(X_bag, features_subset)',
                 scenarios: ['金融风控', '医疗诊断', '图像分类', '特征选择'],
-                related: ['决策树', '梯度提升树', 'XGBoost'],
+                related: ['决策树', '梯度提升树', 'XGBoost', 'LightGBM'],
                 hasVisualization: true,
                 vizType: 'random-forest',
-                history: '2001年Breiman提出随机森林算法，结合了Bagging和随机特征选择。',
-                limitations: '训练时间长，对回归问题效果不如分类，对低维数据可能过拟合。',
+                history: '2001年Breiman提出随机森林算法，结合了Bagging和随机特征选择，成为最常用的集成学习方法之一。',
+                limitations: '训练时间长，对回归问题效果不如分类，对低维数据可能过拟合，模型内存占用大。',
                 stats: { accuracy: 94, complexity: 'O(n log n)', usage: '广泛' }
             },
             '深度学习': {
                 level: 4,
-                definition: '深度学习是机器学习的一个子领域，使用多层神经网络（深度神经网络）来学习数据的多层次抽象表示。',
-                intuition: '就像剥洋葱一样，每一层学习数据的不同层次特征，从简单到复杂逐步抽象。',
-                formula: '深层网络: hᵢ = f(Wᵢ·hᵢ₋₁ + bᵢ)',
+                definition: '深度学习是机器学习的一个子领域，使用多层神经网络（深度神经网络）来学习数据的多层次抽象表示。深度学习模型通常有几十到上千层。',
+                intuition: '就像剥洋葱一样，每一层学习数据的不同层次特征，从简单的边缘检测到复杂的语义理解，逐步抽象。',
+                formula: '深层网络: h⁽ˡ⁾ = f(W⁽ˡ⁾·h⁽ˡ⁻¹⁾ + b⁽ˡ⁾)\n其中 f 为激活函数',
                 scenarios: ['自动驾驶', '生成式AI', '药物发现', 'AlphaGo'],
-                related: ['神经网络', 'CNN', 'Transformer'],
+                related: ['神经网络', 'CNN', 'Transformer', 'GPT'],
                 hasVisualization: true,
                 vizType: 'deep-learning',
-                history: '2006年Hinton提出深度信念网络，标志着深度学习的兴起。2012年AlexNet在ImageNet竞赛中突破性胜出。',
-                limitations: '需要海量数据和计算资源，训练时间长，可解释性极差。',
+                history: '2006年Hinton提出深度信念网络和预训练方法，标志着深度学习的兴起。2012年AlexNet在ImageNet竞赛中突破性胜出。',
+                limitations: '需要海量数据和计算资源（GPU/TPU），训练时间长，可解释性极差，容易产生幻觉。',
                 stats: { accuracy: 98, complexity: 'O(n)', usage: '核心' }
             },
             '卷积神经网络': {
                 level: 4,
-                definition: 'CNN是一种专门用于处理网格状数据（如图像）的深度学习模型，使用卷积操作自动学习空间层次特征。',
-                intuition: '就像用放大镜观察图像的不同区域，逐步提取边缘、纹理、形状等特征。',
-                formula: '特征图: y[i,j] = Σₖ Σₘ x[i+m, j+n]·w[k,m] + b',
+                definition: 'CNN是一种专门用于处理网格状数据（如图像）的深度学习模型，使用卷积操作自动学习空间层次特征。包含卷积层、池化层和全连接层。',
+                intuition: '就像用放大镜观察图像的不同区域，逐步提取边缘、纹理、形状等特征。卷积核在图像上滑动，提取局部特征。',
+                formula: '特征图: y[i,j] = Σₖ Σₘ x[i+m, j+n]·w[k,m,n] + b\n池化: y[i,j] = max(x[i: i+p, j: j+p])',
                 scenarios: ['图像分类', '目标检测', '人脸识别', '医学影像'],
-                related: ['神经网络', '深度学习', '目标检测'],
+                related: ['神经网络', '深度学习', '目标检测', '图像分割'],
                 hasVisualization: true,
                 vizType: 'cnn',
-                history: '1989年LeCun提出卷积神经网络，1998年LeNet-5用于手写数字识别。2012年AlexNet使其再次流行。',
-                limitations: '需要大量标注数据和计算资源，模型复杂难以优化。',
+                history: '1989年LeCun提出卷积神经网络，1998年LeNet-5用于手写数字识别。2012年AlexNet使其再次流行并成为主流。',
+                limitations: '需要大量标注数据和计算资源，模型复杂难以优化，对小样本学习能力有限。',
                 stats: { accuracy: 97, complexity: 'O(n)', usage: '广泛' }
             },
             '栈和队列': {
                 level: 1,
-                definition: '栈是后进先出(LIFO)的数据结构，只允许在栈顶进行插入和删除。队列是先进先出(FIFO)的数据结构。',
-                intuition: '栈就像一叠盘子，只能从最上面取放；队列就像排队买票，先来的先服务。',
-                formula: '栈操作: push(O(1)), pop(O(1))\n队列操作: enqueue(O(1)), dequeue(O(1))',
+                definition: '栈是后进先出(LIFO)的数据结构，只允许在栈顶进行插入和删除操作。队列是先进先出(FIFO)的数据结构，在队尾插入，队头删除。',
+                intuition: '栈就像一叠盘子，只能从最上面取放；队列就像排队买票，先来的先服务，后来的排后面。',
+                formula: '栈操作: push(O(1)), pop(O(1)), peek(O(1))\n队列操作: enqueue(O(1)), dequeue(O(1)), front(O(1))',
                 scenarios: ['函数调用栈', '表达式求值', '任务调度', '宽度优先搜索'],
-                related: ['链表', '数组', '优先队列'],
+                related: ['链表', '数组', '优先队列', '双端队列'],
                 hasVisualization: true,
                 vizType: 'stack-queue',
-                history: '栈和队列是计算机科学中最基本的数据结构，20世纪50年代开始被系统研究。',
-                limitations: '栈容量有限，队列出队效率在某些实现中可能较低。',
+                history: '栈和队列是计算机科学中最基本的数据结构，20世纪50年代开始被系统研究和应用。',
+                limitations: '栈容量有限（受内存限制），普通队列出队在数组实现中效率较低（需移动元素）。',
                 stats: { accuracy: '-', complexity: 'O(1)', usage: '核心' }
             },
             '链表': {
                 level: 1,
-                definition: '链表是由节点组成的线性数据结构，每个节点包含数据和指向下一个（和上一个）节点的指针。',
-                intuition: '就像一串珠子，每个珠子都知道下一个珠子在哪里，但不知道前面的。',
-                formula: '插入: O(1), 删除: O(1), 查找: O(n)',
+                definition: '链表是由节点组成的线性数据结构，每个节点包含数据和指向下一个（和上一个）节点的指针。分为单链表、双链表和循环链表。',
+                intuition: '就像一串珠子，每个珠子都知道下一个珠子在哪里，但不知道前面的（单链表）。可以灵活地插入和删除节点。',
+                formula: '插入(已知前驱): O(1)\n删除(已知前驱): O(1)\n查找: O(n)',
                 scenarios: ['内存管理', '动态数组实现', 'LRU缓存', '图的邻接表'],
-                related: ['栈', '队列', '树'],
+                related: ['栈', '队列', '树', '哈希表'],
                 hasVisualization: true,
                 vizType: 'linked-list',
-                history: '链表是第一批被用于高级语言的数据结构之一，1955-1960年间被广泛研究。',
-                limitations: '无法随机访问，内存占用大，指针操作容易出错。',
+                history: '链表是第一批被用于高级语言的数据结构之一，1955-1960年间被广泛研究和应用。',
+                limitations: '无法随机访问（需从头遍历），内存占用大（每个节点需存储指针），指针操作容易出错。',
                 stats: { accuracy: '-', complexity: 'O(n)', usage: '核心' }
             },
             '树结构': {
                 level: 2,
-                definition: '树是一种层次化的数据结构，由节点和边组成，具有一个根节点，每个节点有零个或多个子节点。',
-                intuition: '就像一棵倒过来的树，有一个根，然后分叉出多个子节点，子节点又分叉。',
-                formula: '二叉树: 每个节点最多两个子节点\n高度: h = log₂(n)',
+                definition: '树是一种层次化的数据结构，由节点和边组成，具有一个根节点，每个节点有零个或多个子节点。最常见的是二叉树。',
+                intuition: '就像一棵倒过来的树，有一个根，然后分叉出多个子节点，子节点又分叉，形成层次结构。',
+                formula: '二叉树性质: n₀ = n₂ + 1\n高度: h = log₂(n) (完全二叉树)\n节点数: n = 2ʰ⁺¹ - 1 (满二叉树)',
                 scenarios: ['文件系统', '数据库索引', 'XML/HTML解析', '编译器语法树'],
-                related: ['二叉搜索树', 'B树', '堆'],
+                related: ['二叉搜索树', 'B树', '堆', 'AVL树'],
                 hasVisualization: true,
                 vizType: 'tree',
-                history: '树结构在19世纪被用于描述家族谱系，20世纪成为计算机科学的基础数据结构。',
-                limitations: '不平衡时性能退化，需要旋转操作维持平衡。',
+                history: '树结构在19世纪被用于描述家族谱系，20世纪成为计算机科学的基础数据结构，广泛应用于数据库和文件系统。',
+                limitations: '不平衡时性能退化（退化为链表），需要旋转操作维持平衡（如AVL树、红黑树）。',
                 stats: { accuracy: '-', complexity: 'O(log n)', usage: '核心' }
             },
             '排序算法': {
                 level: 2,
-                definition: '排序算法是将一组数据按照特定顺序排列的算法，常见排序包括冒泡排序、快速排序、归并排序、堆排序等。',
-                intuition: '就像整理扑克牌，按照一定规则（花色、数字）排列整齐。',
-                formula: '快速排序: T(n) = T(k) + T(n-k-1) + O(n)\n归并排序: T(n) = 2T(n/2) + O(n)',
+                definition: '排序算法是将一组数据按照特定顺序排列的算法，常见排序包括冒泡排序、快速排序、归并排序、堆排序等。分为比较排序和非比较排序。',
+                intuition: '就像整理扑克牌，按照一定规则（花色、数字）排列整齐，使数据有序便于查找和处理。',
+                formula: '快速排序: T(n) = T(k) + T(n-k-1) + O(n)\n归并排序: T(n) = 2T(n/2) + O(n) = O(n log n)',
                 scenarios: ['数据预处理', '搜索优化', '数据库排序', '排行榜'],
-                related: ['查找算法', '堆', '复杂度分析'],
+                related: ['查找算法', '堆', '复杂度分析', '外部排序'],
                 hasVisualization: true,
                 vizType: 'sorting',
-                history: '排序是最早被系统研究的算法之一，1959年Hoare发明快速排序，1945年冯诺依曼发明归并排序。',
-                limitations: '不同算法有不同最优场景，需要根据数据特点选择合适的算法。',
+                history: '排序是最早被系统研究的算法之一，1959年Hoare发明快速排序，1945年冯诺依曼发明归并排序，1964年Williams发明堆排序。',
+                limitations: '不同算法有不同最优场景，需要根据数据特点（规模、有序程度、稳定性要求）选择合适的算法。',
                 stats: { accuracy: '-', complexity: 'O(n log n)', usage: '核心' }
             },
             '查找算法': {
                 level: 2,
                 definition: '查找算法用于在数据集中查找特定元素的位置或判断元素是否存在，包括顺序查找、二分查找、哈希查找等。',
-                intuition: '就像在字典中查找单词，可以从头翻，也可以根据字母顺序快速定位。',
-                formula: '二分查找: T(n) = T(n/2) + O(1) = O(log n)\n哈希查找: O(1)平均',
+                intuition: '就像在字典中查找单词，可以从头翻（顺序查找），也可以根据字母顺序快速定位（二分查找），或者直接查索引（哈希查找）。',
+                formula: '二分查找: T(n) = T(n/2) + O(1) = O(log n)\n哈希查找: O(1)平均，O(n)最坏',
                 scenarios: ['数据库查询', '搜索引擎', '符号表', '字典查询'],
-                related: ['排序算法', '哈希表', '搜索树'],
+                related: ['排序算法', '哈希表', '搜索树', '索引结构'],
                 hasVisualization: true,
                 vizType: 'search',
-                history: '二分查找在1946年被首次提出，但正确实现花了16年。哈希表在1953年被发明。',
-                limitations: '二分查找需要有序数组，哈希冲突影响性能。',
+                history: '二分查找在1946年被首次提出，但正确实现花了16年。哈希表在1953年被发明，是最常用的查找数据结构。',
+                limitations: '二分查找需要有序数组，哈希冲突影响性能，哈希函数设计至关重要。',
                 stats: { accuracy: '-', complexity: 'O(log n)', usage: '核心' }
             },
             '图算法': {
                 level: 3,
-                definition: '图是由顶点和边组成的数据结构，图算法用于解决图上的各种问题如最短路径、连通性、最小生成树等。',
-                intuition: '图就像一张地图，顶点是城市，边是道路，算法帮助找到最佳路线。',
-                formula: 'Dijkstra: O((V+E)log V)\nBFS: O(V+E)',
+                definition: '图是由顶点和边组成的数据结构，图算法用于解决图上的各种问题如最短路径、连通性、最小生成树等。分为有向图和无向图。',
+                intuition: '图就像一张地图，顶点是城市，边是道路，算法帮助找到最佳路线（最短路径）、判断是否连通等。',
+                formula: 'Dijkstra: O((V+E)log V)\nBFS: O(V+E)\n最小生成树: Kruskal O(E log E)',
                 scenarios: ['导航系统', '社交网络', '网络路由', '任务调度'],
-                related: ['最短路径', '最小生成树', '网络流'],
+                related: ['最短路径', '最小生成树', '网络流', '拓扑排序'],
                 hasVisualization: true,
                 vizType: 'graph',
-                history: '欧拉在1736年研究哥尼斯堡七桥问题，奠定了图论基础。',
-                limitations: '大规模图计算复杂度高，内存消耗大。',
+                history: '欧拉在1736年研究哥尼斯堡七桥问题，奠定了图论基础。Dijkstra算法于1956年提出，是最经典的最短路径算法。',
+                limitations: '大规模图计算复杂度高，内存消耗大，某些问题（如旅行商问题）是NP难问题。',
                 stats: { accuracy: '-', complexity: 'O((V+E) log V)', usage: '中等' }
             },
             '集合论': {
                 level: 1,
-                definition: '集合论是研究集合的数学分支，集合是由确定的、互不相同的对象组成的整体。基本运算包括并集、交集、差集。',
-                intuition: '就像一个盒子，可以装各种东西，每个东西只能装一次，盒子里的东西就是集合。',
-                formula: 'A ∪ B (并集)\nA ∩ B (交集)\nA - B (差集)\nA × B (笛卡尔积)',
+                definition: '集合论是研究集合的数学分支，集合是由确定的、互不相同的对象组成的整体。基本运算包括并集、交集、差集、笛卡尔积。',
+                intuition: '就像一个盒子，可以装各种东西，每个东西只能装一次，盒子里的东西就是集合。运算就是对盒子里的东西进行操作。',
+                formula: 'A ∪ B = {x | x ∈ A ∨ x ∈ B} (并集)\nA ∩ B = {x | x ∈ A ∧ x ∈ B} (交集)\nA - B = {x | x ∈ A ∧ x ∉ B} (差集)',
                 scenarios: ['数据库查询', '数据去重', '权限管理', '集合运算'],
-                related: ['命题逻辑', '关系代数', '数据库'],
+                related: ['命题逻辑', '关系代数', '数据库', '布尔代数'],
                 hasVisualization: true,
                 vizType: 'set',
-                history: '康托尔在1874年创立集合论，是现代数学的基础。',
-                limitations: '无限集合概念反直觉，罗素悖论揭示了朴素集合论的问题。',
+                history: '康托尔在1874年创立集合论，是现代数学的基础。罗素悖论揭示了朴素集合论的问题，导致公理集合论的发展。',
+                limitations: '无限集合概念反直觉，需要公理化处理，某些集合操作在计算机中难以实现（如无限集合）。',
                 stats: { accuracy: '-', complexity: '-', usage: '基础' }
             },
             '命题逻辑': {
                 level: 1,
                 definition: '命题逻辑是研究命题及其推理的逻辑分支，命题是具有真假值的陈述句，通过逻辑联结词组合成复合命题。',
-                intuition: '就像玩逻辑拼图，用AND、OR、NOT等连接词组合命题，判断真假。',
-                formula: '¬P (非)\nP ∧ Q (且)\nP ∨ Q (或)\nP → Q (蕴含)',
+                intuition: '就像玩逻辑拼图，用AND、OR、NOT等连接词组合命题，判断复合命题的真假。',
+                formula: '¬P (非)\nP ∧ Q (且)\nP ∨ Q (或)\nP → Q (蕴含)\nP ↔ Q (等价)',
                 scenarios: ['数字电路', '程序验证', '逻辑推理', 'AI专家系统'],
-                related: ['谓词逻辑', '数字电路', '布尔代数'],
+                related: ['谓词逻辑', '数字电路', '布尔代数', '逻辑编程'],
                 hasVisualization: true,
                 vizType: 'propositional',
-                history: '亚里士多德创立形式逻辑，1847年布尔建立布尔代数，20世纪命题逻辑成为数理逻辑基础。',
-                limitations: '无法表达数量关系和个体性质，需要谓词逻辑扩展。',
+                history: '亚里士多德创立形式逻辑，1847年布尔建立布尔代数，20世纪命题逻辑成为数理逻辑和计算机科学的基础。',
+                limitations: '无法表达数量关系和个体性质，需要谓词逻辑扩展，不能处理模糊概念。',
                 stats: { accuracy: '-', complexity: '-', usage: '基础' }
             },
             '谓词逻辑': {
                 level: 2,
-                definition: '谓词逻辑扩展了命题逻辑，引入了谓词和量词，可以表达更复杂的逻辑关系，如"存在"和"所有"。',
-                intuition: '不仅能说"下雨"，还能说"所有人都喜欢下雨"或"存在一个人不喜欢下雨"。',
-                formula: '∀x P(x) (对所有x，P(x)为真)\n∃x P(x) (存在x，使P(x)为真)',
+                definition: '谓词逻辑扩展了命题逻辑，引入了谓词和量词，可以表达更复杂的逻辑关系，如"存在"和"所有"的概念。',
+                intuition: '不仅能说"下雨"，还能说"所有人都喜欢下雨"（全称量词）或"存在一个人不喜欢下雨"（存在量词）。',
+                formula: '∀x P(x) (对所有x，P(x)为真)\n∃x P(x) (存在x，使P(x)为真)\n∃!x P(x) (存在唯一x使P(x)为真)',
                 scenarios: ['数据库查询', 'AI推理', '知识表示', '程序规范'],
-                related: ['命题逻辑', '模态逻辑', '一阶逻辑'],
-                hasVisualization: false,
-                history: '弗雷格在1879年发明谓词逻辑，是数理逻辑的重大突破。',
-                limitations: '无法表达高阶逻辑，直觉主义逻辑对排中律有限制。',
+                related: ['命题逻辑', '模态逻辑', '一阶逻辑', '逻辑编程'],
+                hasVisualization: true,
+                vizType: 'predicate',
+                history: '弗雷格在1879年发明谓词逻辑，是数理逻辑的重大突破，成为现代逻辑和人工智能的基础。',
+                limitations: '无法表达高阶逻辑（如关于性质的性质），直觉主义逻辑对排中律有限制，某些公式不可判定。',
                 stats: { accuracy: '-', complexity: '-', usage: '基础' }
             },
             '图论': {
                 level: 2,
-                definition: '图论是研究图的性质和应用的数学分支，图由顶点集和边集组成，用于描述对象之间的关系。',
-                intuition: '图就像一张关系网，顶点代表事物，边代表事物之间的关系。',
-                formula: '握手定理: Σdeg(v) = 2|E|\n欧拉公式: V - E + F = 2',
+                definition: '图论是研究图的性质和应用的数学分支，图由顶点集和边集组成，用于描述对象之间的关系。分为有向图和无向图。',
+                intuition: '图就像一张关系网，顶点代表事物，边代表事物之间的关系（如朋友关系、连接关系等）。',
+                formula: '握手定理: Σdeg(v) = 2|E|\n欧拉公式(平面图): V - E + F = 2\n完全图边数: |E| = n(n-1)/2',
                 scenarios: ['社交网络', '网络分析', '电路设计', '交通运输'],
-                related: ['图算法', '网络流', '拓扑排序'],
+                related: ['图算法', '网络流', '拓扑排序', '图着色'],
                 hasVisualization: true,
                 vizType: 'graph-theory',
-                history: '1736年欧拉研究哥尼斯堡七桥问题开创图论。',
-                limitations: '大规模图计算困难，图同构问题是NP问题。',
+                history: '1736年欧拉研究哥尼斯堡七桥问题开创图论，20世纪图论成为组合数学和计算机科学的重要分支。',
+                limitations: '大规模图计算困难，图同构问题是NP问题，某些图性质难以判定。',
                 stats: { accuracy: '-', complexity: '-', usage: '中等' }
             },
             '信息表示': {
                 level: 1,
                 definition: '信息表示研究计算机中数据的表示方法，包括二进制、进制转换、原码、反码、补码、BCD码等。',
-                intuition: '计算机只认识0和1，所有信息（文字、图片、声音）都要转换成二进制才能处理。',
-                formula: '十进制转二进制: 除2取余\n补码: 正数同原码，负数取反加1',
+                intuition: '计算机只认识0和1，所有信息（文字、图片、声音）都要转换成二进制才能处理和存储。',
+                formula: '十进制转二进制: 除2取余法\n补码: [x]补 = 2ⁿ + x (x < 0)\n二进制转十进制: Σbᵢ·2ⁱ',
                 scenarios: ['数据存储', '网络传输', '编码转换', '加密解密'],
-                related: ['浮点数', '编码理论', '数据压缩'],
+                related: ['浮点数', '编码理论', '数据压缩', '信息论'],
                 hasVisualization: true,
                 vizType: 'binary',
-                history: '1945年冯诺依曼提出二进制计算机架构，奠定了现代计算机基础。',
-                limitations: '整数溢出，浮点数精度问题，不同编码兼容性。',
+                history: '1945年冯诺依曼提出二进制计算机架构，奠定了现代计算机基础。ASCII码于1963年标准化。',
+                limitations: '整数溢出，浮点数精度问题，不同编码兼容性问题，Unicode与ASCII转换复杂。',
                 stats: { accuracy: '-', complexity: '-', usage: '基础' }
             },
             '浮点数': {
                 level: 2,
-                definition: '浮点数是用于表示实数的数据类型，遵循IEEE 754标准，由符号位、指数位和尾数位组成。',
-                intuition: '就像科学计数法，用尾数和指数表示很大或很小的数。',
-                formula: '(-1)^s × 1.m × 2^(e-127)\nIEEE 754: 32位单精度, 64位双精度',
+                definition: '浮点数是用于表示实数的数据类型，遵循IEEE 754标准，由符号位、指数位和尾数位组成。分为单精度（32位）和双精度（64位）。',
+                intuition: '就像科学计数法，用尾数和指数表示很大或很小的数，如1.5 × 10³，在计算机中表示为符号、指数和尾数。',
+                formula: '(-1)^s × (1 + m) × 2^(e-127)\nIEEE 754单精度: 1位符号, 8位指数, 23位尾数',
                 scenarios: ['科学计算', '图形处理', '金融计算', '游戏开发'],
-                related: ['信息表示', '数值计算', '舍入误差'],
+                related: ['信息表示', '数值计算', '舍入误差', '精度分析'],
                 hasVisualization: true,
                 vizType: 'floating-point',
-                history: '1985年IEEE发布754标准，统一了浮点数表示，是计算机历史上最重要的标准之一。',
-                limitations: '精度有限，舍入误差累积，特殊值处理（NaN、无穷）。',
+                history: '1985年IEEE发布754标准，统一了浮点数表示，是计算机历史上最重要的标准之一，至今仍在使用。',
+                limitations: '精度有限（约7位十进制有效数字），舍入误差累积，特殊值处理（NaN、无穷）复杂。',
                 stats: { accuracy: '-', complexity: '-', usage: '核心' }
             },
             '动态规划': {
                 level: 3,
-                definition: '动态规划是一种将复杂问题分解为子问题来求解的算法设计方法，利用重叠子问题和最优子结构性质。',
-                intuition: '不要重复计算相同的问题，把答案记下来下次直接用。空间换时间。',
-                formula: 'dp[i] = max/min(dp[j] + cost(j,i))\n状态转移方程是关键',
+                definition: '动态规划是一种将复杂问题分解为子问题来求解的算法设计方法，利用重叠子问题和最优子结构性质，通过记忆化避免重复计算。',
+                intuition: '不要重复计算相同的问题，把答案记下来下次直接用。用空间换时间，将复杂问题分解为简单子问题。',
+                formula: '状态转移方程: dp[i] = min/max(dp[j] + cost(j,i))\n最优子结构: 最优解包含子问题的最优解',
                 scenarios: ['最短路径', '序列比对', '资源分配', '投资组合'],
-                related: ['贪心算法', '分治算法', '记忆化搜索'],
+                related: ['贪心算法', '分治算法', '记忆化搜索', '状态压缩'],
                 hasVisualization: true,
                 vizType: 'dp',
-                history: '1953年贝尔曼提出动态规划，用于研究多阶段决策问题。',
-                limitations: '状态空间可能很大，需要优化空间复杂度。',
+                history: '1953年贝尔曼提出动态规划，用于研究多阶段决策问题。现已成为算法设计的核心方法之一。',
+                limitations: '状态空间可能很大（维数灾难），需要优化空间复杂度，状态转移方程设计困难。',
                 stats: { accuracy: '-', complexity: 'O(n²)', usage: '高级' }
             },
             '贪心算法': {
                 level: 3,
-                definition: '贪心算法在每一步都做出当前最优的选择，希望最终得到全局最优解。不回溯，不后悔。',
-                intuition: '走一步看一步，每次都选看起来最好的选项，相信局部最优能带来全局最优。',
-                formula: '每步选择: argmax/min { 局部收益 }\n需要证明贪心选择性和最优子结构',
+                definition: '贪心算法在每一步都做出当前最优的选择，希望最终得到全局最优解。不回溯，不后悔，只看眼前利益。',
+                intuition: '走一步看一步，每次都选看起来最好的选项，相信局部最优能带来全局最优（需要证明正确性）。',
+                formula: '每步选择: argmax/min { 局部收益 }\n需要证明: 贪心选择性 + 最优子结构',
                 scenarios: ['找零钱', '区间调度', '最小生成树', 'Huffman编码'],
-                related: ['动态规划', '图算法', '近似算法'],
+                related: ['动态规划', '图算法', '近似算法', '在线算法'],
                 hasVisualization: true,
                 vizType: 'greedy',
-                history: '贪心思想自古有之，20世纪被系统化为算法设计范式。',
-                limitations: '并非所有问题都能用贪心，正确性需要严格证明。',
+                history: '贪心思想自古有之，20世纪被系统化为算法设计范式。Dijkstra算法就是贪心算法的经典应用。',
+                limitations: '并非所有问题都能用贪心，正确性需要严格证明，可能陷入局部最优而错过全局最优。',
                 stats: { accuracy: '-', complexity: 'O(n log n)', usage: '高级' }
             },
             '复杂度分析': {
                 level: 2,
-                definition: '复杂度分析用于评估算法的时间和空间效率，通常用大O、大Ω、大Θ表示法。分析最优、最坏、平均情况。',
+                definition: '复杂度分析用于评估算法的时间和空间效率，通常用大O、大Ω、大Θ表示法。分析最优、最坏、平均情况的性能。',
                 intuition: '评估算法的快慢和内存占用，帮助选择最优算法。数据量越大，复杂度差异越明显。',
-                formula: 'O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ)',
+                formula: 'O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ)\nT(n) = Θ(f(n)) 当且仅当 T(n) = O(f(n)) 且 T(n) = Ω(f(n))',
                 scenarios: ['算法选择', '性能优化', '系统设计', '面试笔试'],
-                related: ['算法设计', '数据结构', '计算理论'],
+                related: ['算法设计', '数据结构', '计算理论', '渐近分析'],
                 hasVisualization: true,
                 vizType: 'complexity',
-                history: '1965年霍斯特德提出算法复杂度标记，渐近分析成为标准。',
-                limitations: '忽略常数因子和低阶项，不适合小规模数据。',
+                history: '1965年霍斯特德提出算法复杂度标记，渐近分析成为计算机科学的标准方法，用于比较算法效率。',
+                limitations: '忽略常数因子和低阶项，不适合小规模数据，实际性能受硬件和实现细节影响。',
                 stats: { accuracy: '-', complexity: '-', usage: '核心' }
             }
         };
@@ -609,11 +826,11 @@
             
             let content = `
                 <div class="content-card">
-                    <div class="card-title">📖 ${topicName}</div>
+                    <div class="card-title">📖 概念定义</div>
                     <div class="card-content">
                         <p>${detail.definition}</p>
-                        <div style="margin-top:15px;padding:15px;background:rgba(60,140,200,0.2);border-radius:8px;">
-                            <strong style="color:#40c0e0;">💡 核心直觉：</strong>${detail.intuition}
+                        <div class="intuition-box">
+                            <strong>💡 核心直觉：</strong>${detail.intuition}
                         </div>
                     </div>
                 </div>
@@ -621,18 +838,18 @@
                 <div class="content-card">
                     <div class="card-title">📊 性能指标</div>
                     <div class="card-content">
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;">
-                            <div style="text-align:center;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;">
-                                <div style="font-size:20px;color:#40c0e0;font-weight:bold;">${detail.stats.accuracy}</div>
-                                <div style="font-size:12px;color:#80a0c0;margin-top:5px;">准确率%</div>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" style="color:#40c0e0;">${detail.stats.accuracy}</div>
+                                <div class="stat-label">准确率%</div>
                             </div>
-                            <div style="text-align:center;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;">
-                                <div style="font-size:20px;color:#80e0c0;font-weight:bold;">${detail.stats.complexity}</div>
-                                <div style="font-size:12px;color:#80a0c0;margin-top:5px;">时间复杂度</div>
+                            <div class="stat-card">
+                                <div class="stat-value" style="color:#80e0c0;">${detail.stats.complexity}</div>
+                                <div class="stat-label">时间复杂度</div>
                             </div>
-                            <div style="text-align:center;padding:15px;background:rgba(0,0,0,0.3);border-radius:8px;">
-                                <div style="font-size:20px;color:#a080e0;font-weight:bold;">${detail.stats.usage}</div>
-                                <div style="font-size:12px;color:#80a0c0;margin-top:5px;">使用频率</div>
+                            <div class="stat-card">
+                                <div class="stat-value" style="color:#a080e0;">${detail.stats.usage}</div>
+                                <div class="stat-label">使用频率</div>
                             </div>
                         </div>
                     </div>
@@ -641,15 +858,16 @@
                 <div class="content-card">
                     <div class="card-title">📐 核心公式</div>
                     <div class="card-content">
-                        <div style="background:rgba(0,0,0,0.4);padding:15px;border-radius:8px;border-left:4px solid #40c0e0;font-family:monospace;font-size:15px;white-space:pre-line;">${detail.formula}</div>
+                        <div class="formula-box">${detail.formula}</div>
+                        ${detail.loss ? `<div class="formula-box" style="margin-top:15px;border-left-color:#a080e0;">${detail.loss}</div>` : ''}
                     </div>
                 </div>
                 
                 <div class="content-card">
                     <div class="card-title">🎯 适用场景</div>
                     <div class="card-content">
-                        <div style="display:flex;flex-wrap:wrap;gap:10px;">
-                            ${detail.scenarios.map(s => `<span style="padding:6px 14px;background:rgba(60,180,140,0.2);border-radius:15px;font-size:13px;color:#60c0a0;">${s}</span>`).join('')}
+                        <div style="display:flex;flex-wrap:wrap;gap:12px;">
+                            ${detail.scenarios.map(s => `<span class="scenario-tag">${s}</span>`).join('')}
                         </div>
                     </div>
                 </div>
@@ -681,8 +899,8 @@
                             </div>
                             <input type="range" min="0" max="100" value="50" id="paramSlider" oninput="updateViz('${topicName}')">
                         </div>
-                        <div style="margin-top:20px;height:300px;background:rgba(0,0,0,0.4);border-radius:8px;position:relative;overflow:hidden;">
-                            <canvas id="vizCanvas" width="100%" height="300" style="width:100%;height:300px;"></canvas>
+                        <div style="margin-top:25px;height:320px;background:rgba(0,0,0,0.4);border-radius:12px;position:relative;overflow:hidden;border:1px solid rgba(64,192,224,0.2);">
+                            <canvas id="vizCanvas" width="100%" height="320" style="width:100%;height:320px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -700,12 +918,12 @@
                 </div>
             `;
             
-            document.getElementById('modalTitle').innerHTML = `${topicName} <span style="font-size:14px;color:${levelColors[detail.level]};">(${levelLabels[detail.level]})</span>`;
+            document.getElementById('modalTitle').innerHTML = `${topicName} <span style="font-size:18px;color:${levelColors[detail.level]};margin-left:12px;">(${levelLabels[detail.level]})</span>`;
             document.getElementById('modalContent').innerHTML = content;
             document.getElementById('topicModal').style.display = 'flex';
             
             if (detail.hasVisualization) {
-                setTimeout(() => drawVisualization('${topicName}', 50), 100);
+                setTimeout(() => drawVisualization(topicName, 50), 150);
             }
         }
 
@@ -730,10 +948,10 @@
             canvas.width = width;
             canvas.height = height;
             
-            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillStyle = 'rgba(0,0,0,0.15)';
             ctx.fillRect(0, 0, width, height);
             
-            ctx.strokeStyle = 'rgba(100,140,180,0.2)';
+            ctx.strokeStyle = 'rgba(100,140,180,0.15)';
             ctx.lineWidth = 1;
             for (let i = 0; i <= 10; i++) {
                 ctx.beginPath();
@@ -793,6 +1011,27 @@
                 case '贪心算法':
                     drawGreedy(ctx, width, height, param);
                     break;
+                case '谓词逻辑':
+                    drawPredicate(ctx, width, height, param);
+                    break;
+                case '图论':
+                    drawGraphTheory(ctx, width, height, param);
+                    break;
+                case '信息表示':
+                    drawBinary(ctx, width, height, param);
+                    break;
+                case '浮点数':
+                    drawFloatingPoint(ctx, width, height, param);
+                    break;
+                case '卷积神经网络':
+                    drawCNN(ctx, width, height, param);
+                    break;
+                case '深度学习':
+                    drawDeepLearning(ctx, width, height, param);
+                    break;
+                case '随机森林':
+                    drawRandomForest(ctx, width, height, param);
+                    break;
                 default:
                     drawDefault(ctx, width, height, param);
             }
@@ -800,27 +1039,31 @@
 
         function drawRegression(ctx, w, h, p) {
             ctx.strokeStyle = '#40c0e0';
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            const slope = -0.3 + p * 0.6;
-            ctx.moveTo(50, h * 0.8);
-            ctx.lineTo(w - 50, h * 0.2 + slope * h * 0.5);
+            const slope = -0.4 + p * 0.8;
+            const intercept = h * 0.6;
+            ctx.moveTo(50, intercept);
+            ctx.lineTo(w - 50, intercept - (w - 100) * slope);
             ctx.stroke();
             
-            for (let i = 0; i < 20; i++) {
-                const x = 50 + (w - 100) * (i / 19);
-                const baseY = h * 0.5 + Math.sin(i * 0.5) * 60;
-                const y = baseY + (1 - p) * 30 * Math.random();
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('y = ' + slope.toFixed(2) + 'x + ' + (intercept/h).toFixed(2), 20, 35);
+            
+            for (let i = 0; i < 25; i++) {
+                const x = 50 + (w - 100) * (i / 24);
+                const noise = (1 - p) * 40 * Math.sin(i * 0.4);
+                const y = intercept - (x - 50) * slope + noise + (Math.random() - 0.5) * 20;
                 
-                ctx.fillStyle = 'rgba(128, 224, 192, 0.7)';
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, 8);
+                gradient.addColorStop(0, '#80e0c0');
+                gradient.addColorStop(1, 'rgba(96, 192, 160, 0.3)');
+                ctx.fillStyle = gradient;
                 ctx.beginPath();
-                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.arc(x, y, 8, 0, Math.PI * 2);
                 ctx.fill();
             }
-            
-            ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('斜率: ' + slope.toFixed(2), 20, 30);
-            ctx.fillText('数据点: 20个', 20, 50);
         }
 
         function drawSigmoid(ctx, w, h, p) {
@@ -841,9 +1084,9 @@
             
             ctx.fillStyle = '#40c0e0';
             ctx.fillRect(w/2 - 2, h/2 - 5, 4, 10);
-            ctx.font = '14px Arial';
-            ctx.fillText('阈值: 0.5', 20, 30);
-            ctx.fillText('陡峭度: ' + (1 + p).toFixed(2), 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('阈值: 0.5', 20, 35);
+            ctx.fillText('陡峭度: ' + (1 + p).toFixed(2), 20, 55);
         }
 
         function drawKNN(ctx, w, h, p) {
@@ -884,12 +1127,12 @@
             
             ctx.fillStyle = '#40c0e0';
             ctx.beginPath();
-            ctx.arc(targetX, targetY, 10, 0, Math.PI * 2);
+            ctx.arc(targetX, targetY, 12, 0, Math.PI * 2);
             ctx.fill();
             
-            ctx.font = '14px Arial';
-            ctx.fillText('K = ' + k, 20, 30);
-            ctx.fillText('红色邻居: ' + distances.slice(0, k).filter(p => p.class === 1).length, 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('K = ' + k, 20, 35);
+            ctx.fillText('红色邻居: ' + distances.slice(0, k).filter(p => p.class === 1).length, 20, 55);
         }
 
         function drawNeuralNetwork(ctx, w, h, p) {
@@ -907,7 +1150,7 @@
                         const y2 = (h / (nodes[i+1] + 1)) * (k + 1);
                         const opacity = 0.2 + p * 0.4 * Math.random();
                         ctx.strokeStyle = `rgba(64, 192, 224, ${opacity})`;
-                        ctx.lineWidth = 1 + p;
+                        ctx.lineWidth = 1 + p * 0.5;
                         ctx.beginPath();
                         ctx.moveTo(layerX[i], y1);
                         ctx.lineTo(layerX[i+1], y2);
@@ -919,7 +1162,7 @@
             for (let i = 0; i < layers; i++) {
                 for (let j = 0; j < nodes[i]; j++) {
                     const y = (h / (nodes[i] + 1)) * (j + 1);
-                    const radius = 10 + p * 8;
+                    const radius = 12 + p * 6;
                     ctx.fillStyle = `rgba(64, 192, 224, ${0.5 + p * 0.5})`;
                     ctx.beginPath();
                     ctx.arc(layerX[i], y, radius, 0, Math.PI * 2);
@@ -931,9 +1174,9 @@
             }
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('隐藏层数: ' + (layers - 2), 20, 30);
-            ctx.fillText('激活强度: ' + (p * 100).toFixed(0) + '%', 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('隐藏层数: ' + (layers - 2), 20, 35);
+            ctx.fillText('激活强度: ' + (p * 100).toFixed(0) + '%', 20, 55);
         }
 
         function drawSVM(ctx, w, h, p) {
@@ -955,7 +1198,7 @@
                 ctx.fill();
             }
             
-            const marginWidth = 20 + p * 40;
+            const marginWidth = 20 + p * 50;
             ctx.strokeStyle = '#40c0e0';
             ctx.lineWidth = 2;
             ctx.setLineDash([5, 5]);
@@ -977,53 +1220,55 @@
             ctx.stroke();
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('间隔宽度: ' + (marginWidth * 2).toFixed(0), 20, 30);
-            ctx.fillText('支持向量: 4个', 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('间隔宽度: ' + (marginWidth * 2).toFixed(0), 20, 35);
+            ctx.fillText('支持向量: 4个', 20, 55);
         }
 
         function drawStackQueue(ctx, w, h, p) {
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '16px Arial';
-            ctx.fillText('栈 (LIFO)', 50, 30);
-            ctx.fillText('队列 (FIFO)', w/2 + 50, 30);
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('栈 (LIFO)', 50, 35);
+            ctx.fillText('队列 (FIFO)', w/2 + 50, 35);
             
             ctx.strokeStyle = '#60c0a0';
             ctx.lineWidth = 2;
             for (let i = 0; i < 5; i++) {
-                const y = h - 50 - i * 40;
+                const y = h - 60 - i * 40;
                 ctx.strokeRect(30, y, 100, 30);
                 if (i < 4 - Math.floor(p * 5)) {
                     ctx.fillStyle = '#60c0a0';
-                    ctx.font = '14px Arial';
-                    ctx.fillText(['A', 'B', 'C', 'D', 'E'][i], 65, y + 20);
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillText(['A', 'B', 'C', 'D', 'E'][i], 68, y + 22);
                 }
             }
             
             ctx.fillStyle = '#e060a0';
-            ctx.fillText('TOP →', 10, h - 50 - (4 - Math.floor(p * 5)) * 40 + 20);
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('TOP →', 5, h - 60 - (4 - Math.floor(p * 5)) * 40 + 22);
             
             for (let i = 0; i < 5; i++) {
-                const x = w/2 + 30 + i * 22;
-                const y = h - 50;
+                const x = w/2 + 30 + i * 24;
+                const y = h - 60;
                 ctx.strokeStyle = '#a080e0';
-                ctx.strokeRect(x, y, 20, 60);
+                ctx.strokeRect(x, y, 22, 60);
                 if (i < Math.floor(p * 5)) {
                     ctx.fillStyle = '#a080e0';
-                    ctx.font = '12px Arial';
-                    ctx.fillText(['1', '2', '3', '4', '5'][i], x + 5, y + 35);
+                    ctx.font = 'bold 12px Arial';
+                    ctx.fillText(['1', '2', '3', '4', '5'][i], x + 7, y + 38);
                 }
             }
             
             ctx.fillStyle = '#a080e0';
-            ctx.fillText('→ 入口', w/2 + 30 - 40, h - 65);
-            ctx.fillText('出口 →', w/2 + 30 + 5 * 22 + 10, h - 65);
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('→ 入口', w/2 + 30 - 45, h - 75);
+            ctx.fillText('出口 →', w/2 + 30 + 5 * 24 + 15, h - 75);
         }
 
         function drawLinkedList(ctx, w, h, p) {
             const nodeCount = 5 + Math.floor(p * 4);
-            const nodeWidth = 60;
-            const nodeHeight = 40;
+            const nodeWidth = 65;
+            const nodeHeight = 45;
             const gap = (w - 100) / nodeCount;
             
             for (let i = 0; i < nodeCount; i++) {
@@ -1036,34 +1281,36 @@
                 ctx.fillRect(x, y, nodeWidth, nodeHeight);
                 ctx.strokeRect(x, y, nodeWidth, nodeHeight);
                 
-                ctx.strokeStyle = '#40c0e0';
                 ctx.fillStyle = '#40c0e0';
-                ctx.font = '14px Arial';
-                ctx.fillText(String(i + 1), x + nodeWidth/2 - 5, y + nodeHeight/2 + 5);
+                ctx.font = 'bold 16px Arial';
+                ctx.fillText(String(i + 1), x + nodeWidth/2 - 6, y + nodeHeight/2 + 6);
                 
-                ctx.beginPath();
-                ctx.moveTo(x + nodeWidth, y + nodeHeight/2);
-                ctx.lineTo(x + nodeWidth + gap/2, y + nodeHeight/2);
-                ctx.stroke();
-                
-                ctx.beginPath();
-                ctx.moveTo(x + nodeWidth + gap/2 - 5, y + nodeHeight/2 - 5);
-                ctx.lineTo(x + nodeWidth + gap/2, y + nodeHeight/2);
-                ctx.lineTo(x + nodeWidth + gap/2 - 5, y + nodeHeight/2 + 5);
-                ctx.stroke();
+                if (i < nodeCount - 1) {
+                    ctx.strokeStyle = '#40c0e0';
+                    ctx.beginPath();
+                    ctx.moveTo(x + nodeWidth, y + nodeHeight/2);
+                    ctx.lineTo(x + nodeWidth + gap/2, y + nodeHeight/2);
+                    ctx.stroke();
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(x + nodeWidth + gap/2 - 6, y + nodeHeight/2 - 6);
+                    ctx.lineTo(x + nodeWidth + gap/2, y + nodeHeight/2);
+                    ctx.lineTo(x + nodeWidth + gap/2 - 6, y + nodeHeight/2 + 6);
+                    ctx.stroke();
+                }
             }
             
             ctx.fillStyle = '#40c0e0';
             ctx.beginPath();
-            ctx.arc(50 + nodeCount * gap - nodeWidth, h/2 + 50, 6, 0, Math.PI * 2);
+            ctx.arc(50 + nodeCount * gap - nodeWidth + nodeWidth/2, h/2 + 55, 6, 0, Math.PI * 2);
             ctx.fill();
-            ctx.font = '12px Arial';
-            ctx.fillText('NULL', 50 + nodeCount * gap - nodeWidth + 10, h/2 + 55);
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('NULL', 50 + nodeCount * gap - nodeWidth + nodeWidth/2 + 12, h/2 + 60);
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('节点数: ' + nodeCount, 20, 30);
-            ctx.fillText('next指针', 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('节点数: ' + nodeCount, 20, 35);
+            ctx.fillText('结构: 单链表', 20, 55);
         }
 
         function drawTree(ctx, w, h, p) {
@@ -1083,18 +1330,18 @@
                 ctx.stroke();
                 
                 ctx.fillStyle = '#0a0e18';
-                ctx.font = '12px Arial';
+                ctx.font = 'bold 12px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(level === 0 ? '根' : 'N' + level, x, y + 4);
+                ctx.fillText(level === 0 ? '根' : 'N' + level, x, y + 5);
                 ctx.textAlign = 'left';
                 
-                const y2 = y + 60;
+                const y2 = y + 65;
                 const x1 = x - childGap;
                 const x2 = x + childGap;
                 
                 if (level < depth - 1) {
-                    ctx.strokeStyle = 'rgba(64, 192, 224, 0.5)';
-                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = 'rgba(64, 192, 224, 0.6)';
+                    ctx.lineWidth = 2;
                     ctx.beginPath();
                     ctx.moveTo(x, y + 20);
                     ctx.lineTo(x1, y2 - 15);
@@ -1109,12 +1356,12 @@
                 }
             }
             
-            drawNode(w/2, 50, 0, Math.PI / 3);
+            drawNode(w/2, 55, 0, Math.PI / 3);
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('深度: ' + (depth - 1), 20, 30);
-            ctx.fillText('节点数: ' + (Math.pow(2, depth) - 1), 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('深度: ' + (depth - 1), 20, 35);
+            ctx.fillText('节点数: ' + (Math.pow(2, depth) - 1), 20, 55);
         }
 
         function drawSorting(ctx, w, h, p) {
@@ -1128,9 +1375,9 @@
             const barWidth = (w - 40) / bars;
             
             for (let i = 0; i < bars; i++) {
-                const barHeight = heights[i] * (h - 60);
+                const barHeight = heights[i] * (h - 70);
                 const x = 20 + i * barWidth;
-                const y = h - 30 - barHeight;
+                const y = h - 35 - barHeight;
                 
                 if (i < sortedCount) {
                     const gradient = ctx.createLinearGradient(x, y, x, h);
@@ -1143,7 +1390,7 @@
                 
                 ctx.fillRect(x + 2, y, barWidth - 4, barHeight);
                 
-                if (i === sortedCount - 1 || (sortedCount === 0 && i === 0)) {
+                if (i === sortedCount - 1 && sortedCount > 0) {
                     ctx.strokeStyle = '#ffffff';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(x + 2, y, barWidth - 4, barHeight);
@@ -1151,9 +1398,9 @@
             }
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('已排序: ' + sortedCount + '/' + bars, 20, 30);
-            ctx.fillText('算法: 快速排序', 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('已排序: ' + sortedCount + '/' + bars, 20, 35);
+            ctx.fillText('算法: 快速排序', 20, 55);
         }
 
         function drawSearch(ctx, w, h, p) {
@@ -1162,40 +1409,44 @@
             const searchIndex = Math.floor(p * (arr.length + 1));
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('二分查找目标: ' + target, 20, 30);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('二分查找目标: ' + target, 20, 35);
             
-            const boxWidth = 50;
+            const boxWidth = 55;
             const startX = (w - arr.length * boxWidth) / 2;
             
             for (let i = 0; i < arr.length; i++) {
                 const x = startX + i * boxWidth;
                 
-                ctx.strokeStyle = i === searchIndex ? '#ffffff' : 'rgba(64, 192, 224, 0.5)';
+                ctx.strokeStyle = i === searchIndex ? '#ffffff' : 'rgba(64, 192, 224, 0.4)';
                 ctx.lineWidth = i === searchIndex ? 3 : 1;
-                ctx.strokeRect(x, h/2 - 20, boxWidth - 5, 40);
+                ctx.strokeRect(x, h/2 - 22, boxWidth - 5, 44);
                 
                 ctx.fillStyle = i === searchIndex ? '#40c0e0' : '#a0c0e0';
-                ctx.font = '14px Arial';
+                ctx.font = 'bold 14px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText(arr[i], x + boxWidth/2 - 2, h/2 + 5);
-                ctx.fillText(i, x + boxWidth/2 - 2, h/2 + 30);
+                ctx.fillText(arr[i], x + boxWidth/2 - 3, h/2 + 5);
+                ctx.fillText('[' + i + ']', x + boxWidth/2 - 8, h/2 + 28);
                 ctx.textAlign = 'left';
             }
             
             if (searchIndex < arr.length && arr[searchIndex] === target) {
                 ctx.fillStyle = '#80e0c0';
-                ctx.font = '16px Arial';
-                ctx.fillText('找到!', w/2, h/2 + 80);
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('✅ 找到!', w/2, h/2 + 75);
+                ctx.textAlign = 'left';
             } else if (searchIndex >= arr.length) {
                 ctx.fillStyle = '#e08060';
-                ctx.font = '16px Arial';
-                ctx.fillText('未找到', w/2, h/2 + 80);
+                ctx.font = 'bold 18px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('❌ 未找到', w/2, h/2 + 75);
+                ctx.textAlign = 'left';
             }
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '12px Arial';
-            ctx.fillText('查找次数: ' + Math.ceil(Math.log2(arr.length)), 20, 50);
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('查找次数: ' + Math.ceil(Math.log2(arr.length)), 20, 55);
         }
 
         function drawSetOperations(ctx, w, h, p) {
@@ -1205,7 +1456,7 @@
             const cy2 = h/2;
             const r = 100;
             
-            ctx.fillStyle = 'rgba(96, 192, 160, 0.2)';
+            ctx.fillStyle = 'rgba(96, 192, 160, 0.25)';
             ctx.beginPath();
             ctx.arc(cx1, cy1, r, 0, Math.PI * 2);
             ctx.fill();
@@ -1213,7 +1464,7 @@
             ctx.lineWidth = 2;
             ctx.stroke();
             
-            ctx.fillStyle = 'rgba(160, 128, 224, 0.2)';
+            ctx.fillStyle = 'rgba(160, 128, 224, 0.25)';
             ctx.beginPath();
             ctx.arc(cx2, cy2, r, 0, Math.PI * 2);
             ctx.fill();
@@ -1222,22 +1473,34 @@
             ctx.stroke();
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '16px Arial';
-            ctx.fillText('A', cx1 - r - 20, cy1 + 5);
-            ctx.fillText('B', cx2 + r + 15, cy2 + 5);
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText('A', cx1 - r - 25, cy1 + 8);
+            ctx.fillText('B', cx2 + r + 20, cy2 + 8);
             
             const mode = Math.floor(p * 4);
-            ctx.font = '14px Arial';
-            const labels = ['A n B', 'A U B', 'A - B', '对称差'];
-            ctx.fillText(labels[mode], w/2, 30);
+            const labels = ['交集 A ∩ B', '并集 A ∪ B', '差集 A - B', '对称差'];
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(labels[mode], w/2, 35);
+            ctx.textAlign = 'left';
+            
+            if (mode === 0) {
+                ctx.fillStyle = 'rgba(128, 160, 192, 0.4)';
+                ctx.beginPath();
+                ctx.arc(cx1, cy1, r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(cx2, cy2, r, 0, Math.PI * 2);
+                ctx.fill();
+            }
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '12px Arial';
-            ctx.fillText('元素数: 8个(A), 6个(B)', 20, h - 30);
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('元素数: |A|=8, |B|=6', 20, h - 35);
         }
 
         function drawComplexity(ctx, w, h, p) {
-            ctx.strokeStyle = 'rgba(100,140,180,0.3)';
+            ctx.strokeStyle = 'rgba(100,140,180,0.2)';
             ctx.lineWidth = 1;
             for (let i = 0; i <= 10; i++) {
                 ctx.beginPath();
@@ -1247,29 +1510,30 @@
             }
             
             const complexities = [
-                { name: 'O(1)', color: '#60c0a0', y: 0 },
-                { name: 'O(log n)', color: '#60c0f0', y: h * 0.2 },
-                { name: 'O(n)', color: '#a080e0', y: h * 0.4 },
-                { name: 'O(n log n)', color: '#e08060', y: h * 0.6 },
-                { name: 'O(n2)', color: '#e060a0', y: h * 0.85 }
+                { name: 'O(1)', color: '#60c0a0', growth: 0 },
+                { name: 'O(log n)', color: '#60c0f0', growth: 0.15 },
+                { name: 'O(n)', color: '#a080e0', growth: 0.3 },
+                { name: 'O(n log n)', color: '#e08060', growth: 0.5 },
+                { name: 'O(n²)', color: '#e060a0', growth: 0.8 }
             ];
             
             complexities.forEach(c => {
                 ctx.strokeStyle = c.color;
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.moveTo(0, c.y);
-                ctx.lineTo(w, Math.min(c.y + p * h * 0.3, h - 20));
+                ctx.moveTo(0, h * 0.8);
+                const endY = Math.max(h * 0.1, h * 0.8 - p * h * c.growth * 3);
+                ctx.lineTo(w, endY);
                 ctx.stroke();
                 
                 ctx.fillStyle = c.color;
-                ctx.font = '12px Arial';
-                ctx.fillText(c.name, w - 60, c.y - 5);
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(c.name, w - 70, endY - 8);
             });
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('当前展示: ' + (p * 100).toFixed(0) + '% 增长', 20, 30);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('数据规模: ' + (p * 100).toFixed(0) + '%', 20, 35);
         }
 
         function drawDP(ctx, w, h, p) {
@@ -1293,9 +1557,9 @@
                     ctx.strokeRect(x, y, cellSize - 2, cellSize - 2);
                     
                     ctx.fillStyle = '#0a0e18';
-                    ctx.font = '12px Arial';
+                    ctx.font = 'bold 12px Arial';
                     ctx.textAlign = 'center';
-                    ctx.fillText(dist, x + cellSize/2 - 1, y + cellSize/2 + 4);
+                    ctx.fillText(dist.toString(), x + cellSize/2 - 2, y + cellSize/2 + 5);
                     ctx.textAlign = 'left';
                 }
             }
@@ -1312,9 +1576,9 @@
             ctx.stroke();
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('状态数: ' + ((gridSize+1) * (gridSize+1)), 20, 30);
-            ctx.fillText('最优路径步数: ' + Math.floor(p * gridSize), 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('状态数: ' + ((gridSize+1) * (gridSize+1)), 20, 35);
+            ctx.fillText('最优路径步数: ' + Math.floor(p * gridSize), 20, 55);
         }
 
         function drawGreedy(ctx, w, h, p) {
@@ -1328,7 +1592,7 @@
             
             const scale = w / 12;
             
-            ctx.strokeStyle = 'rgba(100,140,180,0.3)';
+            ctx.strokeStyle = 'rgba(100,140,180,0.2)';
             ctx.lineWidth = 1;
             for (let i = 0; i <= 10; i++) {
                 ctx.beginPath();
@@ -1342,32 +1606,283 @@
                 const isSelected = i < selected;
                 const x = iv.start * scale;
                 const width = (iv.end - iv.start) * scale;
-                const y = 50 + i * 40;
+                const y = 55 + i * 45;
                 
-                ctx.fillStyle = isSelected ? '#40c0e0' : 'rgba(64, 192, 224, 0.3)';
-                ctx.fillRect(x, y, width, 25);
+                ctx.fillStyle = isSelected ? '#40c0e0' : 'rgba(64, 192, 224, 0.25)';
+                ctx.fillRect(x, y, width, 28);
                 ctx.strokeStyle = '#40c0e0';
                 ctx.lineWidth = isSelected ? 2 : 1;
-                ctx.strokeRect(x, y, width, 25);
+                ctx.strokeRect(x, y, width, 28);
                 
                 ctx.fillStyle = '#0a0e18';
-                ctx.font = '10px Arial';
-                ctx.fillText(iv.profit, x + width/2 - 5, y + 17);
+                ctx.font = 'bold 11px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(iv.profit.toString(), x + width/2 - 6, y + 20);
+                ctx.textAlign = 'left';
             });
             
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '14px Arial';
-            ctx.fillText('选择数量: ' + selected, 20, 30);
-            ctx.fillText('总利润: ' + intervals.slice(0, selected).reduce((sum, iv) => sum + iv.profit, 0), 20, 50);
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('选择数量: ' + selected, 20, 35);
+            ctx.fillText('总利润: ' + intervals.slice(0, selected).reduce((sum, iv) => sum + iv.profit, 0), 20, 55);
+        }
+
+        function drawPredicate(ctx, w, h, p) {
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('谓词逻辑量化', w/2, 35);
+            ctx.textAlign = 'left';
+            
+            const quantifiers = [
+                { symbol: '∀', name: '全称量词', desc: '对所有x' },
+                { symbol: '∃', name: '存在量词', desc: '存在x' },
+                { symbol: '∃!', name: '唯一量词', desc: '存在唯一x' }
+            ];
+            
+            const idx = Math.floor(p * quantifiers.length);
+            const q = quantifiers[idx];
+            
+            ctx.fillStyle = '#80e0c0';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(q.symbol, w/2, h/2);
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText(q.name, w/2, h/2 + 45);
+            ctx.font = '16px Arial';
+            ctx.fillText(q.desc, w/2, h/2 + 75);
+            ctx.textAlign = 'left';
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('示例: ' + q.symbol + 'x P(x)', 20, h - 35);
+        }
+
+        function drawGraphTheory(ctx, w, h, p) {
+            const nodes = [
+                {x: w/2, y: 60},
+                {x: w/4, y: h/2},
+                {x: 3*w/4, y: h/2},
+                {x: w/3, y: h - 60},
+                {x: 2*w/3, y: h - 60}
+            ];
+            
+            nodes.forEach(n => {
+                ctx.fillStyle = '#40c0e0';
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, 18, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+            
+            const edges = [[0,1],[0,2],[1,3],[2,4],[3,4],[1,2]];
+            ctx.strokeStyle = 'rgba(64, 192, 224, 0.5)';
+            ctx.lineWidth = 2;
+            edges.forEach(e => {
+                ctx.beginPath();
+                ctx.moveTo(nodes[e[0]].x, nodes[e[0]].y);
+                ctx.lineTo(nodes[e[1]].x, nodes[e[1]].y);
+                ctx.stroke();
+            });
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('顶点数: ' + nodes.length, 20, 35);
+            ctx.fillText('边数: ' + edges.length, 20, 55);
+            ctx.fillText('握手定理: Σdeg(v) = ' + (edges.length * 2), 20, 75);
+        }
+
+        function drawBinary(ctx, w, h, p) {
+            const num = Math.floor(p * 255);
+            const binary = num.toString(2).padStart(8, '0');
+            const hex = num.toString(16).toUpperCase().padStart(2, '0');
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('十进制: ' + num, 20, 35);
+            ctx.fillText('十六进制: 0x' + hex, 20, 55);
+            
+            ctx.font = 'bold 18px Arial';
+            ctx.fillStyle = '#80e0c0';
+            ctx.textAlign = 'center';
+            ctx.fillText('二进制: ' + binary, w/2, h/2);
+            ctx.textAlign = 'left';
+            
+            const bitWidth = 35;
+            const startX = (w - bitWidth * 8) / 2;
+            for (let i = 0; i < 8; i++) {
+                const x = startX + i * bitWidth;
+                ctx.strokeStyle = binary[i] === '1' ? '#80e0c0' : '#6080a0';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, h/2 + 40, bitWidth - 5, 30);
+                ctx.fillStyle = binary[i] === '1' ? '#80e0c0' : '#6080a0';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(binary[i], x + bitWidth/2 - 3, h/2 + 62);
+            }
+            ctx.textAlign = 'left';
+        }
+
+        function drawFloatingPoint(ctx, w, h, p) {
+            const sign = Math.floor(p * 2);
+            const exponent = 127 + Math.floor((p - 0.5) * 30);
+            const mantissa = 0.5 + p * 0.3;
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('IEEE 754 单精度浮点数', 20, 35);
+            
+            const parts = [
+                {label: '符号位', bits: 1, value: sign, color: '#e060a0'},
+                {label: '指数位', bits: 8, value: exponent, color: '#a080e0'},
+                {label: '尾数位', bits: 23, value: mantissa.toFixed(4), color: '#60c0a0'}
+            ];
+            
+            let x = 30;
+            parts.forEach((part, i) => {
+                const width = i === 0 ? 40 : (i === 1 ? 180 : 320);
+                ctx.fillStyle = part.color;
+                ctx.fillRect(x, h/2 - 30, width, 60);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, h/2 - 30, width, 60);
+                
+                ctx.fillStyle = '#0a0e18';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(part.label, x + width/2, h/2 - 5);
+                ctx.fillText(part.value.toString(), x + width/2, h/2 + 15);
+                ctx.fillText(part.bits + '位', x + width/2, h/2 + 35);
+                x += width + 10;
+                ctx.textAlign = 'left';
+            });
+            
+            const value = (sign === 0 ? 1 : -1) * (1 + mantissa) * Math.pow(2, exponent - 127);
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 12px Arial';
+            ctx.fillText('值: ' + value.toExponential(4), 20, h - 35);
+        }
+
+        function drawCNN(ctx, w, h, p) {
+            const layers = [
+                {name: '输入层', channels: 3, color: '#60c0a0'},
+                {name: '卷积层', channels: 16 + Math.floor(p * 16), color: '#60c0f0'},
+                {name: '池化层', channels: 16 + Math.floor(p * 16), color: '#a080e0'},
+                {name: '全连接层', channels: 10, color: '#e060a0'}
+            ];
+            
+            const layerWidth = w / (layers.length + 1);
+            layers.forEach((layer, i) => {
+                const x = layerWidth * (i + 1) - 50;
+                const height = 30 + layer.channels * 4;
+                const y = h/2 - height/2;
+                
+                ctx.fillStyle = layer.color;
+                ctx.fillRect(x, y, 100, height);
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(x, y, 100, height);
+                
+                ctx.fillStyle = '#0a0e18';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(layer.name, x + 50, y + 20);
+                ctx.fillText(layer.channels + '通道', x + 50, y + height - 10);
+                ctx.textAlign = 'left';
+            });
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('卷积核大小: 3x3', 20, 35);
+            ctx.fillText('激活函数: ReLU', 20, 55);
+        }
+
+        function drawDeepLearning(ctx, w, h, p) {
+            const layerCounts = [3, 8 + Math.floor(p * 12), 6 + Math.floor(p * 8), 4 + Math.floor(p * 6), 2];
+            const layerX = [];
+            for (let i = 0; i < layerCounts.length; i++) {
+                layerX.push((w / (layerCounts.length + 1)) * (i + 1));
+            }
+            
+            for (let i = 0; i < layerCounts.length - 1; i++) {
+                for (let j = 0; j < layerCounts[i]; j++) {
+                    const y1 = (h / (layerCounts[i] + 1)) * (j + 1);
+                    for (let k = 0; k < layerCounts[i+1]; k++) {
+                        const y2 = (h / (layerCounts[i+1] + 1)) * (k + 1);
+                        ctx.strokeStyle = `rgba(64, 192, 224, ${0.15 + p * 0.3})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(layerX[i], y1);
+                        ctx.lineTo(layerX[i+1], y2);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            layerCounts.forEach((count, i) => {
+                for (let j = 0; j < count; j++) {
+                    const y = (h / (count + 1)) * (j + 1);
+                    ctx.fillStyle = `rgba(64, 192, 224, ${0.4 + p * 0.4})`;
+                    ctx.beginPath();
+                    ctx.arc(layerX[i], y, 8 + p * 4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('层数: ' + layerCounts.length, 20, 35);
+            ctx.fillText('总节点: ' + layerCounts.reduce((a,b) => a+b, 0), 20, 55);
+        }
+
+        function drawRandomForest(ctx, w, h, p) {
+            const treeCount = 3 + Math.floor(p * 7);
+            
+            for (let i = 0; i < treeCount; i++) {
+                const x = (w / (treeCount + 1)) * (i + 1);
+                drawMiniTree(ctx, x, h/2, 2, Math.PI / 4);
+            }
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('决策树数量: ' + treeCount, 20, 35);
+            ctx.fillText('集成学习: Bagging', 20, 55);
+        }
+        
+        function drawMiniTree(ctx, cx, cy, depth, angle) {
+            if (depth <= 0) return;
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const childY = cy + 35;
+            const childGap = 25 * (depth + 1);
+            
+            ctx.strokeStyle = 'rgba(64, 192, 224, 0.6)';
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 10);
+            ctx.lineTo(cx - childGap, childY - 8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + 10);
+            ctx.lineTo(cx + childGap, childY - 8);
+            ctx.stroke();
+            
+            drawMiniTree(ctx, cx - childGap, childY, depth - 1, angle);
+            drawMiniTree(ctx, cx + childGap, childY, depth - 1, angle);
         }
 
         function drawDefault(ctx, w, h, p) {
             ctx.fillStyle = '#40c0e0';
-            ctx.font = '20px Arial';
+            ctx.font = 'bold 22px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('交互式演示区域', w/2, h/2);
-            ctx.font = '14px Arial';
-            ctx.fillText('调整滑块查看动态效果', w/2, h/2 + 30);
+            ctx.fillText('交互式演示区域', w/2, h/2 - 20);
+            ctx.font = '16px Arial';
+            ctx.fillText('调整滑块查看动态效果', w/2, h/2 + 20);
             ctx.textAlign = 'left';
         }
 
