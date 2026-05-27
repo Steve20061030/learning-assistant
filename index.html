@@ -1299,7 +1299,8 @@
                 el.className = `graph-node level-${node.level}`;
                 el.innerHTML = `<div class="node-level">Lv${node.level}</div><div class="node-name">${node.name}</div>`;
                 el.style.animationDelay = `${index * 30}ms`;
-                el.onclick = () => showNodeDetail(node);
+                el.style.cursor = 'pointer';
+                el.onclick = () => openDetailPage(node.name);
                 container.appendChild(el);
             });
         }

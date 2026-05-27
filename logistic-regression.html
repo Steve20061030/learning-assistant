@@ -331,6 +331,101 @@
 
         .related-card-desc { font-size: 12px; color: var(--text-muted); }
 
+        /* History Section */
+        .history-section {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
+            border-color: rgba(160, 128, 224, 0.3);
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #a080e0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .timeline-highlight {
+            background: rgba(96, 192, 240, 0.15);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border-left: 3px solid var(--level-color);
+        }
+
+        .timeline-highlight-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        /* Classification */
+        .classification-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .classification-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid rgba(96, 192, 240, 0.2);
+        }
+
+        .classification-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .classification-value {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 600;
+        }
+
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -472,6 +567,64 @@
                 <div class="scenario-card">
                     <div class="scenario-icon">🔒</div>
                     <div class="scenario-name">欺诈检测</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历史渊源 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1958</div>
+                    <div class="timeline-content">
+                        <strong>大卫·考克斯(David Cox)</strong>首次提出逻辑回归模型，最初用于生物统计学中分析二分类数据。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1970s</div>
+                    <div class="timeline-content">
+                        逻辑回归被引入机器学习领域，成为二分类问题的标准方法。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1990s</div>
+                    <div class="timeline-content">
+                        随着计算能力提升和大数据时代的到来，逻辑回归在互联网、金融等领域广泛应用。
+                        <div class="timeline-highlight">
+                            <span class="timeline-highlight-icon">⭐</span>
+                            逻辑回归是现代机器学习的基石，几乎所有分类任务都会先尝试它作为基准模型。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 分类体系 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🏷️</span>
+                分类体系
+            </h2>
+            <div class="classification-box">
+                <div class="classification-item">
+                    <div class="classification-label">学习类型</div>
+                    <div class="classification-value">监督学习</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">任务类型</div>
+                    <div class="classification-value">二分类</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">模型类型</div>
+                    <div class="classification-value">广义线性模型(GLM)</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">输出类型</div>
+                    <div class="classification-value">概率值 [0,1]</div>
                 </div>
             </div>
         </section>
