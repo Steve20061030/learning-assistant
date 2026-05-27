@@ -285,7 +285,7 @@
             border-radius: 16px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 15px;
+            font-size: 14px;
             text-align: center;
             border: 2px solid transparent;
             position: relative;
@@ -295,8 +295,8 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeLegibility;
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
         }
 
         @keyframes fadeIn {
@@ -1503,10 +1503,18 @@
                 'SVM': 'svm.html',
                 'CNN': 'cnn.html',
                 'RNN': 'rnn.html',
-                'Attention': 'attention.html'
+                'LSTM': 'lstm.html',
+                'GRU': 'gru.html',
+                'Attention': 'attention.html',
+                'Transformer': 'transformer.html'
             };
-            const page = pageMap[name] || 'linear-regression.html';
-            window.open(page, '_blank');
+            const page = pageMap[name];
+            if (page) {
+                window.location.href = page;
+            } else {
+                // 其他知识点使用内置详情页
+                showNodeDetail(name);
+            }
         }
 
         let notes = [];

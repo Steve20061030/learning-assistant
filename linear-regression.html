@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>线性回归 - 学习助手</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
 
         :root {
             --bg-primary: #0a0e18;
@@ -31,6 +31,9 @@
             font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
             min-height: 100vh;
             line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 300;
         }
 
         body::before {
@@ -65,6 +68,7 @@
             color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
+            font-weight: 300;
             padding: 8px 16px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
@@ -91,6 +95,7 @@
             border: 1px solid rgba(96, 192, 160, 0.4);
             border-radius: 20px;
             font-size: 12px;
+            font-weight: 300;
             color: var(--level-color);
             margin-bottom: 15px;
             letter-spacing: 1px;
@@ -98,7 +103,7 @@
 
         .page-title {
             font-size: 48px;
-            font-weight: 700;
+            font-weight: 400;
             color: var(--text-primary);
             margin-bottom: 10px;
             letter-spacing: 4px;
@@ -126,7 +131,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-weight: 600;
+            font-weight: 400;
         }
 
         .section-icon {
@@ -139,6 +144,7 @@
             color: var(--text-secondary);
             line-height: 2;
             margin-bottom: 20px;
+            font-weight: 300;
         }
 
         .intuition-box {
@@ -149,46 +155,224 @@
             margin-top: 20px;
         }
 
-        .intuition-box strong {
-            color: var(--level-color);
-            font-weight: 600;
+        .intuition-box strong { color: var(--level-color); font-weight: 400; }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(96, 192, 224, 0.1), rgba(96, 192, 224, 0.05));
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 25px;
+            border-left: 4px solid #60c0e0;
         }
 
-        .scenario-grid {
+        .analogy-title {
+            font-size: 16px;
+            color: #60c0e0;
+            font-weight: 400;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analogy-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        .analogy-highlight {
+            background: rgba(96, 192, 224, 0.15);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #c0e0f0;
+            font-weight: 300;
+        }
+
+        .viz-section {
+            background: linear-gradient(135deg, rgba(20, 40, 60, 0.8), rgba(10, 30, 50, 0.6));
+        }
+
+        .viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            background: rgba(5, 10, 20, 0.9);
+            border-radius: 12px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+            overflow: hidden;
+        }
+
+        #regressionCanvas { width: 100%; height: 100%; }
+
+        .viz-controls {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
         }
 
-        .scenario-card {
+        .control-group {
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-subtle);
             border-radius: 12px;
             padding: 20px;
-            text-align: center;
+        }
+
+        .control-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: 300;
+        }
+
+        .control-select, .control-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(96, 192, 160, 0.15);
+            border: 1px solid rgba(96, 192, 160, 0.3);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 300;
+            cursor: pointer;
             transition: all 0.3s;
         }
 
-        .scenario-card:hover {
+        .control-select:focus, .control-input:focus {
+            outline: none;
             border-color: var(--level-color);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(96, 192, 160, 0.15);
+            box-shadow: 0 0 15px rgba(96, 192, 160, 0.2);
         }
 
-        .scenario-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+        .control-range {
+            width: 100%;
+            height: 4px;
+            background: rgba(96, 192, 160, 0.2);
+            border-radius: 2px;
+            appearance: none;
+            cursor: pointer;
         }
 
-        .scenario-name {
-            font-size: 14px;
-            color: var(--text-secondary);
+        .control-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--level-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(96, 192, 160, 0.5);
+        }
+
+        .range-value {
+            font-family: 'Orbitron', monospace;
+            color: var(--level-color);
+            font-size: 15px;
+            font-weight: 300;
+            margin-top: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            background: rgba(96, 192, 224, 0.15);
+            border: 1px solid rgba(96, 192, 224, 0.3);
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 300;
+            color: #60c0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: rgba(96, 192, 224, 0.25);
+            border-color: #60c0e0;
+        }
+
+        .viz-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .viz-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid rgba(96, 192, 160, 0.2);
+        }
+
+        .viz-stat-value {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--level-color);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .viz-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            font-weight: 300;
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            font-weight: 300;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
         }
 
         .history-section {
-            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
-            border-color: rgba(160, 128, 224, 0.3);
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.1), rgba(96, 192, 160, 0.05));
+            border-color: rgba(96, 192, 160, 0.3);
         }
 
         .history-timeline {
@@ -221,13 +405,13 @@
             height: 10px;
             background: var(--level-color);
             border-radius: 50%;
-            box-shadow: 0 0 15px var(--level-color);
+            box-shadow: 0 0 15px rgba(96, 192, 160, 0.3);
         }
 
         .timeline-year {
             font-size: 14px;
             color: var(--level-color);
-            font-weight: 600;
+            font-weight: 400;
             margin-bottom: 5px;
             font-family: 'Orbitron', monospace;
         }
@@ -236,10 +420,11 @@
             font-size: 14px;
             color: var(--text-secondary);
             line-height: 1.8;
+            font-weight: 300;
         }
 
         .timeline-highlight {
-            background: rgba(96, 192, 160, 0.15);
+            background: rgba(96, 192, 224, 0.15);
             padding: 15px 20px;
             border-radius: 12px;
             margin-top: 10px;
@@ -251,253 +436,102 @@
             margin-right: 8px;
         }
 
-        /* Interactive Visualization */
-        .visualization-section {
-            background: linear-gradient(135deg, rgba(40, 60, 100, 0.5), rgba(25, 40, 70, 0.4));
-        }
-
-        .viz-container {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 25px;
-        }
-
-        .viz-title {
-            font-size: 16px;
-            color: var(--accent-cyan);
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            height: 350px;
-            background: rgba(10, 20, 40, 0.8);
-            border-radius: 12px;
-            border: 1px solid var(--border-subtle);
-            overflow: hidden;
-        }
-
-        #regressionCanvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        .controls-panel {
+        .classification-box {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
         }
 
-        .control-group {
+        .classification-item {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
             padding: 18px;
-        }
-
-        .control-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-        }
-
-        .control-name {
-            color: var(--text-secondary);
-        }
-
-        .control-value {
-            color: var(--accent-cyan);
-            font-family: 'Orbitron', monospace;
-            font-weight: 600;
-        }
-
-        .slider {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            outline: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--level-color);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--level-color);
-            transition: all 0.2s;
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 20px var(--level-color);
-        }
-
-        .generate-btn {
-            background: linear-gradient(135deg, var(--level-color), #40a080);
-            border: none;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .generate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(96, 192, 160, 0.4);
-        }
-
-        .stats-display {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .stat-box {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
             text-align: center;
             border: 1px solid rgba(96, 192, 160, 0.2);
         }
 
-        .stat-box-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--level-color);
-            font-family: 'Orbitron', monospace;
-            margin-bottom: 6px;
-        }
-
-        .stat-box-label {
+        .classification-label {
             font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 300;
         }
 
-        .try-section {
-            background: linear-gradient(135deg, rgba(64, 140, 200, 0.12), rgba(64, 140, 200, 0.04));
-            border-left: 4px solid var(--accent-cyan);
-            padding: 20px 25px;
-            border-radius: 0 12px 12px 0;
+        .classification-value {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 400;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
             margin-top: 20px;
         }
 
-        .try-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .try-item {
-            padding: 10px 0;
-            color: var(--text-secondary);
-            font-size: 14px;
-            padding-left: 24px;
-            position: relative;
-            border-bottom: 1px solid rgba(80, 120, 180, 0.1);
-        }
-
-        .try-item:last-child { border-bottom: none; }
-
-        .try-item::before {
-            content: '🎯';
-            position: absolute;
-            left: 0;
-        }
-
-        /* Formula Section */
-        .formula-section {
-            background: linear-gradient(135deg, rgba(30, 50, 80, 0.5), rgba(20, 35, 60, 0.4));
-        }
-
-        .formula-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--level-color);
-        }
-
-        .formula-title {
-            font-size: 16px;
-            color: var(--level-color);
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .formula-content {
-            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
-            font-size: 16px;
-            color: #c0e0f0;
-            line-height: 2.2;
-            white-space: pre-wrap;
-        }
-
-        .formula-note {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(80, 120, 180, 0.2);
-        }
-
-        /* Limitations Section */
-        .limitations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
-        .limitation-card {
+        .scenario-card {
             background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(224, 128, 96, 0.3);
+            border: 1px solid var(--border-subtle);
             border-radius: 12px;
             padding: 20px;
+            text-align: center;
             transition: all 0.3s;
         }
 
-        .limitation-card:hover {
-            border-color: rgba(224, 128, 96, 0.6);
-            transform: translateY(-2px);
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(96, 192, 160, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .limitation-card {
+            background: rgba(224, 128, 96, 0.1);
+            border: 1px solid rgba(224, 128, 96, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .limitation-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
         }
 
         .limitation-title {
             font-size: 15px;
             color: #e08060;
+            font-weight: 400;
             margin-bottom: 8px;
-            font-weight: 600;
         }
 
         .limitation-desc {
             font-size: 13px;
             color: var(--text-muted);
-            line-height: 1.7;
+            line-height: 1.6;
+            font-weight: 300;
         }
 
         .limitation-solution {
             font-size: 12px;
-            color: var(--accent-cyan);
+            color: #80e0c0;
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            border-top: 1px solid rgba(128, 224, 192, 0.2);
+            font-weight: 300;
         }
 
-        /* Related Section */
         .related-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -505,8 +539,8 @@
         }
 
         .related-card {
-            background: linear-gradient(135deg, rgba(160, 128, 224, 0.15), rgba(160, 128, 224, 0.05));
-            border: 1px solid rgba(160, 128, 224, 0.3);
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.15), rgba(96, 192, 160, 0.05));
+            border: 1px solid rgba(96, 192, 160, 0.3);
             border-radius: 12px;
             padding: 20px;
             text-decoration: none;
@@ -516,57 +550,55 @@
 
         .related-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(160, 128, 224, 0.25);
-            border-color: var(--accent-purple);
+            box-shadow: 0 15px 40px rgba(96, 192, 160, 0.25);
+            border-color: var(--level-color);
         }
 
         .related-card-title {
             font-size: 15px;
-            color: var(--accent-purple);
-            font-weight: 600;
+            color: var(--level-color);
+            font-weight: 400;
             margin-bottom: 6px;
         }
 
-        .related-card-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
 
-        /* Industry Section */
-        .industry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .industry-card {
+        .quick-nav {
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
+            border-radius: 16px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .quick-nav-title {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+
+        .quick-nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quick-nav-link {
+            padding: 10px 20px;
+            background: rgba(96, 192, 160, 0.15);
+            border: 1px solid rgba(96, 192, 160, 0.3);
+            border-radius: 25px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 300;
             transition: all 0.3s;
         }
 
-        .industry-card:hover {
-            background: rgba(96, 192, 160, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .industry-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-        }
-
-        .industry-name {
-            font-size: 14px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .industry-example {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 6px;
+        .quick-nav-link:hover {
+            background: rgba(96, 192, 160, 0.3);
+            border-color: var(--level-color);
+            color: var(--level-color);
         }
 
         footer {
@@ -574,15 +606,15 @@
             padding: 40px 20px;
             color: var(--text-muted);
             font-size: 14px;
+            font-weight: 300;
             border-top: 1px solid var(--border-subtle);
             margin-top: 50px;
         }
 
         @media (max-width: 768px) {
             .page-title { font-size: 32px; }
-            .stats-display { grid-template-columns: 1fr; }
-            .controls-panel { grid-template-columns: 1fr; }
-            .canvas-container { height: 280px; }
+            .viz-stats { grid-template-columns: repeat(2, 1fr); }
+            .canvas-container { height: 320px; }
         }
     </style>
 </head>
@@ -591,98 +623,44 @@
         <a href="index.html" class="back-btn">← 返回知识图谱</a>
 
         <div class="page-header">
-            <div class="level-badge">Level 1 · 入门</div>
+            <div class="level-badge">Level 1 · 基础</div>
             <h1 class="page-title">线性回归</h1>
             <p class="page-subtitle">Linear Regression</p>
         </div>
 
-        <!-- 定义与直觉 -->
         <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">📖</span>
-                什么是线性回归？
+                算法简介
             </h2>
             <p class="definition-text">
-                线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。通过最小化预测值与实际值之间的均方误差来训练模型。
+                线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。
             </p>
             <p class="definition-text">
-                <strong>典型应用：</strong>例如根据房屋面积预测房价、根据学习时间预测考试成绩等连续值的预测问题。
+                通过最小化预测值与真实值之间的均方误差，我们可以学习出最佳的参数 w（权重）和 b（偏置）。
             </p>
-            <div class="intuition-box">
-                <strong>💡 核心直觉：</strong>想象你在散点图中画一条线，让所有点到这条线的距离平方和最小。这条线就是最佳拟合线，能够最好地代表数据的趋势。
+
+            <div class="analogy-box">
+                <div class="analogy-title">
+                    <span>🎯</span> 生活类比：射箭
+                </div>
+                <div class="analogy-text">
+                    想象你在练习射箭，想要射得越准越好。线性回归就像是不断调整你的瞄准姿势和力度，直到箭头能够尽可能集中地落在靶心周围。
+                </div>
+                <div class="analogy-highlight">
+                    💡 <strong>核心直觉：</strong><br>
+                    在散点图中画一条线，让所有点到这条线的垂直距离平方和最小。
+                </div>
             </div>
         </section>
 
-        <!-- 适用场景 -->
-        <section class="section">
+        <section class="section viz-section">
             <h2 class="section-title">
-                <span class="section-icon">🎯</span>
-                适用场景
-            </h2>
-            <div class="scenario-grid">
-                <div class="scenario-card">
-                    <div class="scenario-icon">📈</div>
-                    <div class="scenario-name">数据呈线性关系</div>
-                </div>
-                <div class="scenario-card">
-                    <div class="scenario-icon">📊</div>
-                    <div class="scenario-name">需要可解释性</div>
-                </div>
-                <div class="scenario-card">
-                    <div class="scenario-icon">⚡</div>
-                    <div class="scenario-name">快速基线模型</div>
-                </div>
-                <div class="scenario-card">
-                    <div class="scenario-icon">🔢</div>
-                    <div class="scenario-name">特征数量适中</div>
-                </div>
-                <div class="scenario-card">
-                    <div class="scenario-icon">📉</div>
-                    <div class="scenario-name">预测连续值</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 历史渊源 -->
-        <section class="section history-section">
-            <h2 class="section-title" style="color: var(--accent-purple);">
-                <span class="section-icon">📜</span>
-                历史渊源
-            </h2>
-            <div class="history-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-year">1805</div>
-                    <div class="timeline-content">
-                        法国数学家<strong>勒让德</strong>发表了<strong>最小二乘法</strong>：找一条线，使所有观测点到这条线的距离平方和最小。
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1809</div>
-                    <div class="timeline-content">
-                        <strong>高斯</strong>声称自己早在1795年就用过这个方法，并给出了更严格的概率论证明。两人为此争论了数十年。
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">历史意义</div>
-                    <div class="timeline-content">
-                        最小二乘法成为了整个统计学和机器学习的基石。从天文学到经济学，从工程到医学，几乎所有"从数据中学习"的方法都可以追溯到这个200多年前的想法。
-                        <div class="timeline-highlight">
-                            <span class="timeline-highlight-icon">⭐</span>
-                            高斯用最小二乘法仅凭几个观测点就成功预测了小行星谷神星(Ceres)的轨道，让天文学家在它消失数月后重新找到了它。
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 交互式可视化 -->
-        <section class="section visualization-section">
-            <h2 class="section-title">
-                <span class="section-icon">📊</span>
+                <span class="section-icon">📈</span>
                 交互式可视化
             </h2>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">
-                拖动滑块调整参数，观察拟合线如何变化
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-weight: 300;">
+                点击画布添加数据点，观察线性回归拟合线的变化
             </p>
 
             <div class="viz-container">
@@ -690,101 +668,159 @@
                     <canvas id="regressionCanvas"></canvas>
                 </div>
 
-                <div class="controls-panel">
+                <div class="viz-controls">
                     <div class="control-group">
-                        <div class="control-label">
-                            <span class="control-name">斜率 (Slope, m)</span>
-                            <span class="control-value" id="slopeValue">1.0</span>
-                        </div>
-                        <input type="range" class="slider" id="slopeSlider" min="-2" max="3" step="0.1" value="1">
+                        <div class="control-label">噪声强度</div>
+                        <input type="range" class="control-range" id="noiseLevel" min="0" max="100" value="20">
+                        <div class="range-value" id="noiseValue">20%</div>
                     </div>
                     <div class="control-group">
-                        <div class="control-label">
-                            <span class="control-name">截距 (Intercept, b)</span>
-                            <span class="control-value" id="interceptValue">0.0</span>
-                        </div>
-                        <input type="range" class="slider" id="interceptSlider" min="-3" max="3" step="0.1" value="0">
+                        <div class="control-label">点数量</div>
+                        <input type="range" class="control-range" id="pointCount" min="5" max="100" value="30">
+                        <div class="range-value" id="pointValue">30</div>
                     </div>
                     <div class="control-group">
-                        <div class="control-label">
-                            <span class="control-name">数据噪声 (Noise)</span>
-                            <span class="control-value" id="noiseValue">0.5</span>
-                        </div>
-                        <input type="range" class="slider" id="noiseSlider" min="0" max="2" step="0.1" value="0.5">
+                        <div class="control-label">斜率</div>
+                        <input type="range" class="control-range" id="slopeVal" min="-20" max="20" value="10">
+                        <div class="range-value" id="slopeValue">1.0</div>
                     </div>
                     <div class="control-group">
-                        <div class="control-label">
-                            <span class="control-name">样本数 (Samples)</span>
-                            <span class="control-value" id="samplesValue">30</span>
-                        </div>
-                        <input type="range" class="slider" id="samplesSlider" min="10" max="100" step="5" value="30">
-                        <button class="generate-btn" onclick="generateData()">🔄 生成新数据</button>
+                        <div class="control-label">偏置</div>
+                        <input type="range" class="control-range" id="biasVal" min="-50" max="50" value="0">
+                        <div class="range-value" id="biasValue">0</div>
                     </div>
                 </div>
 
-                <div class="stats-display">
-                    <div class="stat-box">
-                        <div class="stat-box-value" id="equationDisplay">y = 1.00x + 0.00</div>
-                        <div class="stat-box-label">拟合方程</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-value" id="mseDisplay">1.0163</div>
-                        <div class="stat-box-label">MSE (均方误差)</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-box-value" id="r2Display">0.892</div>
-                        <div class="stat-box-label">R² (决定系数)</div>
-                    </div>
+                <div class="action-buttons">
+                    <button class="action-btn" id="genPoints">生成数据</button>
+                    <button class="action-btn" id="addPoint">添加点</button>
+                    <button class="action-btn" id="clearCanvas">清除</button>
+                    <button class="action-btn" id="toggleGrid">网格切换</button>
                 </div>
 
-                <div class="try-section">
-                    <div class="try-title" style="color: var(--accent-cyan); font-weight: 600; margin-bottom: 12px;">🎯 试一试</div>
-                    <ul class="try-list">
-                        <li class="try-item">拖动「斜率」和「截距」滑块，观察回归线如何变化——能否手动找到最佳拟合？</li>
-                        <li class="try-item">增大「噪声」，观察数据变散后 R² 值下降——噪声越大，线性关系越弱</li>
-                        <li class="try-item">改变「样本数」，体会样本越多、拟合越稳定的道理</li>
-                    </ul>
+                <div class="viz-stats">
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="slopeDisplay">0.00</div>
+                        <div class="viz-stat-label">斜率 w</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="biasDisplay">0.00</div>
+                        <div class="viz-stat-label">偏置 b</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="rmseDisplay">0.00</div>
+                        <div class="viz-stat-label">RMSE</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="r2Display">0.00</div>
+                        <div class="viz-stat-label">R²</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 数学原理 -->
-        <section class="section formula-section">
+        <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">📐</span>
                 数学原理
             </h2>
 
             <div class="formula-card">
-                <div class="formula-title">模型</div>
-                <div class="formula-content">ŷ = wx + b</div>
-                <div class="formula-note">其中 ŷ 是预测值，w 是权重（斜率），b 是偏置（截距）</div>
+                <div class="formula-title">线性模型</div>
+                <div class="formula-content">ŷ = w·x + b</div>
+                <div class="formula-note">w 是权重（斜率），b 是偏置（截距），ŷ 是预测值</div>
             </div>
 
             <div class="formula-card">
-                <div class="formula-title">损失函数（均方误差 MSE）</div>
-                <div class="formula-content">J(w, b) = (1/n) Σ(yᵢ - ŷᵢ)²</div>
-                <div class="formula-note">
-                    为什么用平方？① 消除正负抵消 ② 对大误差惩罚更重 ③ 处处可导，方便优化
-                </div>
+                <div class="formula-title">损失函数 - 均方误差</div>
+                <div class="formula-content">J(w, b) = (1/(2n)) Σ(ŷᵢ - yᵢ)²</div>
+                <div class="formula-note">最小化所有样本预测值与真实值之间的平方误差之和</div>
             </div>
 
             <div class="formula-card">
-                <div class="formula-title">闭式解（直接算出最优解）</div>
-                <div class="formula-content">w = Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²
-b = ȳ - wx̄</div>
-                <div class="formula-note">这就是著名的正规方程 (Normal Equation)</div>
-            </div>
-
-            <div class="formula-card">
-                <div class="formula-title">梯度下降（迭代求解）</div>
-                <div class="formula-content">w ← w - η · ∂J/∂w
-  = w - η · (2/n) Σ(wxᵢ + b - yᵢ) · xᵢ</div>
-                <div class="formula-note">η 是学习率——太大会震荡，太小收敛慢。当特征很多时，梯度下降比闭式解更高效。</div>
+                <div class="formula-title">正规方程 - 闭式解</div>
+                <div class="formula-content">w = (XᵀX)⁻¹Xᵀy</div>
+                <div class="formula-note">可以直接计算出最优解，不需要迭代训练</div>
             </div>
         </section>
 
-        <!-- 局限性 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: var(--level-color);">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1805</div>
+                    <div class="timeline-content">
+                        <strong>勒让德（Legendre）</strong>发表了最小二乘法的第一篇论文，为线性回归奠定了基础。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1809</div>
+                    <div class="timeline-content">
+                        <strong>高斯（Gauss）</strong>也独立发现了最小二乘法，并将其应用于天文学数据的预测分析中。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1936</div>
+                    <div class="timeline-content">
+                        <strong>费歇尔（Fisher）</strong>进一步发展了线性回归的统计理论，包括方差分析。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🏷️</span>
+                分类体系
+            </h2>
+            <div class="classification-box">
+                <div class="classification-item">
+                    <div class="classification-label">学习类型</div>
+                    <div class="classification-value">监督学习</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">任务类型</div>
+                    <div class="classification-value">回归</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">模型类型</div>
+                    <div class="classification-value">线性模型</div>
+                </div>
+                <div class="classification-item">
+                    <div class="classification-label">复杂度</div>
+                    <div class="classification-value">O(n)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">🏠</div>
+                    <div class="scenario-name">房价预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">💰</div>
+                    <div class="scenario-name">销量预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📚</div>
+                    <div class="scenario-name">成绩预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🌡️</div>
+                    <div class="scenario-name">温度预测</div>
+                </div>
+            </div>
+        </section>
+
         <section class="section">
             <h2 class="section-title" style="color: #e08060;">
                 <span class="section-icon">⚠️</span>
@@ -792,65 +828,26 @@ b = ȳ - wx̄</div>
             </h2>
             <div class="limitations-grid">
                 <div class="limitation-card">
+                    <div class="limitation-icon">📉</div>
                     <div class="limitation-title">只能拟合线性关系</div>
-                    <div class="limitation-desc">如果数据是曲线，线性回归效果很差</div>
-                    <div class="limitation-solution">→ 多项式回归、核方法、神经网络</div>
+                    <div class="limitation-desc">无法捕捉复杂的非线性模式，对真实世界的限制很大。</div>
+                    <div class="limitation-solution">💡 使用多项式回归或神经网络</div>
                 </div>
                 <div class="limitation-card">
+                    <div class="limitation-icon">📍</div>
                     <div class="limitation-title">对异常值敏感</div>
-                    <div class="limitation-desc">一个极端的离群点可以显著影响回归线</div>
-                    <div class="limitation-solution">→ 鲁棒回归、RANSAC</div>
+                    <div class="limitation-desc">少数异常点会显著影响拟合结果，破坏整体模型质量。</div>
+                    <div class="limitation-solution">💡 使用鲁棒回归或数据预处理</div>
                 </div>
                 <div class="limitation-card">
-                    <div class="limitation-title">假设特征独立</div>
-                    <div class="limitation-desc">多重共线性会导致参数估计不稳定</div>
-                    <div class="limitation-solution">→ Ridge、Lasso 正则化</div>
-                </div>
-                <div class="limitation-card">
+                    <div class="limitation-icon">📊</div>
                     <div class="limitation-title">容易过拟合</div>
-                    <div class="limitation-desc">当特征很多而样本很少时</div>
-                    <div class="limitation-solution">→ 正则化、特征选择</div>
+                    <div class="limitation-desc">特征过多时容易在训练集表现好但在测试集表现差。</div>
+                    <div class="limitation-solution">💡 使用 L1/L2 正则化（Lasso/Ridge）</div>
                 </div>
             </div>
         </section>
 
-        <!-- 工业界地位 -->
-        <section class="section">
-            <h2 class="section-title">
-                <span class="section-icon">🏢</span>
-                工业界地位
-            </h2>
-            <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.9;">
-                尽管已有200多年历史，线性回归在工业界仍然是<strong style="color: var(--level-color);">最常用的算法之一</strong>。
-            </p>
-            <div class="industry-grid">
-                <div class="industry-card">
-                    <div class="industry-icon">💰</div>
-                    <div class="industry-name">金融风控</div>
-                    <div class="industry-example">信用评分、违约预测</div>
-                </div>
-                <div class="industry-card">
-                    <div class="industry-icon">🛒</div>
-                    <div class="industry-name">电商</div>
-                    <div class="industry-example">销量预测、价格敏感度</div>
-                </div>
-                <div class="industry-card">
-                    <div class="industry-icon">📢</div>
-                    <div class="industry-name">广告</div>
-                    <div class="industry-example">点击率预估基础模型</div>
-                </div>
-                <div class="industry-card">
-                    <div class="industry-icon">🔬</div>
-                    <div class="industry-name">因果推断</div>
-                    <div class="industry-example">A/B测试分析</div>
-                </div>
-            </div>
-            <div class="intuition-box" style="margin-top: 25px;">
-                <strong>🎯 为什么还在用？</strong>简单、快速、可解释性强。在很多场景下，复杂模型的性能提升并不显著，而线性回归的透明度和可维护性更有价值。
-            </div>
-        </section>
-
-        <!-- 相关算法 -->
         <section class="section">
             <h2 class="section-title" style="color: var(--accent-purple);">
                 <span class="section-icon">🔗</span>
@@ -858,181 +855,274 @@ b = ȳ - wx̄</div>
             </h2>
             <div class="related-grid">
                 <a href="logistic-regression.html" class="related-card">
-                    <div class="related-card-title">→ 逻辑回归（分类）</div>
-                    <div class="related-card-desc">二分类问题的经典算法</div>
+                    <div class="related-card-title">→ 逻辑回归</div>
+                    <div class="related-card-desc">分类版本，输出概率</div>
                 </a>
-                <a href="ridge-regression.html" class="related-card">
-                    <div class="related-card-title">→ Ridge 回归（正则化）</div>
-                    <div class="related-card-desc">L2正则化防止过拟合</div>
+                <a href="neural-network.html" class="related-card">
+                    <div class="related-card-title">→ 神经网络</div>
+                    <div class="related-card-desc">多层非线性学习</div>
                 </a>
-                <a href="lasso-regression.html" class="related-card">
-                    <div class="related-card-title">→ Lasso 回归（L1正则）</div>
-                    <div class="related-card-desc">特征选择与稀疏性</div>
+                <a href="knn.html" class="related-card">
+                    <div class="related-card-title">→ KNN</div>
+                    <div class="related-card-desc">近邻方法</div>
                 </a>
-                <a href="pca.html" class="related-card">
-                    <div class="related-card-title">→ PCA 降维</div>
-                    <div class="related-card-desc">主成分分析</div>
+                <a href="svm.html" class="related-card">
+                    <div class="related-card-title">→ SVM</div>
+                    <div class="related-card-desc">最大间隔分类</div>
                 </a>
             </div>
         </section>
 
+        <div class="quick-nav">
+            <div class="quick-nav-title">快速导航</div>
+            <div class="quick-nav-links">
+                <a href="logistic-regression.html" class="quick-nav-link">→ 逻辑回归</a>
+                <a href="knn.html" class="quick-nav-link">→ KNN</a>
+                <a href="neural-network.html" class="quick-nav-link">→ 神经网络</a>
+                <a href="index.html" class="quick-nav-link">→ 知识图谱</a>
+            </div>
+        </div>
+
         <footer>
-            <p>学习助手 - 线性回归 | Level 1 入门</p>
+            <p>学习助手 - 线性回归 | Level 1 基础</p>
         </footer>
     </div>
 
     <script>
         const canvas = document.getElementById('regressionCanvas');
         const ctx = canvas.getContext('2d');
-
-        let data = [];
-        let slope = 1.0;
-        let intercept = 0.0;
-        let noise = 0.5;
-        let sampleCount = 30;
+        let points = [];
+        let showGrid = true;
+        let w = 0, b = 0;
 
         function resizeCanvas() {
-            const container = canvas.parentElement;
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
             draw();
         }
 
-        function generateData() {
-            data = [];
-            for (let i = 0; i < sampleCount; i++) {
-                const x = (Math.random() - 0.5) * 10;
-                const y = slope * x + intercept + (Math.random() - 0.5) * noise * 4;
-                data.push({ x, y });
+        function generatePoints() {
+            points = [];
+            const noise = parseInt(document.getElementById('noiseLevel').value) / 100;
+            const count = parseInt(document.getElementById('pointCount').value);
+            const trueW = parseInt(document.getElementById('slopeVal').value) / 10;
+            const trueB = parseInt(document.getElementById('biasVal').value);
+            
+            for (let i = 0; i < count; i++) {
+                const x = Math.random() * 100;
+                const y = trueW * x + trueB + (Math.random() - 0.5) * 100 * noise;
+                points.push({ x, y });
             }
+            fitRegression();
             draw();
+        }
+
+        function addPoint(x, y) {
+            if (x === undefined || y === undefined) {
+                x = Math.random() * 100;
+                y = Math.random() * 100;
+            }
+            points.push({ x, y });
+            fitRegression();
+            draw();
+        }
+
+        function fitRegression() {
+            if (points.length < 2) {
+                w = 0; b = 0;
+                updateStats();
+                return;
+            }
+            
+            const n = points.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+            
+            for (let p of points) {
+                sumX += p.x; sumY += p.y;
+                sumXY += p.x * p.y; sumXX += p.x * p.x;
+            }
+            
+            w = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            b = (sumY - w * sumX) / n;
             updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('slopeDisplay').textContent = w.toFixed(2);
+            document.getElementById('biasDisplay').textContent = b.toFixed(2);
+            
+            if (points.length < 2) {
+                document.getElementById('rmseDisplay').textContent = '0.00';
+                document.getElementById('r2Display').textContent = '0.00';
+                return;
+            }
+            
+            let sse = 0, sst = 0, meanY = 0;
+            for (let p of points) meanY += p.y;
+            meanY /= points.length;
+            for (let p of points) {
+                const pred = w * p.x + b;
+                sse += (pred - p.y) ** 2;
+                sst += (p.y - meanY) ** 2;
+            }
+            const rmse = Math.sqrt(sse / points.length);
+            const r2 = 1 - sse / sst;
+            
+            document.getElementById('rmseDisplay').textContent = rmse.toFixed(2);
+            document.getElementById('r2Display').textContent = r2.toFixed(2);
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            const padding = 40;
-            const plotWidth = canvas.width - padding * 2;
-            const plotHeight = canvas.height - padding * 2;
-
-            ctx.strokeStyle = 'rgba(80, 120, 180, 0.2)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 10; i++) {
-                const x = padding + (i / 10) * plotWidth;
-                ctx.beginPath();
-                ctx.moveTo(x, padding);
-                ctx.lineTo(x, canvas.height - padding);
-                ctx.stroke();
-
-                const y = padding + (i / 10) * plotHeight;
-                ctx.beginPath();
-                ctx.moveTo(padding, y);
-                ctx.lineTo(canvas.width - padding, y);
-                ctx.stroke();
+            
+            const padding = 50;
+            const width = canvas.width - padding * 2;
+            const height = canvas.height - padding * 2;
+            
+            // 背景
+            ctx.fillStyle = 'rgba(5, 10, 20, 0.95)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 网格
+            if (showGrid) {
+                ctx.strokeStyle = 'rgba(80, 120, 180, 0.15)';
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i <= 10; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(padding + i * width / 10, padding);
+                    ctx.lineTo(padding + i * width / 10, canvas.height - padding);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.moveTo(padding, padding + i * height / 10);
+                    ctx.lineTo(canvas.width - padding, padding + i * height / 10);
+                    ctx.stroke();
+                }
             }
-
-            ctx.fillStyle = 'rgba(80, 120, 180, 0.5)';
-            ctx.font = '11px Orbitron';
+            
+            // 坐标系
+            ctx.strokeStyle = 'rgba(160, 192, 160, 0.6)';
+            ctx.lineWidth = 1;
+            
+            // X轴
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.stroke();
+            
+            // Y轴
+            ctx.beginPath();
+            ctx.moveTo(padding, canvas.height - padding);
+            ctx.lineTo(padding, padding);
+            ctx.stroke();
+            
+            // 轴标签
+            ctx.fillStyle = '#6080a0';
+            ctx.font = '11px Noto Sans SC';
+            ctx.fontWeight = '300';
             ctx.textAlign = 'center';
-            for (let i = -5; i <= 5; i++) {
-                const x = padding + ((i + 5) / 10) * plotWidth;
-                ctx.fillText(i.toString(), x, canvas.height - padding + 20);
+            ctx.fillText('X', canvas.width - padding - 10, canvas.height - 15);
+            ctx.textAlign = 'right';
+            ctx.fillText('Y', padding + 10, padding + 5);
+            
+            // 刻度
+            ctx.font = '10px Orbitron';
+            ctx.textAlign = 'center';
+            for (let i = 0; i <= 10; i++) {
+                const x = padding + i * width / 10;
+                ctx.fillText(i * 10, x, canvas.height - padding + 18);
+                ctx.fillStyle = 'rgba(160, 192, 160, 0.8)';
+                ctx.fillRect(x - 1, canvas.height - padding - 3, 2, 6);
+                ctx.fillStyle = '#6080a0';
             }
             ctx.textAlign = 'right';
-            for (let i = -5; i <= 5; i++) {
-                const y = canvas.height - padding - ((i + 5) / 10) * plotHeight;
-                ctx.fillText(i.toString(), padding - 10, y + 4);
+            for (let i = 0; i <= 10; i++) {
+                const y = canvas.height - padding - i * height / 10;
+                ctx.fillText(Math.round(i * 10), padding - 10, y + 4);
+                ctx.fillStyle = 'rgba(160, 192, 160, 0.8)';
+                ctx.fillRect(padding - 3, y - 1, 6, 2);
+                ctx.fillStyle = '#6080a0';
             }
-
-            ctx.fillStyle = '#a0a0a0';
-            ctx.font = '12px Noto Sans SC';
-            ctx.textAlign = 'center';
-            ctx.fillText('x (特征)', canvas.width / 2, canvas.height - 5);
-            ctx.save();
-            ctx.translate(15, canvas.height / 2);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText('y (目标)', 0, 0);
-            ctx.restore();
-
-            ctx.strokeStyle = '#40c0e0';
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            const x1 = -6, x2 = 6;
-            const y1 = slope * x1 + intercept;
-            const y2 = slope * x2 + intercept;
-            const screenX1 = padding + ((x1 + 5) / 10) * plotWidth;
-            const screenX2 = padding + ((x2 + 5) / 10) * plotWidth;
-            const screenY1 = canvas.height - padding - ((y1 + 5) / 10) * plotHeight;
-            const screenY2 = canvas.height - padding - ((y2 + 5) / 10) * plotHeight;
-            ctx.moveTo(screenX1, screenY1);
-            ctx.lineTo(screenX2, screenY2);
-            ctx.stroke();
-
-            data.forEach(point => {
-                const screenX = padding + ((point.x + 5) / 10) * plotWidth;
-                const screenY = canvas.height - padding - ((point.y + 5) / 10) * plotHeight;
-
-                ctx.beginPath();
-                ctx.arc(screenX, screenY, 6, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(96, 192, 160, 0.7)';
-                ctx.fill();
+            
+            // 回归线
+            if (points.length >= 2) {
+                const x1 = 0, y1 = w * x1 + b;
+                const x2 = 100, y2 = w * x2 + b;
+                
+                const sx1 = padding + (x1 / 100) * width;
+                const sy1 = canvas.height - padding - (y1 / 100) * height;
+                const sx2 = padding + (x2 / 100) * width;
+                const sy2 = canvas.height - padding - (y2 / 100) * height;
+                
                 ctx.strokeStyle = '#60c0a0';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(sx1, sy1);
+                ctx.lineTo(sx2, sy2);
                 ctx.stroke();
-            });
+            }
+            
+            // 数据点
+            for (let p of points) {
+                const sx = padding + (p.x / 100) * width;
+                const sy = canvas.height - padding - (p.y / 100) * height;
+                
+                ctx.beginPath();
+                ctx.arc(sx, sy, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#60c0e0';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
         }
 
-        function updateStats() {
-            let mse = 0;
-            let ssRes = 0, ssTot = 0;
-            const meanY = data.reduce((sum, p) => sum + p.y, 0) / data.length;
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const padding = 50;
+            const width = canvas.width - padding * 2;
+            const height = canvas.height - padding * 2;
+            
+            const x = ((e.clientX - rect.left) - padding) / width * 100;
+            const y = 100 - ((e.clientY - rect.top) - padding) / height * 100;
+            
+            if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
+                addPoint(x, y);
+            }
+        });
 
-            data.forEach(point => {
-                const predicted = slope * point.x + intercept;
-                mse += Math.pow(point.y - predicted, 2);
-                ssRes += Math.pow(point.y - predicted, 2);
-                ssTot += Math.pow(point.y - meanY, 2);
-            });
-            mse /= data.length;
-            const r2 = 1 - ssRes / ssTot;
+        document.getElementById('noiseLevel').addEventListener('input', (e) => {
+            document.getElementById('noiseValue').textContent = e.target.value + '%';
+        });
 
-            document.getElementById('equationDisplay').textContent = `y = ${slope.toFixed(2)}x + ${intercept.toFixed(2)}`;
-            document.getElementById('mseDisplay').textContent = mse.toFixed(4);
-            document.getElementById('r2Display').textContent = r2.toFixed(3);
-        }
+        document.getElementById('pointCount').addEventListener('input', (e) => {
+            document.getElementById('pointValue').textContent = e.target.value;
+        });
 
-        document.getElementById('slopeSlider').addEventListener('input', function() {
-            slope = parseFloat(this.value);
-            document.getElementById('slopeValue').textContent = slope.toFixed(1);
-            draw();
+        document.getElementById('slopeVal').addEventListener('input', (e) => {
+            document.getElementById('slopeValue').textContent = (parseInt(e.target.value) / 10).toFixed(1);
+        });
+
+        document.getElementById('biasVal').addEventListener('input', (e) => {
+            document.getElementById('biasValue').textContent = e.target.value;
+        });
+
+        document.getElementById('genPoints').addEventListener('click', generatePoints);
+        document.getElementById('addPoint').addEventListener('click', () => addPoint());
+        document.getElementById('clearCanvas').addEventListener('click', () => {
+            points = [];
+            w = 0; b = 0;
             updateStats();
-        });
-
-        document.getElementById('interceptSlider').addEventListener('input', function() {
-            intercept = parseFloat(this.value);
-            document.getElementById('interceptValue').textContent = intercept.toFixed(1);
             draw();
-            updateStats();
         });
-
-        document.getElementById('noiseSlider').addEventListener('input', function() {
-            noise = parseFloat(this.value);
-            document.getElementById('noiseValue').textContent = noise.toFixed(1);
-            generateData();
-        });
-
-        document.getElementById('samplesSlider').addEventListener('input', function() {
-            sampleCount = parseInt(this.value);
-            document.getElementById('samplesValue').textContent = sampleCount;
-            generateData();
+        document.getElementById('toggleGrid').addEventListener('click', () => {
+            showGrid = !showGrid;
+            draw();
         });
 
         window.addEventListener('resize', resizeCanvas);
-        window.addEventListener('load', function() {
+        window.addEventListener('load', () => {
             resizeCanvas();
-            generateData();
+            generatePoints();
         });
     </script>
 </body>
