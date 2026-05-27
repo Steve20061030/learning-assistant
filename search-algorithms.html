@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查找算法 - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        .katex { font-size: 1.1em; }
+        .katex-display { margin: 0.5em 0; }
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --level-color: #80e0a0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 300;
+        }
+
+        ::selection { background: rgba(128, 224, 160, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #60c080); border-radius: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(128, 224, 160, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(128, 224, 160, 0.15);
+            border: 1px solid rgba(128, 224, 160, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+        }
+
+        .section-icon { font-size: 24px; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(128, 224, 160, 0.1), rgba(128, 224, 160, 0.05));
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 25px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .analogy-title {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .analogy-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        .formula-section {
+            margin-bottom: 30px;
+        }
+
+        .formula-section-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-left: 10px;
+            border-left: 3px solid var(--level-color);
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--level-color);
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateX(5px);
+            border-left-color: #a0f0c0;
+            box-shadow: 0 8px 25px rgba(128, 224, 160, 0.15);
+        }
+
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .formula-label {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+        }
+
+        .formula-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(128, 224, 160, 0.2);
+            border-radius: 12px;
+            color: #a0f0c0;
+            font-weight: 300;
+        }
+
+        .formula-content {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 18px;
+            color: #c8e4f8;
+            line-height: 2.4;
+            font-weight: 400;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(128, 224, 160, 0.15), rgba(128, 224, 160, 0.05));
+            border: 1px solid rgba(128, 224, 160, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(128, 224, 160, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 300;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 2 · 进阶</div>
+            <h1 class="page-title">查找算法</h1>
+            <p class="page-subtitle">Search Algorithms</p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是查找算法？
+            </h2>
+            <p class="definition-text">
+                查找算法是在数据集合中寻找特定元素的算法。查找操作是计算机科学中最基础也最常用的操作之一。
+            </p>
+            <p class="definition-text">
+                常见的查找算法包括顺序查找、二分查找、哈希查找、二叉搜索树查找等。
+            </p>
+
+            <div class="analogy-box">
+                <div class="analogy-title">💡 核心直觉</div>
+                <div class="analogy-text">
+                    想象你在图书馆找一本书。顺序查找就像从第一排开始一本一本地找；二分查找就像先看目录，然后直接找到对应的书架。
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                算法复杂度
+            </h2>
+
+            <div class="formula-section">
+                <div class="formula-section-title">⚡ 二分查找</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">二分查找</span>
+                        <span class="formula-tag">O(log n)</span>
+                    </div>
+                    <div class="formula-content">$$T(n) = T(n/2) + O(1)$$</div>
+                    <div class="formula-note">每次将搜索范围减半，需要有序数组</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">🔄 顺序查找</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">线性查找</span>
+                        <span class="formula-tag">O(n)</span>
+                    </div>
+                    <div class="formula-content">$$T(n) = \sum_{i=1}^{n} 1 = O(n)$$</div>
+                    <div class="formula-note">逐个检查每个元素</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">🔍 哈希查找</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">哈希表查找</span>
+                        <span class="formula-tag">O(1)</span>
+                    </div>
+                    <div class="formula-content">$$T(n) = O(1)$$</div>
+                    <div class="formula-note">平均情况，需要处理哈希冲突</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                适用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔍</div>
+                    <div class="scenario-name">数据检索</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">字典查询</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📊</div>
+                    <div class="scenario-name">数据库索引</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🌐</div>
+                    <div class="scenario-name">搜索引擎</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="sorting-algorithms.html" class="related-card">
+                    <div class="related-card-title">→ 排序算法</div>
+                    <div class="related-card-desc">二分查找需要有序数组</div>
+                </a>
+                <a href="tree-structure.html" class="related-card">
+                    <div class="related-card-title">→ 树结构</div>
+                    <div class="related-card-desc">BST查找</div>
+                </a>
+                <a href="complexity-analysis.html" class="related-card">
+                    <div class="related-card-title">→ 复杂度分析</div>
+                    <div class="related-card-desc">算法效率评估</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 查找算法 | Level 2 进阶</p>
+        </footer>
+    </div>
+</body>
+</html>

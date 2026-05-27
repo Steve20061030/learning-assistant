@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>集合论 - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        .katex { font-size: 1.1em; }
+        :root { --bg-primary: #0a0e18; --bg-secondary: #111a28; --bg-card: rgba(30, 40, 60, 0.7); --text-primary: #e0f0ff; --text-secondary: #a0c0e0; --text-muted: #6080a0; --level-color: #80c0a0; --border-subtle: rgba(80, 120, 180, 0.3); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%); color: var(--text-primary); font-family: 'Noto Sans SC', 'Segoe UI', sans-serif; min-height: 100vh; line-height: 1.8; -webkit-font-smoothing: antialiased; font-weight: 300; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; padding: 8px 16px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; margin-bottom: 30px; transition: all 0.3s; }
+        .back-btn:hover { color: var(--level-color); background: rgba(128, 192, 160, 0.1); }
+        .page-header { text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid var(--border-subtle); }
+        .level-badge { display: inline-block; padding: 6px 16px; background: rgba(128, 192, 160, 0.15); border: 1px solid rgba(128, 192, 160, 0.4); border-radius: 20px; font-size: 12px; color: var(--level-color); margin-bottom: 15px; letter-spacing: 1px; font-weight: 300; }
+        .page-title { font-size: 48px; font-weight: 400; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 4px; }
+        .page-subtitle { font-size: 18px; color: var(--text-muted); font-weight: 300; }
+        .section { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 35px; margin-bottom: 30px; backdrop-filter: blur(10px); }
+        .section-title { font-size: 22px; color: var(--level-color); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
+        .section-icon { font-size: 24px; }
+        .definition-text { font-size: 16px; color: var(--text-secondary); line-height: 2; margin-bottom: 20px; font-weight: 300; }
+        .analogy-box { background: linear-gradient(135deg, rgba(128, 192, 160, 0.1), rgba(128, 192, 160, 0.05)); border-radius: 16px; padding: 28px; margin-top: 25px; border-left: 4px solid var(--level-color); }
+        .analogy-title { font-size: 16px; color: var(--level-color); font-weight: 400; margin-bottom: 12px; }
+        .analogy-text { font-size: 15px; color: var(--text-secondary); line-height: 1.9; font-weight: 300; }
+        .formula-section { margin-bottom: 30px; }
+        .formula-section-title { font-size: 16px; color: var(--level-color); margin-bottom: 20px; font-weight: 400; padding-left: 10px; border-left: 3px solid var(--level-color); }
+        .formula-card { background: rgba(0, 0, 0, 0.45); border-radius: 14px; padding: 22px; margin-bottom: 16px; border-left: 4px solid var(--level-color); transition: all 0.3s ease; }
+        .formula-card:hover { transform: translateX(5px); border-left-color: #a0e0c0; box-shadow: 0 8px 25px rgba(128, 192, 160, 0.15); }
+        .formula-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .formula-label { font-size: 14px; color: var(--level-color); font-weight: 400; }
+        .formula-tag { font-size: 11px; padding: 4px 10px; background: rgba(128, 192, 160, 0.2); border-radius: 12px; color: #a0e0c0; font-weight: 300; }
+        .formula-content { font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 18px; color: #c8e4f8; line-height: 2.4; font-weight: 400; white-space: pre-wrap; letter-spacing: 0.5px; }
+        .formula-note { font-size: 13px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(80, 120, 180, 0.2); font-weight: 300; line-height: 1.7; }
+        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+        .scenario-card { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s; }
+        .scenario-card:hover { border-color: var(--level-color); transform: translateY(-3px); }
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+        .related-card { background: linear-gradient(135deg, rgba(128, 192, 160, 0.15), rgba(128, 192, 160, 0.05)); border: 1px solid rgba(128, 192, 160, 0.3); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.3s; display: block; }
+        .related-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(128, 192, 160, 0.25); border-color: var(--level-color); }
+        .related-card-title { font-size: 15px; color: var(--level-color); font-weight: 400; margin-bottom: 6px; }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; font-weight: 300; border-top: 1px solid var(--border-subtle); margin-top: 50px; }
+        @media (max-width: 768px) { .page-title { font-size: 32px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+        <div class="page-header">
+            <div class="level-badge">Level 1 · 基础</div>
+            <h1 class="page-title">集合论</h1>
+            <p class="page-subtitle">Set Theory</p>
+        </div>
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">📖</span>什么是集合论？</h2>
+            <p class="definition-text">集合论是研究集合及其运算的数学分支。集合是由一些确定的、不同的对象组成的整体，这些对象称为集合的元素。集合论是现代数学的基础。</p>
+            <div class="analogy-box">
+                <div class="analogy-title">💡 核心直觉</div>
+                <div class="analogy-text">想象一个装满水果的篮子，篮子就是集合，里面的每个水果就是元素。你可以把两个篮子的水果合并（并集），或者找出两个篮子里都有的水果（交集）。</div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">📐</span>集合运算</h2>
+            <div class="formula-section">
+                <div class="formula-section-title">∪ 并集</div>
+                <div class="formula-card">
+                    <div class="formula-header"><span class="formula-label">并集定义</span><span class="formula-tag">基础</span></div>
+                    <div class="formula-content">$$A \cup B = \{x \mid x \in A \text{ 或 } x \in B\}$$</div>
+                    <div class="formula-note">属于A或属于B的所有元素</div>
+                </div>
+            </div>
+            <div class="formula-section">
+                <div class="formula-section-title">∩ 交集</div>
+                <div class="formula-card">
+                    <div class="formula-header"><span class="formula-label">交集定义</span><span class="formula-tag">基础</span></div>
+                    <div class="formula-content">$$A \cap B = \{x \mid x \in A \text{ 且 } x \in B\}$$</div>
+                    <div class="formula-note">同时属于A和B的所有元素</div>
+                </div>
+            </div>
+            <div class="formula-section">
+                <div class="formula-section-title">A 补集</div>
+                <div class="formula-card">
+                    <div class="formula-header"><span class="formula-label">补集定义</span><span class="formula-tag">基础</span></div>
+                    <div class="formula-content">$$A^c = \{x \mid x \notin A\}$$</div>
+                    <div class="formula-note">不属于A的所有元素</div>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">🎯</span>适用场景</h2>
+            <div class="scenario-grid">
+                <div class="scenario-card"><div class="scenario-icon">📊</div><div class="scenario-name">数据库查询</div></div>
+                <div class="scenario-card"><div class="scenario-icon">🔍</div><div class="scenario-name">搜索引擎</div></div>
+                <div class="scenario-card"><div class="scenario-icon">📝</div><div class="scenario-name">逻辑推理</div></div>
+                <div class="scenario-card"><div class="scenario-icon">🔢</div><div class="scenario-name">数学证明</div></div>
+            </div>
+        </section>
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">🔗</span>相关知识</h2>
+            <div class="related-grid">
+                <a href="propositional-logic.html" class="related-card"><div class="related-card-title">→ 命题逻辑</div><div class="related-card-desc">逻辑基础</div></a>
+                <a href="graph-theory.html" class="related-card"><div class="related-card-title">→ 图论</div><div class="related-card-desc">顶点集和边集</div></a>
+            </div>
+        </section>
+        <footer><p>学习助手 - 集合论 | Level 1 基础</p></footer>
+    </div>
+</body>
+</html>

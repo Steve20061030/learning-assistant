@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>树结构 - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        .katex { font-size: 1.1em; }
+        .katex-display { margin: 0.5em 0; }
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --level-color: #c0a080;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 300;
+        }
+
+        ::selection { background: rgba(192, 160, 128, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a08060); border-radius: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(192, 160, 128, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(192, 160, 128, 0.15);
+            border: 1px solid rgba(192, 160, 128, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+        }
+
+        .section-icon { font-size: 24px; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(192, 160, 128, 0.1), rgba(192, 160, 128, 0.05));
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 25px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .analogy-title {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .analogy-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        .formula-section {
+            margin-bottom: 30px;
+        }
+
+        .formula-section-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-left: 10px;
+            border-left: 3px solid var(--level-color);
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--level-color);
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateX(5px);
+            border-left-color: #e0c0a0;
+            box-shadow: 0 8px 25px rgba(192, 160, 128, 0.15);
+        }
+
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .formula-label {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+        }
+
+        .formula-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(192, 160, 128, 0.2);
+            border-radius: 12px;
+            color: #e0c0a0;
+            font-weight: 300;
+        }
+
+        .formula-content {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 18px;
+            color: #c8e4f8;
+            line-height: 2.4;
+            font-weight: 400;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(192, 160, 128, 0.15), rgba(192, 160, 128, 0.05));
+            border: 1px solid rgba(192, 160, 128, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(192, 160, 128, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 300;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 2 · 进阶</div>
+            <h1 class="page-title">树结构</h1>
+            <p class="page-subtitle">Tree Data Structure</p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是树结构？
+            </h2>
+            <p class="definition-text">
+                树是一种层次化的数据结构，由节点和边组成。它有一个根节点，每个节点可以有零个或多个子节点，但每个节点只有一个父节点（除了根节点）。
+            </p>
+            <p class="definition-text">
+                树结构广泛应用于表示层级关系，如文件系统、组织架构等。
+            </p>
+
+            <div class="analogy-box">
+                <div class="analogy-title">💡 核心直觉</div>
+                <div class="analogy-text">
+                    想象一棵真实的树，从根部开始生长，主干分成多个分支，每个分支又继续分叉。数据结构中的树也是如此，从根节点开始，每个节点可以有多个子节点。
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                树的类型与性质
+            </h2>
+
+            <div class="formula-section">
+                <div class="formula-section-title">🌲 基本概念</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">二叉树</span>
+                        <span class="formula-tag">基础</span>
+                    </div>
+                    <div class="formula-content">$$\text{每个节点最多有2个子节点}$$</div>
+                    <div class="formula-note">左子树和右子树</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">完全二叉树</span>
+                        <span class="formula-tag">特殊</span>
+                    </div>
+                    <div class="formula-content">$$\text{除最后一层外，每层都满}$$</div>
+                    <div class="formula-note">最后一层节点从左到右填充</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">📊 性质</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">节点数</span>
+                        <span class="formula-tag">性质</span>
+                    </div>
+                    <div class="formula-content">$$n = n_0 + n_1 + n_2$$
+$$n_0 = n_2 + 1$$</div>
+                    <div class="formula-note">$n_0$为叶子节点，$n_1$为单孩子节点，$n_2$为双孩子节点</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">高度</span>
+                        <span class="formula-tag">性质</span>
+                    </div>
+                    <div class="formula-content">$$h = \log_2(n+1) - 1$$</div>
+                    <div class="formula-note">完全二叉树的高度</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                适用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">📁</div>
+                    <div class="scenario-name">文件系统</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🏢</div>
+                    <div class="scenario-name">组织架构</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔍</div>
+                    <div class="scenario-name">搜索索引</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🧠</div>
+                    <div class="scenario-name">决策树</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                相关数据结构
+            </h2>
+            <div class="related-grid">
+                <a href="linked-list.html" class="related-card">
+                    <div class="related-card-title">→ 链表</div>
+                    <div class="related-card-desc">基础结构</div>
+                </a>
+                <a href="decision-tree.html" class="related-card">
+                    <div class="related-card-title">→ 决策树</div>
+                    <div class="related-card-desc">机器学习应用</div>
+                </a>
+                <a href="graph-algorithms.html" class="related-card">
+                    <div class="related-card-title">→ 图算法</div>
+                    <div class="related-card-desc">更一般化结构</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 树结构 | Level 2 进阶</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>链表 - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        .katex { font-size: 1.1em; }
+        .katex-display { margin: 0.5em 0; }
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --level-color: #80c0e0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 300;
+        }
+
+        ::selection { background: rgba(128, 192, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #60a0c0); border-radius: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(128, 192, 224, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(128, 192, 224, 0.15);
+            border: 1px solid rgba(128, 192, 224, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+        }
+
+        .section-icon { font-size: 24px; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(128, 192, 224, 0.1), rgba(128, 192, 224, 0.05));
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 25px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .analogy-title {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .analogy-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        .formula-section {
+            margin-bottom: 30px;
+        }
+
+        .formula-section-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-left: 10px;
+            border-left: 3px solid var(--level-color);
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--level-color);
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateX(5px);
+            border-left-color: #a0e0f0;
+            box-shadow: 0 8px 25px rgba(128, 192, 224, 0.15);
+        }
+
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .formula-label {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+        }
+
+        .formula-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(128, 192, 224, 0.2);
+            border-radius: 12px;
+            color: #a0e0f0;
+            font-weight: 300;
+        }
+
+        .formula-content {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 18px;
+            color: #c8e4f8;
+            line-height: 2.4;
+            font-weight: 400;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #60a0c0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(128, 192, 224, 0.15), rgba(128, 192, 224, 0.05));
+            border: 1px solid rgba(128, 192, 224, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(128, 192, 224, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 300;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 1 · 基础</div>
+            <h1 class="page-title">链表</h1>
+            <p class="page-subtitle">Linked List</p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是链表？
+            </h2>
+            <p class="definition-text">
+                链表是一种线性数据结构，它由一系列节点组成，每个节点包含数据和指向下一个节点的指针。链表中的元素在内存中不需要连续存储，可以灵活地插入和删除元素。
+            </p>
+            <p class="definition-text">
+                链表是动态数据结构的基础，常用于实现栈、队列等其他数据结构。
+            </p>
+
+            <div class="analogy-box">
+                <div class="analogy-title">💡 核心直觉</div>
+                <div class="analogy-text">
+                    想象一串珍珠项链，每颗珍珠（节点）都用线（指针）连接起来。你可以轻松地在任何位置添加或移除珍珠，而不需要重新排列整串项链。
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                结构与操作
+            </h2>
+
+            <div class="formula-section">
+                <div class="formula-section-title">🔗 节点结构</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">单链表节点</span>
+                        <span class="formula-tag">基础</span>
+                    </div>
+                    <div class="formula-content">$$\text{Node} = (\text{data}, \text{next})$$</div>
+                    <div class="formula-note">每个节点包含数据字段和指向下一个节点的指针</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">双链表节点</span>
+                        <span class="formula-tag">扩展</span>
+                    </div>
+                    <div class="formula-content">$$\text{Node} = (\text{prev}, \text{data}, \text{next})$$</div>
+                    <div class="formula-note">双向链表，可向前和向后遍历</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">⚡ 时间复杂度</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">访问</span>
+                        <span class="formula-tag">O(n)</span>
+                    </div>
+                    <div class="formula-content">$$\text{Access}(i) = O(n)$$</div>
+                    <div class="formula-note">需要从头遍历到第i个节点</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">插入/删除（已知位置）</span>
+                        <span class="formula-tag">O(1)</span>
+                    </div>
+                    <div class="formula-content">$$\text{Insert/Delete} = O(1)$$</div>
+                    <div class="formula-note">只需修改指针指向</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📜</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">📋</div>
+                    <div class="scenario-name">动态数组</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔄</div>
+                    <div class="scenario-name">队列实现</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">⬆️</div>
+                    <div class="scenario-name">栈实现</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">文本编辑器</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                相关数据结构
+            </h2>
+            <div class="related-grid">
+                <a href="stack-queue.html" class="related-card">
+                    <div class="related-card-title">→ 栈和队列</div>
+                    <div class="related-card-desc">基于链表实现</div>
+                </a>
+                <a href="tree-structure.html" class="related-card">
+                    <div class="related-card-title">→ 树结构</div>
+                    <div class="related-card-desc">层次化数据</div>
+                </a>
+                <a href="sorting-algorithms.html" class="related-card">
+                    <div class="related-card-title">→ 排序算法</div>
+                    <div class="related-card-desc">排序链表</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 链表 | Level 1 基础</p>
+        </footer>
+    </div>
+</body>
+</html>
