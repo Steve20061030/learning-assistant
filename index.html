@@ -1488,16 +1488,16 @@
         function openDetailPage(name) {
             const pageMap = {
                 '线性回归': 'linear-regression.html',
+                '逻辑回归': 'logistic-regression.html',
                 '神经网络': 'neural-network.html',
                 '动态规划': 'dynamic-programming.html',
-                '逻辑回归': 'linear-regression.html',
-                'KNN': 'linear-regression.html',
-                'K-Means': 'linear-regression.html',
-                '决策树': 'linear-regression.html',
-                'SVM': 'linear-regression.html',
-                'CNN': 'neural-network.html',
-                'RNN': 'neural-network.html',
-                'Attention': 'neural-network.html'
+                'KNN': 'knn.html',
+                'K-Means': 'kmeans.html',
+                '决策树': 'decision-tree.html',
+                'SVM': 'svm.html',
+                'CNN': 'cnn.html',
+                'RNN': 'rnn.html',
+                'Attention': 'attention.html'
             };
             const page = pageMap[name] || 'linear-regression.html';
             window.open(page, '_blank');
