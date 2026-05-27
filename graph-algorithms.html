@@ -10,62 +10,30 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
         .katex { font-size: 1.1em; }
-        :root {
-            --bg-primary: #0a0e18;
-            --bg-secondary: #111a28;
-            --bg-card: rgba(30, 40, 60, 0.7);
-            --text-primary: #e0f0ff;
-            --text-secondary: #a0c0e0;
-            --text-muted: #6080a0;
-            --level-color: #80a0e0;
-            --border-subtle: rgba(80, 120, 180, 0.3);
-        }
+        :root { --bg-primary: #0a0e18; --bg-secondary: #111a28; --bg-card: rgba(30, 40, 60, 0.7); --text-primary: #e0f0ff; --text-secondary: #a0c0e0; --text-muted: #6080a0; --level-color: #80a0e0; --border-subtle: rgba(80, 120, 180, 0.3); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
-            color: var(--text-primary);
-            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            line-height: 1.8;
-            -webkit-font-smoothing: antialiased;
-            font-weight: 300;
-        }
+        body { background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%); color: var(--text-primary); font-family: 'Noto Sans SC', 'Segoe UI', sans-serif; min-height: 100vh; line-height: 1.8; -webkit-font-smoothing: antialiased; font-weight: 300; }
+        ::selection { background: rgba(128, 160, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #6080c0); border-radius: 4px; }
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--text-muted); text-decoration: none; font-size: 14px;
-            padding: 8px 16px; background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px; margin-bottom: 30px; transition: all 0.3s;
-        }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; padding: 8px 16px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; margin-bottom: 30px; transition: all 0.3s; }
         .back-btn:hover { color: var(--level-color); background: rgba(128, 160, 224, 0.1); }
         .page-header { text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid var(--border-subtle); }
-        .level-badge {
-            display: inline-block; padding: 6px 16px;
-            background: rgba(128, 160, 224, 0.15); border: 1px solid rgba(128, 160, 224, 0.4);
-            border-radius: 20px; font-size: 12px; color: var(--level-color);
-            margin-bottom: 15px; letter-spacing: 1px; font-weight: 300;
-        }
+        .level-badge { display: inline-block; padding: 6px 16px; background: rgba(128, 160, 224, 0.15); border: 1px solid rgba(128, 160, 224, 0.4); border-radius: 20px; font-size: 12px; color: var(--level-color); margin-bottom: 15px; letter-spacing: 1px; font-weight: 300; }
         .page-title { font-size: 48px; font-weight: 400; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 4px; }
         .page-subtitle { font-size: 18px; color: var(--text-muted); font-weight: 300; }
-        .section {
-            background: var(--bg-card); border: 1px solid var(--border-subtle);
-            border-radius: 20px; padding: 35px; margin-bottom: 30px; backdrop-filter: blur(10px);
-        }
+        .section { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 35px; margin-bottom: 30px; backdrop-filter: blur(10px); }
         .section-title { font-size: 22px; color: var(--level-color); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
         .section-icon { font-size: 24px; }
         .definition-text { font-size: 16px; color: var(--text-secondary); line-height: 2; margin-bottom: 20px; font-weight: 300; }
-        .analogy-box {
-            background: linear-gradient(135deg, rgba(128, 160, 224, 0.1), rgba(128, 160, 224, 0.05));
-            border-radius: 16px; padding: 28px; margin-top: 25px; border-left: 4px solid var(--level-color);
-        }
+        .analogy-box { background: linear-gradient(135deg, rgba(128, 160, 224, 0.1), rgba(128, 160, 224, 0.05)); border-radius: 16px; padding: 28px; margin-top: 25px; border-left: 4px solid var(--level-color); }
         .analogy-title { font-size: 16px; color: var(--level-color); font-weight: 400; margin-bottom: 12px; }
         .analogy-text { font-size: 15px; color: var(--text-secondary); line-height: 1.9; font-weight: 300; }
         .formula-section { margin-bottom: 30px; }
         .formula-section-title { font-size: 16px; color: var(--level-color); margin-bottom: 20px; font-weight: 400; padding-left: 10px; border-left: 3px solid var(--level-color); }
-        .formula-card {
-            background: rgba(0, 0, 0, 0.45); border-radius: 14px; padding: 22px;
-            margin-bottom: 16px; border-left: 4px solid var(--level-color); transition: all 0.3s ease;
-        }
+        .formula-card { background: rgba(0, 0, 0, 0.45); border-radius: 14px; padding: 22px; margin-bottom: 16px; border-left: 4px solid var(--level-color); transition: all 0.3s ease; }
         .formula-card:hover { transform: translateX(5px); border-left-color: #a0c0f0; box-shadow: 0 8px 25px rgba(128, 160, 224, 0.15); }
         .formula-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .formula-label { font-size: 14px; color: var(--level-color); font-weight: 400; }
@@ -78,14 +46,16 @@
         .scenario-icon { font-size: 32px; margin-bottom: 10px; }
         .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
         .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-        .related-card {
-            background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05));
-            border: 1px solid rgba(128, 160, 224, 0.3); border-radius: 12px; padding: 20px;
-            text-decoration: none; transition: all 0.3s; display: block;
-        }
+        .related-card { background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05)); border: 1px solid rgba(128, 160, 224, 0.3); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.3s; display: block; }
         .related-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(128, 160, 224, 0.25); border-color: var(--level-color); }
         .related-card-title { font-size: 15px; color: var(--level-color); font-weight: 400; margin-bottom: 6px; }
         .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+        .viz-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .viz-btn { padding: 10px 16px; background: linear-gradient(135deg, #80a0e0, #6080c0); border: none; border-radius: 8px; color: #fff; font-weight: 500; cursor: pointer; transition: all 0.3s; font-family: inherit; font-size: 13px; }
+        .viz-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(128, 160, 224, 0.3); }
+        .viz-btn-active { background: linear-gradient(135deg, #a0e080, #80c060); }
+        .viz-canvas { background: rgba(0,0,0,0.3); border-radius: 12px; width: 100%; max-width: 900px; display: block; }
+        .viz-info { margin-top: 15px; font-size: 13px; color: var(--text-muted); }
         footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; font-weight: 300; border-top: 1px solid var(--border-subtle); margin-top: 50px; }
         @media (max-width: 768px) { .page-title { font-size: 32px; } }
     </style>
@@ -98,6 +68,7 @@
             <h1 class="page-title">图算法</h1>
             <p class="page-subtitle">Graph Algorithms</p>
         </div>
+
         <section class="section">
             <h2 class="section-title"><span class="section-icon">📖</span>什么是图算法？</h2>
             <p class="definition-text">图算法是在图数据结构上执行的各种算法，用于解决路径查找、连通性检测、最短路径等问题。图由顶点和边组成，可以表示实体之间的关系。</p>
@@ -106,6 +77,329 @@
                 <div class="analogy-text">想象一张城市地图，城市是顶点，道路是边。图算法就是帮你找到从一个城市到另一个城市的最短路径，或者判断两个城市是否连通。</div>
             </div>
         </section>
+
+        <section class="section">
+            <h2 class="section-title"><span class="section-icon">🎮</span>交互式演示</h2>
+            
+            <div class="viz-controls">
+                <button class="viz-btn viz-btn-active" id="bfsBtn" onclick="runBFS()">BFS 广度优先</button>
+                <button class="viz-btn" id="dfsBtn" onclick="runDFS()">DFS 深度优先</button>
+                <button class="viz-btn" onclick="resetGraph()">重置图</button>
+            </div>
+            
+            <canvas id="graphCanvas" class="viz-canvas" width="900" height="400"></canvas>
+            
+            <div id="graphInfo" class="viz-info">点击画布添加节点 | 按住Shift点击拖动连接</div>
+            
+            <script>
+                const canvas = document.getElementById('graphCanvas');
+                const ctx = canvas.getContext('2d');
+                
+                class GraphNode {
+                    constructor(x, y, id) {
+                        this.x = x;
+                        this.y = y;
+                        this.id = id;
+                        this.adj = [];
+                        this.visited = false;
+                        this.dist = Infinity;
+                        this.order = -1;
+                    }
+                }
+                
+                let nodes = [];
+                let edges = [];
+                let nodeIdCounter = 0;
+                let isDragging = false;
+                let dragNode = null;
+                let connectMode = false;
+                let connectFrom = null;
+                let traversalOrder = [];
+                let animationIndex = 0;
+                let animationTimer = null;
+                
+                const nodeRadius = 25;
+                const colors = {
+                    default: '#80a0e0',
+                    visited: '#a0e080',
+                    current: '#e08080',
+                    queued: '#e0c080',
+                    edge: '#6080a0',
+                    edgeVisited: '#a0e080',
+                    text: '#0a0e18'
+                };
+                
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    edges.forEach(edge => {
+                        const from = nodes[edge.from];
+                        const to = nodes[edge.to];
+                        
+                        ctx.strokeStyle = edge.visited ? colors.edgeVisited : colors.edge;
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.moveTo(from.x, from.y);
+                        ctx.lineTo(to.x, to.y);
+                        ctx.stroke();
+                    });
+                    
+                    nodes.forEach(node => {
+                        ctx.fillStyle = node.visited ? colors.visited : 
+                                        node.order >= 0 ? colors.current : colors.default;
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = colors.text;
+                        ctx.font = '500 14px "Noto Sans SC"';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(node.id, node.x, node.y);
+                        
+                        if (node.order >= 0) {
+                            ctx.fillStyle = '#0a0e18';
+                            ctx.font = '300 10px "Noto Sans SC"';
+                            ctx.fillText(node.order, node.x, node.y + 35);
+                        }
+                    });
+                }
+                
+                function addNode(x, y) {
+                    const id = String.fromCharCode(65 + nodeIdCounter % 26);
+                    nodes.push(new GraphNode(x, y, id));
+                    nodeIdCounter++;
+                    draw();
+                }
+                
+                function getNodeAt(x, y) {
+                    return nodes.find(n => {
+                        const dx = n.x - x;
+                        const dy = n.y - y;
+                        return Math.sqrt(dx*dx + dy*dy) <= nodeRadius;
+                    });
+                }
+                
+                canvas.addEventListener('click', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    if (connectMode && connectFrom) {
+                        const target = getNodeAt(x, y);
+                        if (target && target !== connectFrom) {
+                            const exists = edges.some(e => 
+                                (e.from === connectFrom.id && e.to === target.id) ||
+                                (e.from === target.id && e.to === connectFrom.id)
+                            );
+                            if (!exists) {
+                                edges.push({from: connectFrom.id, to: target.id, visited: false});
+                            }
+                        }
+                        connectMode = false;
+                        connectFrom = null;
+                        draw();
+                    } else {
+                        const node = getNodeAt(x, y);
+                        if (node) {
+                            if (connectFrom === null) {
+                                connectFrom = node;
+                                connectMode = true;
+                                document.getElementById('graphInfo').textContent = `选择目标节点连接 (从 ${connectFrom.id})`;
+                            }
+                        } else {
+                            addNode(x, y);
+                        }
+                    }
+                });
+                
+                canvas.addEventListener('mousedown', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const node = getNodeAt(x, y);
+                    if (node && !e.shiftKey) {
+                        isDragging = true;
+                        dragNode = node;
+                    }
+                });
+                
+                canvas.addEventListener('mousemove', e => {
+                    if (isDragging && dragNode) {
+                        const rect = canvas.getBoundingClientRect();
+                        dragNode.x = e.clientX - rect.left;
+                        dragNode.y = e.clientY - rect.top;
+                        draw();
+                    }
+                });
+                
+                canvas.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    dragNode = null;
+                });
+                
+                canvas.addEventListener('dblclick', e => {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const node = getNodeAt(x, y);
+                    if (node) {
+                        nodes = nodes.filter(n => n !== node);
+                        edges = edges.filter(e => e.from !== node.id && e.to !== node.id);
+                        draw();
+                    }
+                });
+                
+                function bfs(startId) {
+                    const queue = [startId];
+                    const visited = new Set([startId]);
+                    const order = [];
+                    
+                    while (queue.length > 0) {
+                        const current = queue.shift();
+                        order.push(current);
+                        
+                        nodes.forEach(n => {
+                            if (!visited.has(n.id)) {
+                                const hasEdge = edges.some(e => 
+                                    (e.from === current && e.to === n.id) ||
+                                    (e.to === current && e.from === n.id)
+                                );
+                                if (hasEdge) {
+                                    queue.push(n.id);
+                                    visited.add(n.id);
+                                }
+                            }
+                        });
+                    }
+                    return order;
+                }
+                
+                function dfs(startId) {
+                    const stack = [startId];
+                    const visited = new Set();
+                    const order = [];
+                    
+                    while (stack.length > 0) {
+                        const current = stack.pop();
+                        if (!visited.has(current)) {
+                            visited.add(current);
+                            order.push(current);
+                            
+                            nodes.forEach(n => {
+                                if (!visited.has(n.id)) {
+                                    const hasEdge = edges.some(e => 
+                                        (e.from === current && e.to === n.id) ||
+                                        (e.to === current && e.from === n.id)
+                                    );
+                                    if (hasEdge) {
+                                        stack.push(n.id);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    return order;
+                }
+                
+                function runBFS() {
+                    if (nodes.length === 0) return;
+                    
+                    clearTraversal();
+                    document.getElementById('bfsBtn').classList.add('viz-btn-active');
+                    document.getElementById('dfsBtn').classList.remove('viz-btn-active');
+                    
+                    traversalOrder = bfs(nodes[0].id);
+                    animateTraversal();
+                }
+                
+                function runDFS() {
+                    if (nodes.length === 0) return;
+                    
+                    clearTraversal();
+                    document.getElementById('dfsBtn').classList.add('viz-btn-active');
+                    document.getElementById('bfsBtn').classList.remove('viz-btn-active');
+                    
+                    traversalOrder = dfs(nodes[0].id);
+                    animateTraversal();
+                }
+                
+                function animateTraversal() {
+                    animationIndex = 0;
+                    
+                    if (animationTimer) clearInterval(animationTimer);
+                    
+                    animationTimer = setInterval(() => {
+                        if (animationIndex >= traversalOrder.length) {
+                            clearInterval(animationTimer);
+                            document.getElementById('graphInfo').textContent = 
+                                `遍历完成 | 访问顺序: ${traversalOrder.join(' → ')}`;
+                            return;
+                        }
+                        
+                        const nodeId = traversalOrder[animationIndex];
+                        const node = nodes.find(n => n.id === nodeId);
+                        if (node) {
+                            node.visited = true;
+                            node.order = animationIndex;
+                            
+                            edges.forEach(edge => {
+                                if (edge.from === nodeId || edge.to === nodeId) {
+                                    edge.visited = true;
+                                }
+                            });
+                        }
+                        
+                        draw();
+                        document.getElementById('graphInfo').textContent = 
+                            `BFS遍历: ${traversalOrder.slice(0, animationIndex + 1).join(' → ')}`;
+                        
+                        animationIndex++;
+                    }, 500);
+                }
+                
+                function clearTraversal() {
+                    if (animationTimer) clearInterval(animationTimer);
+                    nodes.forEach(n => {
+                        n.visited = false;
+                        n.order = -1;
+                    });
+                    edges.forEach(e => e.visited = false);
+                    traversalOrder = [];
+                    animationIndex = 0;
+                }
+                
+                function resetGraph() {
+                    clearTraversal();
+                    if (nodes.length === 0) {
+                        addNode(200, 100);
+                        addNode(400, 100);
+                        addNode(600, 100);
+                        addNode(300, 250);
+                        addNode(500, 250);
+                        addNode(400, 380);
+                        
+                        edges = [
+                            {from: 'A', to: 'B', visited: false},
+                            {from: 'B', to: 'C', visited: false},
+                            {from: 'A', to: 'D', visited: false},
+                            {from: 'B', to: 'D', visited: false},
+                            {from: 'B', to: 'E', visited: false},
+                            {from: 'C', to: 'E', visited: false},
+                            {from: 'D', to: 'E', visited: false},
+                            {from: 'E', to: 'F', visited: false},
+                            {from: 'D', to: 'F', visited: false}
+                        ];
+                    }
+                    draw();
+                    document.getElementById('graphInfo').textContent = 
+                        '图已重置 | 节点数: 6 | 边数: 9';
+                }
+                
+                resetGraph();
+            </script>
+        </section>
+
         <section class="section">
             <h2 class="section-title"><span class="section-icon">📐</span>核心算法</h2>
             <div class="formula-section">
@@ -130,6 +424,7 @@
                 </div>
             </div>
         </section>
+
         <section class="section">
             <h2 class="section-title"><span class="section-icon">🎯</span>适用场景</h2>
             <div class="scenario-grid">
@@ -139,6 +434,7 @@
                 <div class="scenario-card"><div class="scenario-icon">📦</div><div class="scenario-name">依赖分析</div></div>
             </div>
         </section>
+
         <section class="section">
             <h2 class="section-title"><span class="section-icon">🔗</span>相关算法</h2>
             <div class="related-grid">

@@ -285,8 +285,191 @@
             margin-top: 50px;
         }
 
+        .viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .viz-title {
+            font-size: 18px;
+            color: var(--level-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .viz-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .viz-canvas {
+            border: 1px solid rgba(160, 192, 128, 0.3);
+            border-radius: 12px;
+            background: rgba(10, 15, 25, 0.8);
+        }
+
+        .viz-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .viz-input {
+            padding: 10px 16px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: rgba(30, 40, 60, 0.8);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Noto Sans SC', sans-serif;
+            width: 80px;
+            text-align: center;
+        }
+
+        .viz-input:focus {
+            outline: none;
+            border-color: var(--level-color);
+            box-shadow: 0 0 10px rgba(160, 192, 128, 0.2);
+        }
+
+        .viz-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(160, 192, 128, 0.4);
+            border-radius: 8px;
+            background: rgba(160, 192, 128, 0.1);
+            color: var(--level-color);
+            font-size: 14px;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .viz-btn:hover {
+            background: rgba(160, 192, 128, 0.25);
+            border-color: var(--level-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(160, 192, 128, 0.2);
+        }
+
+        .viz-btn:active {
+            transform: translateY(0);
+        }
+
+        .viz-btn-danger {
+            border-color: rgba(220, 100, 100, 0.4);
+            background: rgba(220, 100, 100, 0.1);
+            color: #e08080;
+        }
+
+        .viz-btn-danger:hover {
+            background: rgba(220, 100, 100, 0.25);
+            border-color: #e08080;
+            box-shadow: 0 4px 12px rgba(220, 100, 100, 0.2);
+        }
+
+        .viz-btn-success {
+            border-color: rgba(100, 200, 140, 0.4);
+            background: rgba(100, 200, 140, 0.1);
+            color: #80e0a0;
+        }
+
+        .viz-btn-success:hover {
+            background: rgba(100, 200, 140, 0.25);
+            border-color: #80e0a0;
+            box-shadow: 0 4px 12px rgba(100, 200, 140, 0.2);
+        }
+
+        .viz-btn-primary {
+            border-color: rgba(100, 160, 220, 0.4);
+            background: rgba(100, 160, 220, 0.1);
+            color: #80c0e0;
+        }
+
+        .viz-btn-primary:hover {
+            background: rgba(100, 160, 220, 0.25);
+            border-color: #80c0e0;
+            box-shadow: 0 4px 12px rgba(100, 160, 220, 0.2);
+        }
+
+        .status-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--text-muted);
+            min-height: 20px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .demo-tab {
+            padding: 10px 24px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            background: rgba(30, 40, 60, 0.6);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .demo-tab:hover {
+            border-color: var(--level-color);
+            color: var(--text-secondary);
+        }
+
+        .demo-tab.active {
+            background: rgba(160, 192, 128, 0.2);
+            border-color: var(--level-color);
+            color: var(--level-color);
+        }
+
+        .demo-content {
+            display: none;
+        }
+
+        .demo-content.active {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .page-title { font-size: 32px; }
+            .viz-canvas { width: 100%; max-width: 400px; }
         }
     </style>
 </head>
@@ -317,6 +500,84 @@
                 <div class="analogy-text">
                     <strong>栈：</strong>就像一叠盘子，你只能从最上面取盘子，也只能往最上面放盘子。<br>
                     <strong>队列：</strong>就像排队买票，先来的人先买票，后来的人排在后面。
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎮</span>
+                交互式演示
+            </h2>
+
+            <div class="demo-tabs">
+                <button class="demo-tab active" onclick="showDemo('stack')">栈 Stack</button>
+                <button class="demo-tab" onclick="showDemo('queue')">队列 Queue</button>
+            </div>
+
+            <div id="stack-demo" class="demo-content active">
+                <div class="viz-container">
+                    <div class="viz-title">📚 栈的 LIFO 演示</div>
+                    <div class="viz-wrapper">
+                        <canvas id="stackCanvas" class="viz-canvas" width="500" height="320"></canvas>
+                    </div>
+                    <div class="viz-controls">
+                        <input type="number" id="stackValue" class="viz-input" placeholder="值" min="1" max="99" value="10">
+                        <button class="viz-btn" onclick="stackPush()">Push 入栈</button>
+                        <button class="viz-btn viz-btn-danger" onclick="stackPop()">Pop 出栈</button>
+                        <button class="viz-btn viz-btn-success" onclick="stackPeek()">Peek 查看栈顶</button>
+                        <button class="viz-btn" onclick="clearStack()">清空</button>
+                    </div>
+                    <div id="stackStatus" class="status-text">点击按钮开始操作</div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(160, 192, 128, 0.6);"></div>
+                            栈顶元素
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(100, 160, 220, 0.6);"></div>
+                            普通元素
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(80, 100, 140, 0.4);"></div>
+                            空槽位
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="queue-demo" class="demo-content">
+                <div class="viz-container">
+                    <div class="viz-title">🚶 队列的 FIFO 演示</div>
+                    <div class="viz-wrapper">
+                        <canvas id="queueCanvas" class="viz-canvas" width="700" height="180"></canvas>
+                    </div>
+                    <div class="viz-controls">
+                        <input type="number" id="queueValue" class="viz-input" placeholder="值" min="1" max="99" value="10">
+                        <button class="viz-btn" onclick="queueEnqueue()">Enqueue 入队</button>
+                        <button class="viz-btn viz-btn-danger" onclick="queueDequeue()">Dequeue 出队</button>
+                        <button class="viz-btn viz-btn-success" onclick="queuePeek()">Peek 查看队首</button>
+                        <button class="viz-btn" onclick="clearQueue()">清空</button>
+                    </div>
+                    <div id="queueStatus" class="status-text">点击按钮开始操作</div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(100, 200, 140, 0.6);"></div>
+                            队首元素
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(160, 192, 128, 0.6);"></div>
+                            队尾元素
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(100, 160, 220, 0.6);"></div>
+                            普通元素
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: rgba(80, 100, 140, 0.4);"></div>
+                            空槽位
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -422,5 +683,299 @@
             <p>学习助手 - 栈和队列 | Level 1 基础</p>
         </footer>
     </div>
+
+    <script>
+        const stack = [];
+        const MAX_STACK_SIZE = 8;
+
+        function showDemo(type) {
+            document.querySelectorAll('.demo-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.demo-content').forEach(content => content.classList.remove('active'));
+            
+            if (type === 'stack') {
+                document.querySelector('.demo-tab:nth-child(1)').classList.add('active');
+                document.getElementById('stack-demo').classList.add('active');
+                drawStack();
+            } else {
+                document.querySelector('.demo-tab:nth-child(2)').classList.add('active');
+                document.getElementById('queue-demo').classList.add('active');
+                drawQueue();
+            }
+        }
+
+        function stackPush() {
+            const value = parseInt(document.getElementById('stackValue').value) || Math.floor(Math.random() * 99) + 1;
+            
+            if (stack.length >= MAX_STACK_SIZE) {
+                document.getElementById('stackStatus').textContent = '⚠️ 栈已满，无法继续入栈！';
+                document.getElementById('stackStatus').style.color = '#e08080';
+                return;
+            }
+            
+            stack.push(value);
+            document.getElementById('stackStatus').textContent = `✓ 将 ${value} 入栈 → 栈顶`;
+            document.getElementById('stackStatus').style.color = 'var(--level-color)';
+            drawStack();
+        }
+
+        function stackPop() {
+            if (stack.length === 0) {
+                document.getElementById('stackStatus').textContent = '⚠️ 栈为空，无法出栈！';
+                document.getElementById('stackStatus').style.color = '#e08080';
+                return;
+            }
+            
+            const popped = stack.pop();
+            document.getElementById('stackStatus').textContent = `✓ 弹出栈顶元素: ${popped}`;
+            document.getElementById('stackStatus').style.color = 'var(--level-color)';
+            drawStack();
+        }
+
+        function stackPeek() {
+            if (stack.length === 0) {
+                document.getElementById('stackStatus').textContent = '⚠️ 栈为空！';
+                document.getElementById('stackStatus').style.color = '#e08080';
+                return;
+            }
+            
+            document.getElementById('stackStatus').textContent = `📌 栈顶元素: ${stack[stack.length - 1]}（不弹出）`;
+            document.getElementById('stackStatus').style.color = '#80c0e0';
+            drawStack(stack.length - 1);
+        }
+
+        function clearStack() {
+            stack.length = 0;
+            document.getElementById('stackStatus').textContent = '✓ 栈已清空';
+            document.getElementById('stackStatus').style.color = 'var(--text-muted)';
+            drawStack();
+        }
+
+        function drawStack(highlightIndex = -1) {
+            const canvas = document.getElementById('stackCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const boxWidth = 100;
+            const boxHeight = 30;
+            const startX = width / 2 - boxWidth / 2;
+            const baseY = height - 50;
+            
+            ctx.strokeStyle = 'rgba(160, 192, 128, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(startX - 10, baseY - (MAX_STACK_SIZE - 1) * (boxHeight + 5) + 10);
+            ctx.lineTo(startX - 10, baseY + 15);
+            ctx.lineTo(startX + boxWidth + 10, baseY + 15);
+            ctx.lineTo(startX + boxWidth + 10, baseY - (MAX_STACK_SIZE - 1) * (boxHeight + 5) + 10);
+            ctx.stroke();
+            
+            ctx.fillStyle = 'rgba(80, 100, 140, 0.2)';
+            ctx.font = '14px Orbitron';
+            ctx.textAlign = 'center';
+            ctx.fillText('TOP', startX + boxWidth / 2, baseY - (MAX_STACK_SIZE - 1) * (boxHeight + 5) - 5);
+            
+            for (let i = 0; i < MAX_STACK_SIZE; i++) {
+                const y = baseY - i * (boxHeight + 5);
+                
+                if (i < stack.length) {
+                    const isTop = i === stack.length - 1;
+                    const isHighlighted = i === highlightIndex;
+                    
+                    if (isHighlighted) {
+                        ctx.fillStyle = 'rgba(128, 192, 160, 0.4)';
+                    } else if (isTop) {
+                        ctx.fillStyle = 'rgba(160, 192, 128, 0.3)';
+                    } else {
+                        ctx.fillStyle = 'rgba(100, 160, 220, 0.25)';
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(startX, y, boxWidth, boxHeight, 6);
+                    ctx.fill();
+                    
+                    if (isHighlighted) {
+                        ctx.strokeStyle = '#80e0a0';
+                    } else if (isTop) {
+                        ctx.strokeStyle = 'rgba(160, 192, 128, 0.8)';
+                    } else {
+                        ctx.strokeStyle = 'rgba(100, 160, 220, 0.6)';
+                    }
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = isHighlighted ? '#80e0a0' : (isTop ? '#c8e8a0' : '#c0d8f0');
+                    ctx.font = isTop ? 'bold 16px Orbitron' : '14px Orbitron';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(stack[i].toString(), startX + boxWidth / 2, y + boxHeight / 2);
+                } else {
+                    ctx.fillStyle = 'rgba(80, 100, 140, 0.15)';
+                    ctx.beginPath();
+                    ctx.roundRect(startX, y, boxWidth, boxHeight, 6);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = 'rgba(80, 100, 140, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+            
+            ctx.fillStyle = 'rgba(160, 192, 128, 0.6)';
+            ctx.font = '13px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText(`栈大小: ${stack.length}/${MAX_STACK_SIZE}`, startX + boxWidth + 25, baseY - 3);
+        }
+
+        const queue = [];
+        const MAX_QUEUE_SIZE = 10;
+
+        function queueEnqueue() {
+            const value = parseInt(document.getElementById('queueValue').value) || Math.floor(Math.random() * 99) + 1;
+            
+            if (queue.length >= MAX_QUEUE_SIZE) {
+                document.getElementById('queueStatus').textContent = '⚠️ 队列已满，无法继续入队！';
+                document.getElementById('queueStatus').style.color = '#e08080';
+                return;
+            }
+            
+            queue.push(value);
+            document.getElementById('queueStatus').textContent = `✓ 将 ${value} 入队（队尾）`;
+            document.getElementById('queueStatus').style.color = 'var(--level-color)';
+            drawQueue();
+        }
+
+        function queueDequeue() {
+            if (queue.length === 0) {
+                document.getElementById('queueStatus').textContent = '⚠️ 队列为空，无法出队！';
+                document.getElementById('queueStatus').style.color = '#e08080';
+                return;
+            }
+            
+            const dequeued = queue.shift();
+            document.getElementById('queueStatus').textContent = `✓ 出队（队首）: ${dequeued}`;
+            document.getElementById('queueStatus').style.color = 'var(--level-color)';
+            drawQueue();
+        }
+
+        function queuePeek() {
+            if (queue.length === 0) {
+                document.getElementById('queueStatus').textContent = '⚠️ 队列为空！';
+                document.getElementById('queueStatus').style.color = '#e08080';
+                return;
+            }
+            
+            document.getElementById('queueStatus').textContent = `📌 队首元素: ${queue[0]}（不弹出）`;
+            document.getElementById('queueStatus').style.color = '#80c0e0';
+            drawQueue(0);
+        }
+
+        function clearQueue() {
+            queue.length = 0;
+            document.getElementById('queueStatus').textContent = '✓ 队列已清空';
+            document.getElementById('queueStatus').style.color = 'var(--text-muted)';
+            drawQueue();
+        }
+
+        function drawQueue(highlightIndex = -1) {
+            const canvas = document.getElementById('queueCanvas');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const boxWidth = 55;
+            const boxHeight = 40;
+            const gap = 8;
+            const startX = 80;
+            const y = height / 2 - boxHeight / 2;
+            
+            ctx.strokeStyle = 'rgba(160, 192, 128, 0.4)';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(startX - 20, y - 15);
+            ctx.lineTo(startX + (MAX_QUEUE_SIZE * (boxWidth + gap)) + 15, y - 15);
+            ctx.moveTo(startX - 20, y + boxHeight + 15);
+            ctx.lineTo(startX + (MAX_QUEUE_SIZE * (boxWidth + gap)) + 15, y + boxHeight + 15);
+            ctx.stroke();
+            
+            ctx.fillStyle = 'rgba(100, 200, 140, 0.6)';
+            ctx.font = '12px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.fillText('队首', startX + (boxWidth / 2), y - 20);
+            
+            ctx.fillStyle = 'rgba(160, 192, 128, 0.6)';
+            ctx.fillText('队尾', startX + (MAX_QUEUE_SIZE - 1) * (boxWidth + gap) + boxWidth / 2, y - 20);
+            
+            for (let i = 0; i < MAX_QUEUE_SIZE; i++) {
+                const x = startX + i * (boxWidth + gap);
+                
+                if (i < queue.length) {
+                    const isFront = i === 0;
+                    const isBack = i === queue.length - 1;
+                    const isHighlighted = i === highlightIndex;
+                    
+                    if (isHighlighted) {
+                        ctx.fillStyle = 'rgba(128, 192, 160, 0.4)';
+                    } else if (isFront) {
+                        ctx.fillStyle = 'rgba(100, 200, 140, 0.3)';
+                    } else if (isBack) {
+                        ctx.fillStyle = 'rgba(160, 192, 128, 0.3)';
+                    } else {
+                        ctx.fillStyle = 'rgba(100, 160, 220, 0.25)';
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, boxWidth, boxHeight, 6);
+                    ctx.fill();
+                    
+                    if (isHighlighted) {
+                        ctx.strokeStyle = '#80e0a0';
+                    } else if (isFront) {
+                        ctx.strokeStyle = 'rgba(100, 200, 140, 0.8)';
+                    } else if (isBack) {
+                        ctx.strokeStyle = 'rgba(160, 192, 128, 0.8)';
+                    } else {
+                        ctx.strokeStyle = 'rgba(100, 160, 220, 0.6)';
+                    }
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = isHighlighted ? '#80e0a0' : (isFront ? '#80e0a0' : (isBack ? '#c8e8a0' : '#c0d8f0'));
+                    ctx.font = 'bold 16px Orbitron';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(queue[i].toString(), x + boxWidth / 2, y + boxHeight / 2);
+                } else {
+                    ctx.fillStyle = 'rgba(80, 100, 140, 0.15)';
+                    ctx.beginPath();
+                    ctx.roundRect(x, y, boxWidth, boxHeight, 6);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = 'rgba(80, 100, 140, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+            
+            ctx.fillStyle = 'rgba(160, 192, 128, 0.6)';
+            ctx.font = '13px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText(`队列长度: ${queue.length}/${MAX_QUEUE_SIZE}`, startX + MAX_QUEUE_SIZE * (boxWidth + gap) + 25, y + boxHeight / 2);
+        }
+
+        window.onload = function() {
+            drawStack();
+            drawQueue();
+        };
+    </script>
 </body>
 </html>
