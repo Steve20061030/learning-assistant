@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>线性回归 - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        .katex { font-size: 1.1em; }
+        .katex-display { margin: 0.5em 0; }
 
         :root {
             --bg-primary: #0a0e18;
@@ -731,8 +737,8 @@
                         <span class="formula-label">一元线性回归</span>
                         <span class="formula-tag">基础</span>
                     </div>
-                    <div class="formula-content">ŷ = w·x + b</div>
-                    <div class="formula-note">ŷ 为预测值，w 为权重（斜率），b 为偏置（截距）</div>
+                    <div class="formula-content">$$\hat{y} = w \cdot x + b$$</div>
+                    <div class="formula-note">$\hat{y}$ 为预测值，$w$ 为权重（斜率），$b$ 为偏置（截距）</div>
                 </div>
 
                 <div class="formula-card">
@@ -740,8 +746,8 @@
                         <span class="formula-label">多元线性回归</span>
                         <span class="formula-tag">扩展</span>
                     </div>
-                    <div class="formula-content">ŷ = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ</div>
-                    <div class="formula-note">多个特征的线性组合，w₀ = b 为偏置项</div>
+                    <div class="formula-content">$$\hat{y} = w_0 + w_1x_1 + w_2x_2 + \dots + w_nx_n$$</div>
+                    <div class="formula-note">多个特征的线性组合，$w_0 = b$ 为偏置项</div>
                 </div>
 
                 <div class="formula-card">
@@ -749,8 +755,8 @@
                         <span class="formula-label">矩阵形式</span>
                         <span class="formula-tag">进阶</span>
                     </div>
-                    <div class="formula-content">ŷ = X·w</div>
-                    <div class="formula-note">X ∈ ℝⁿˣᵈ⁺¹ 为特征矩阵，w ∈ ℝᵈ⁺¹ 为权重向量</div>
+                    <div class="formula-content">$$\hat{y} = X \cdot w$$</div>
+                    <div class="formula-note">$X \in \mathbb{R}^{n \times (d+1)}$ 为特征矩阵，$w \in \mathbb{R}^{d+1}$ 为权重向量</div>
                 </div>
             </div>
 
@@ -762,7 +768,7 @@
                         <span class="formula-label">均方误差（MSE）</span>
                         <span class="formula-tag">常用</span>
                     </div>
-                    <div class="formula-content">J(w) = (1/(2n)) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)²</div>
+                    <div class="formula-content">$$J(w) = \frac{1}{2n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2$$</div>
                     <div class="formula-note">最小化预测值与真实值的平方差，1/2 便于求导</div>
                 </div>
 
@@ -771,7 +777,7 @@
                         <span class="formula-label">均方根误差（RMSE）</span>
                         <span class="formula-tag">评价</span>
                     </div>
-                    <div class="formula-content">RMSE = √[(1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)²]</div>
+                    <div class="formula-content">$$RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)^2}$$</div>
                     <div class="formula-note">衡量预测误差的标准差，与原始数据同量纲</div>
                 </div>
 
@@ -780,7 +786,7 @@
                         <span class="formula-label">平均绝对误差（MAE）</span>
                         <span class="formula-tag">鲁棒</span>
                     </div>
-                    <div class="formula-content">MAE = (1/n) Σᵢ₌₁ⁿ |ŷᵢ - yᵢ|</div>
+                    <div class="formula-content">$$MAE = \frac{1}{n} \sum_{i=1}^{n} |\hat{y}_i - y_i|$$</div>
                     <div class="formula-note">对异常值不敏感，梯度为常数</div>
                 </div>
             </div>
@@ -793,8 +799,7 @@
                         <span class="formula-label">闭式解（一元）</span>
                         <span class="formula-tag">解析</span>
                     </div>
-                    <div class="formula-content">w = Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²
-b = ȳ - w·x̄</div>
+                    <div class="formula-content">$$w = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}, \quad b = \bar{y} - w\bar{x}$$</div>
                     <div class="formula-note">直接求解最优参数，无需迭代训练</div>
                 </div>
 
@@ -803,8 +808,8 @@ b = ȳ - w·x̄</div>
                         <span class="formula-label">正规方程（多元）</span>
                         <span class="formula-tag">矩阵</span>
                     </div>
-                    <div class="formula-content">w = (XᵀX)⁻¹Xᵀy</div>
-                    <div class="formula-note">直接求解多元线性回归的最优解，复杂度 O(d³)</div>
+                    <div class="formula-content">$$w = (X^T X)^{-1} X^T y$$</div>
+                    <div class="formula-note">直接求解多元线性回归的最优解，复杂度 $O(d^3)$</div>
                 </div>
 
                 <div class="formula-card">
@@ -812,10 +817,10 @@ b = ȳ - w·x̄</div>
                         <span class="formula-label">梯度下降</span>
                         <span class="formula-tag">优化</span>
                     </div>
-                    <div class="formula-content">w ← w - α·∇J(w)
-∂J/∂wⱼ = (1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)xᵢⱼ
-∂J/∂b = (1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)</div>
-                    <div class="formula-note">α 为学习率，通过迭代更新参数</div>
+                    <div class="formula-content">$$w \leftarrow w - \alpha \cdot \nabla J(w)$$
+$$\frac{\partial J}{\partial w_j} = \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i) x_{ij}$$
+$$\frac{\partial J}{\partial b} = \frac{1}{n} \sum_{i=1}^{n} (\hat{y}_i - y_i)$$</div>
+                    <div class="formula-note">$\alpha$ 为学习率，通过迭代更新参数</div>
                 </div>
 
                 <div class="formula-card">
@@ -823,8 +828,8 @@ b = ȳ - w·x̄</div>
                         <span class="formula-label">牛顿法</span>
                         <span class="formula-tag">快速</span>
                     </div>
-                    <div class="formula-content">w ← w - H⁻¹·∇J(w)</div>
-                    <div class="formula-note">H 为海森矩阵，收敛速度快但计算量大</div>
+                    <div class="formula-content">$$w \leftarrow w - H^{-1} \cdot \nabla J(w)$$</div>
+                    <div class="formula-note">$H$ 为海森矩阵，收敛速度快但计算量大</div>
                 </div>
             </div>
 
@@ -836,10 +841,10 @@ b = ȳ - w·x̄</div>
                         <span class="formula-label">决定系数 R²</span>
                         <span class="formula-tag">核心指标</span>
                     </div>
-                    <div class="formula-content">R² = 1 - SSₑᵣᵣ/SSₜₒₜ
-SSₑᵣᵣ = Σ(ŷᵢ - yᵢ)²
-SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
-                    <div class="formula-note">衡量模型解释数据方差的能力，范围 [0,1]</div>
+                    <div class="formula-content">$$R^2 = 1 - \frac{SS_{err}}{SS_{tot}}$$
+$$SS_{err} = \sum (\hat{y}_i - y_i)^2$$
+$$SS_{tot} = \sum (y_i - \bar{y})^2$$</div>
+                    <div class="formula-note">衡量模型解释数据方差的能力，范围 $[0,1]$</div>
                 </div>
 
                 <div class="formula-card">
@@ -847,7 +852,7 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">调整 R²</span>
                         <span class="formula-tag">改进</span>
                     </div>
-                    <div class="formula-content">Rₐᵢ⳱² = 1 - [(1-R²)(n-1)]/(n-d-1)</div>
+                    <div class="formula-content">$$R_{adj}^2 = 1 - \frac{(1-R^2)(n-1)}{n-d-1}$$</div>
                     <div class="formula-note">考虑特征数量的影响，防止过拟合</div>
                 </div>
 
@@ -856,7 +861,7 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">F 统计量</span>
                         <span class="formula-tag">检验</span>
                     </div>
-                    <div class="formula-content">F = (SSᵣₑ₉/d) / (SSₑᵣᵣ/(n-d-1))</div>
+                    <div class="formula-content">$$F = \frac{SS_{reg}/d}{SS_{err}/(n-d-1)}$$</div>
                     <div class="formula-note">检验回归模型整体显著性</div>
                 </div>
             </div>
@@ -869,8 +874,8 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">Ridge 回归（L2）</span>
                         <span class="formula-tag">常用</span>
                     </div>
-                    <div class="formula-content">J(w) = (1/(2n)) Σ(ŷᵢ - yᵢ)² + (λ/2)Σwⱼ²</div>
-                    <div class="formula-note">λ ≥ 0 控制正则化强度，防止过拟合</div>
+                    <div class="formula-content">$$J(w) = \frac{1}{2n} \sum (\hat{y}_i - y_i)^2 + \frac{\lambda}{2} \sum w_j^2$$</div>
+                    <div class="formula-note">$\lambda \geq 0$ 控制正则化强度，防止过拟合</div>
                 </div>
 
                 <div class="formula-card">
@@ -878,7 +883,7 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">Lasso 回归（L1）</span>
                         <span class="formula-tag">稀疏</span>
                     </div>
-                    <div class="formula-content">J(w) = (1/(2n)) Σ(ŷᵢ - yᵢ)² + λΣ|wⱼ|</div>
+                    <div class="formula-content">$$J(w) = \frac{1}{2n} \sum (\hat{y}_i - y_i)^2 + \lambda \sum |w_j|$$</div>
                     <div class="formula-note">可实现特征选择，产生稀疏解</div>
                 </div>
 
@@ -887,7 +892,7 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">Elastic Net</span>
                         <span class="formula-tag">混合</span>
                     </div>
-                    <div class="formula-content">J(w) = MSE + λ₁Σ|wⱼ| + λ₂Σwⱼ²</div>
+                    <div class="formula-content">$$J(w) = MSE + \lambda_1 \sum |w_j| + \lambda_2 \sum w_j^2$$</div>
                     <div class="formula-note">结合 L1 和 L2 正则化的优点</div>
                 </div>
             </div>
@@ -900,8 +905,8 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">系数标准误差</span>
                         <span class="formula-tag">误差分析</span>
                     </div>
-                    <div class="formula-content">SE(wⱼ) = √[(XᵀX)⁻¹ⱼⱼ · σ²]</div>
-                    <div class="formula-note">σ² 为残差方差的估计值</div>
+                    <div class="formula-content">$$SE(w_j) = \sqrt{(X^T X)^{-1}_{jj} \cdot \sigma^2}$$</div>
+                    <div class="formula-note">$\sigma^2$ 为残差方差的估计值</div>
                 </div>
 
                 <div class="formula-card">
@@ -909,7 +914,7 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">t 统计量</span>
                         <span class="formula-tag">检验</span>
                     </div>
-                    <div class="formula-content">tⱼ = wⱼ / SE(wⱼ)</div>
+                    <div class="formula-content">$$t_j = \frac{w_j}{SE(w_j)}$$</div>
                     <div class="formula-note">检验单个系数的显著性</div>
                 </div>
 
@@ -918,8 +923,8 @@ SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
                         <span class="formula-label">置信区间</span>
                         <span class="formula-tag">推断</span>
                     </div>
-                    <div class="formula-content">wⱼ ± tₐ/₂·SE(wⱼ)</div>
-                    <div class="formula-note">tₐ/₂ 为 t 分布的分位数</div>
+                    <div class="formula-content">$$w_j \pm t_{\alpha/2} \cdot SE(w_j)$$</div>
+                    <div class="formula-note">$t_{\alpha/2}$ 为 t 分布的分位数</div>
                 </div>
             </div>
         </section>
