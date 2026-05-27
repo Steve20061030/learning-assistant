@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态规划 - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --accent-teal: #80e0c0;
+            --accent-purple: #a080e0;
+            --level-color: #e08060;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(224, 128, 96, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), var(--accent-purple)); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(224, 128, 96, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(224, 128, 96, 0.15);
+            border: 1px solid rgba(224, 128, 96, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(224, 128, 96, 0.15), rgba(224, 128, 96, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* DP Visualization */
+        .dp-viz-section {
+            background: linear-gradient(135deg, rgba(80, 40, 30, 0.5), rgba(60, 30, 20, 0.4));
+        }
+
+        .dp-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .dp-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+        }
+
+        .dp-table th, .dp-table td {
+            padding: 12px 16px;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .dp-table th {
+            background: rgba(224, 128, 96, 0.2);
+            color: var(--level-color);
+            font-weight: 600;
+        }
+
+        .dp-table td {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .dp-table td:hover {
+            background: rgba(224, 128, 96, 0.15);
+            color: var(--text-primary);
+        }
+
+        .dp-table td.filled {
+            background: rgba(96, 192, 160, 0.2);
+            color: #60c0a0;
+        }
+
+        .dp-table td.current {
+            background: rgba(224, 128, 96, 0.4);
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(224, 128, 96, 0.5);
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* History */
+        .history-section {
+            background: linear-gradient(135deg, rgba(224, 128, 96, 0.1), rgba(224, 128, 96, 0.05));
+            border-color: rgba(224, 128, 96, 0.3);
+        }
+
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #e060a0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+        /* Problems */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .problem-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 128, 96, 0.15);
+        }
+
+        .problem-icon { font-size: 32px; margin-bottom: 12px; }
+
+        .problem-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .problem-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .problem-complexity {
+            font-size: 12px;
+            color: var(--level-color);
+            padding: 4px 10px;
+            background: rgba(224, 128, 96, 0.15);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        /* Conditions */
+        .condition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .condition-card {
+            background: linear-gradient(135deg, rgba(96, 192, 160, 0.15), rgba(96, 192, 160, 0.05));
+            border: 1px solid rgba(96, 192, 160, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .condition-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(96, 192, 160, 0.15);
+        }
+
+        .condition-icon { font-size: 28px; margin-bottom: 10px; }
+
+        .condition-title {
+            font-size: 16px;
+            color: #60c0a0;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .condition-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(224, 128, 96, 0.15), rgba(224, 128, 96, 0.05));
+            border: 1px solid rgba(224, 128, 96, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 128, 96, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 3 · 高级</div>
+            <h1 class="page-title">动态规划</h1>
+            <p class="page-subtitle">Dynamic Programming</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是动态规划？
+            </h2>
+            <p class="definition-text">
+                动态规划是一种通过将问题分解为子问题并存储中间结果来避免重复计算的算法设计方法。适用于具有<strong>最优子结构</strong>和<strong>重叠子问题</strong>的问题。
+            </p>
+            <p class="definition-text">
+                <strong>核心思想：</strong>将复杂问题拆解为简单子问题，通过记忆化存储避免重复计算，实现从暴力搜索到高效求解的飞跃。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象解决一个复杂问题时，先解决所有相关的子问题并记住答案，然后用这些答案构建最终解决方案。这就像玩拼图游戏，先完成各个小块，再组合成完整的图。
+            </div>
+        </section>
+
+        <!-- 适用条件 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">✅</span>
+                适用条件
+            </h2>
+            <div class="condition-grid">
+                <div class="condition-card">
+                    <div class="condition-icon">🏛️</div>
+                    <div class="condition-title">最优子结构</div>
+                    <div class="condition-desc">一个问题的最优解可以由其子问题的最优解构成。这是动态规划能够工作的根本前提。</div>
+                </div>
+                <div class="condition-card">
+                    <div class="condition-icon">🔄</div>
+                    <div class="condition-title">重叠子问题</div>
+                    <div class="condition-desc">在递归求解过程中，相同的子问题会被多次计算。存储中间结果可以避免重复计算。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DP表格可视化 -->
+        <section class="section dp-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                动态规划表
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                以斐波那契数列为例，观察状态转移过程
+            </p>
+
+            <div class="dp-viz-container">
+                <table class="dp-table" id="fibTable">
+                    <tr>
+                        <th>位置 i</th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                    </tr>
+                    <tr>
+                        <th>F(i)</th>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>5</td>
+                        <td>8</td>
+                        <td>13</td>
+                        <td>21</td>
+                        <td>34</td>
+                    </tr>
+                </table>
+
+                <div class="intuition-box" style="margin-top: 25px;">
+                    <strong>📝 状态转移方程：</strong>F(n) = F(n-1) + F(n-2)，边界条件 F(0)=0, F(1)=1
+                </div>
+
+                <div class="formula-card" style="margin-top: 20px;">
+                    <div class="formula-title">自底向上解法（迭代）</div>
+                    <div class="formula-content">dp[0] = 0, dp[1] = 1
+for i = 2 to n:
+    dp[i] = dp[i-1] + dp[i-2]
+return dp[n]
+
+时间复杂度: O(n)
+空间复杂度: O(n)</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-title">空间优化</div>
+                    <div class="formula-content">a, b = 0, 1
+for i = range(n):
+    a, b = b, a + b
+return b
+
+时间复杂度: O(n)
+空间复杂度: O(1)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历史 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: var(--level-color);">
+                <span class="section-icon">📜</span>
+                发展历史
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1953</div>
+                    <div class="timeline-content">
+                        <strong>Richard Bellman</strong>正式提出动态规划概念，起初用于运筹学和控制理论。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1950s-60s</div>
+                    <div class="timeline-content">
+                        在<strong>最优控制理论</strong>中得到广泛应用，解决了许多工程优化问题。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">计算机科学</div>
+                    <div class="timeline-content">
+                        成为<strong>算法设计</strong>的核心范式，在字符串匹配、图像处理、AI等领域发挥重要作用。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 经典问题 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                经典问题
+            </h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">💰</div>
+                    <div class="problem-title">0-1背包问题</div>
+                    <div class="problem-desc">给定物品重量和价值，在不超过容量的情况下选择物品使价值最大。</div>
+                    <span class="problem-complexity">时间 O(n×W)</span>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📍</div>
+                    <div class="problem-title">最长公共子序列</div>
+                    <div class="problem-desc">找出两个序列中最长的共同子序列（不要求连续）。</div>
+                    <span class="problem-complexity">时间 O(m×n)</span>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🏃</div>
+                    <div class="problem-title">最短路径</div>
+                    <div class="problem-desc">带权有向无环图中的最短路径问题。</div>
+                    <span class="problem-complexity">时间 O(V+E)</span>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">📐</div>
+                    <div class="problem-title">矩阵链乘法</div>
+                    <div class="problem-desc">给定矩阵链的乘法顺序，使标量乘法次数最少。</div>
+                    <span class="problem-complexity">时间 O(n³)</span>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">🔢</div>
+                    <div class="problem-title">爬楼梯问题</div>
+                    <div class="problem-desc">每次爬1或2步，到达第n阶有多少种方法？</div>
+                    <span class="problem-complexity">时间 O(n)</span>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">✂️</div>
+                    <div class="problem-title">编辑距离</div>
+                    <div class="problem-desc">将一个字符串转换为另一个所需的最少操作数（插入、删除、替换）。</div>
+                    <span class="problem-complexity">时间 O(m×n)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                设计步骤
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">步骤 1: 定义状态</div>
+                <div class="formula-content">dp[i] = 问题的最优解（以第i个...的形式）</div>
+                <div class="formula-note">状态定义要清晰、无歧义，能够完整描述问题</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">步骤 2: 状态转移方程</div>
+                <div class="formula-content">dp[i] = f(dp[i-1], dp[i-2], ...)</div>
+                <div class="formula-note">描述问题与其子问题之间的关系</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">步骤 3: 初始化</div>
+                <div class="formula-content">dp[0] = 边界值
+dp[1] = 边界值</div>
+                <div class="formula-note">确定最基本情况的值</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">步骤 4: 计算顺序</div>
+                <div class="formula-content">自底向上：从最小子问题逐步递推到原问题
+或 自顶向下：递归 + 记忆化</div>
+                <div class="formula-note">确保计算时需要的状态已经求出</div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: var(--level-color);">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 贪心算法</div>
+                    <div class="related-card-desc">另一种优化算法范式</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 分治法</div>
+                    <div class="related-card-desc">递归分解问题</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 回溯算法</div>
+                    <div class="related-card-desc">搜索与剪枝</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 图算法</div>
+                    <div class="related-card-desc">最短路径等</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 动态规划 | Level 3 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentCell = 2;
+        let interval = null;
+
+        function highlightCell() {
+            const cells = document.querySelectorAll('#fibTable td');
+            cells.forEach(cell => cell.classList.remove('current'));
+            cells.forEach(cell => cell.classList.add('filled'));
+
+            if (currentCell < cells.length) {
+                cells[currentCell].classList.add('current');
+                cells[currentCell].classList.add('filled');
+                currentCell++;
+            } else {
+                clearInterval(interval);
+            }
+        }
+
+        window.addEventListener('load', function() {
+            const cells = document.querySelectorAll('#fibTable td');
+            cells.forEach(cell => {
+                cell.classList.add('filled');
+            });
+
+            cells[0].classList.add('current');
+            cells[0].classList.remove('filled');
+
+            interval = setInterval(highlightCell, 500);
+        });
+    </script>
+</body>
+</html>

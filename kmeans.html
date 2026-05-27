@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #c0a060;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(192, 160, 96, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a080e0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(192, 160, 96, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(192, 160, 96, 0.15);
+            border: 1px solid rgba(192, 160, 96, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(192, 160, 96, 0.15), rgba(192, 160, 96, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* Visualization */
+        .viz-section {
+            background: linear-gradient(135deg, rgba(60, 50, 30, 0.5), rgba(50, 40, 20, 0.4));
+        }
+
+        .viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #kmeansCanvas { width: 100%; height: 100%; }
+
+        .controls-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .control-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .control-name { color: var(--text-secondary); }
+        .control-value { color: var(--level-color); font-family: 'Orbitron', monospace; font-weight: 600; }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--level-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--level-color);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--level-color), #a08050);
+            border: none;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(192, 160, 96, 0.4);
+        }
+
+        .stats-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(192, 160, 96, 0.2);
+        }
+
+        .stat-box-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--level-color);
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 6px;
+        }
+
+        .stat-box-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 16px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(192, 160, 96, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(192, 160, 96, 0.15), rgba(192, 160, 96, 0.05));
+            border: 1px solid rgba(192, 160, 96, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(192, 160, 96, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .stats-display { grid-template-columns: repeat(2, 1fr); }
+            .canvas-container { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 2 · 进阶</div>
+            <h1 class="page-title">K-Means</h1>
+            <p class="page-subtitle">K-Means Clustering</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是K-Means？
+            </h2>
+            <p class="definition-text">
+                K-Means是一种经典的无监督学习聚类算法。它将数据点划分为K个簇，使得每个簇内的数据点尽可能相似，而不同簇之间尽可能不同。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象你走进一个拥挤的房间，想要找出哪些人是朋友。你会观察人们如何聚集在一起——朋友通常会站在一起聊天。K-Means就是这样自动找出这些"朋友圈"。
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                交互式可视化
+            </h2>
+
+            <div class="viz-container">
+                <div class="canvas-container">
+                    <canvas id="kmeansCanvas"></canvas>
+                </div>
+
+                <div class="controls-panel">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="control-name">簇数 K</span>
+                            <span class="control-value" id="kValue">3</span>
+                        </div>
+                        <input type="range" class="slider" id="kSlider" min="2" max="6" step="1" value="3">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="control-name">样本数</span>
+                            <span class="control-value" id="samplesValue">80</span>
+                        </div>
+                        <input type="range" class="slider" id="samplesSlider" min="30" max="120" step="10" value="80">
+                    </div>
+                    <div class="control-group">
+                        <button class="btn" onclick="resetAndRun()">🔄 重新聚类</button>
+                    </div>
+                </div>
+
+                <div class="stats-display">
+                    <div class="stat-box">
+                        <div class="stat-box-value" id="clusters">3</div>
+                        <div class="stat-box-label">簇数量</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-value" id="iterations">4</div>
+                        <div class="stat-box-label">迭代次数</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-value" id="inertia">12.5</div>
+                        <div class="stat-box-label">惯性值</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-box-value" id="status">运行中</div>
+                        <div class="stat-box-label">状态</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">目标函数（最小化惯性）</div>
+                <div class="formula-content">J = Σ Σ ||x - μⱼ||²</div>
+                <div class="formula-note">其中 μⱼ 是第j个簇的质心，目标是最小化所有点到其簇质心的距离平方和</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">K-Means算法流程</div>
+                <div class="formula-content">1. 随机初始化K个质心
+2. 分配：将每个点分配到最近的质心
+3. 更新：重新计算每个簇的质心（均值）
+4. 重复步骤2-3直到质心不再变化</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">质心更新公式</div>
+                <div class="formula-content">μⱼ = (1/nⱼ) Σ xᵢ (xᵢ ∈ 簇j)</div>
+                <div class="formula-note">每个簇的质心是该簇所有点的平均值</div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">👥</div>
+                    <div class="scenario-name">用户分群</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🛒</div>
+                    <div class="scenario-name">商品推荐</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🖼️</div>
+                    <div class="scenario-name">图像分割</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📊</div>
+                    <div class="scenario-name">市场细分</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="knn.html" class="related-card">
+                    <div class="related-card-title">→ KNN 分类</div>
+                    <div class="related-card-desc">监督学习版本</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ DBSCAN</div>
+                    <div class="related-card-desc">密度聚类</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 层次聚类</div>
+                    <div class="related-card-desc">树形聚类结构</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ EM算法</div>
+                    <div class="related-card-desc">概率模型聚类</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - K-Means | Level 2 进阶</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('kmeansCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let k = 3;
+        let samples = 80;
+        let data = [];
+        let centroids = [];
+        let clusters = [];
+        let iterations = 0;
+        let isRunning = false;
+
+        const colors = ['#c0a060', '#60c0a0', '#a080e0', '#e08060', '#60c0f0', '#c060a0'];
+
+        function generateData() {
+            data = [];
+            const centers = [];
+            for (let i = 0; i < k; i++) {
+                centers.push({
+                    x: (Math.random() - 0.5) * 4,
+                    y: (Math.random() - 0.5) * 4
+                });
+            }
+            for (let i = 0; i < samples; i++) {
+                const center = centers[i % k];
+                data.push({
+                    x: center.x + (Math.random() - 0.5) * 2.5,
+                    y: center.y + (Math.random() - 0.5) * 2.5
+                });
+            }
+            initializeCentroids();
+        }
+
+        function initializeCentroids() {
+            centroids = [];
+            for (let i = 0; i < k; i++) {
+                const idx = Math.floor(Math.random() * data.length);
+                centroids.push({ ...data[idx] });
+            }
+            iterations = 0;
+            assignClusters();
+        }
+
+        function assignClusters() {
+            clusters = Array(k).fill(null).map(() => []);
+            data.forEach(point => {
+                let minDist = Infinity;
+                let clusterIdx = 0;
+                centroids.forEach((centroid, idx) => {
+                    const dist = Math.pow(point.x - centroid.x, 2) + Math.pow(point.y - centroid.y, 2);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        clusterIdx = idx;
+                    }
+                });
+                clusters[clusterIdx].push(point);
+            });
+        }
+
+        function updateCentroids() {
+            let changed = false;
+            centroids = centroids.map((_, idx) => {
+                const cluster = clusters[idx];
+                if (cluster.length === 0) {
+                    return { x: (Math.random() - 0.5) * 6, y: (Math.random() - 0.5) * 6 };
+                }
+                const newX = cluster.reduce((sum, p) => sum + p.x, 0) / cluster.length;
+                const newY = cluster.reduce((sum, p) => sum + p.y, 0) / cluster.length;
+                if (Math.abs(newX - centroids[idx].x) > 0.001 || Math.abs(newY - centroids[idx].y) > 0.001) {
+                    changed = true;
+                }
+                return { x: newX, y: newY };
+            });
+            return changed;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = 40;
+            const plotWidth = canvas.width - padding * 2;
+            const plotHeight = canvas.height - padding * 2;
+
+            ctx.strokeStyle = 'rgba(80, 120, 180, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 8; i++) {
+                const x = padding + (i / 8) * plotWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, padding);
+                ctx.lineTo(x, canvas.height - padding);
+                ctx.stroke();
+            }
+
+            clusters.forEach((cluster, idx) => {
+                cluster.forEach(point => {
+                    const screenX = padding + ((point.x + 3) / 6) * plotWidth;
+                    const screenY = canvas.height - padding - ((point.y + 3) / 6) * plotHeight;
+
+                    ctx.beginPath();
+                    ctx.arc(screenX, screenY, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = colors[idx];
+                    ctx.fill();
+                    ctx.strokeStyle = colors[idx];
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                });
+            });
+
+            centroids.forEach((centroid, idx) => {
+                const screenX = padding + ((centroid.x + 3) / 6) * plotWidth;
+                const screenY = canvas.height - padding - ((centroid.y + 3) / 6) * plotHeight;
+
+                ctx.beginPath();
+                ctx.arc(screenX, screenY, 12, 0, Math.PI * 2);
+                ctx.fillStyle = colors[idx];
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 10px Orbitron';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(idx + 1, screenX, screenY);
+            });
+        }
+
+        function runIteration() {
+            if (!isRunning) return;
+
+            iterations++;
+            const changed = updateCentroids();
+            assignClusters();
+            draw();
+            updateStats();
+
+            if (changed && iterations < 20) {
+                setTimeout(runIteration, 500);
+            } else {
+                isRunning = false;
+                document.getElementById('status').textContent = '完成';
+            }
+        }
+
+        function resetAndRun() {
+            isRunning = true;
+            document.getElementById('status').textContent = '运行中';
+            generateData();
+            draw();
+            updateStats();
+            setTimeout(runIteration, 300);
+        }
+
+        function updateStats() {
+            let inertia = 0;
+            clusters.forEach((cluster, idx) => {
+                cluster.forEach(point => {
+                    inertia += Math.pow(point.x - centroids[idx].x, 2) + Math.pow(point.y - centroids[idx].y, 2);
+                });
+            });
+
+            document.getElementById('clusters').textContent = k;
+            document.getElementById('iterations').textContent = iterations;
+            document.getElementById('inertia').textContent = inertia.toFixed(1);
+        }
+
+        document.getElementById('kSlider').addEventListener('input', function() {
+            k = parseInt(this.value);
+            document.getElementById('kValue').textContent = k;
+            if (!isRunning) {
+                resetAndRun();
+            }
+        });
+
+        document.getElementById('samplesSlider').addEventListener('input', function() {
+            samples = parseInt(this.value);
+            document.getElementById('samplesValue').textContent = samples;
+            if (!isRunning) {
+                resetAndRun();
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        });
+
+        window.addEventListener('load', function() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            resetAndRun();
+        });
+    </script>
+</body>
+</html>

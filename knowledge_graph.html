@@ -1,0 +1,638 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个性化学习助手 - 机器学习可视化教学平台</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e18 0%, #0f1623 40%, #111a28 100%);
+            color: #d0e0f0;
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%),
+                repeating-linear-gradient(0deg, rgba(0, 60, 120, 0.02) 0, rgba(0, 60, 120, 0.02) 1px, transparent 1px, transparent 6px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(10, 14, 24, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            border-bottom: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            color: #60c0f0;
+            letter-spacing: 3px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border: 1px solid rgba(80, 140, 200, 0.3);
+            border-radius: 6px;
+            background: rgba(60, 100, 160, 0.2);
+            color: #80c0f0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(80, 140, 200, 0.3);
+            color: #60c0f0;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #40a0e0, #60c0f0);
+            border-color: #60c0f0;
+            color: #0a0e18;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding-top: 80px;
+            height: 100vh;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            color: #60c0f0;
+            margin-bottom: 12px;
+            letter-spacing: 4px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #80a0c0;
+            margin-bottom: 20px;
+        }
+
+        .hero-hint {
+            font-size: 13px;
+            color: #60c0a0;
+        }
+
+        #graphCanvas {
+            width: 100%;
+            height: calc(100vh - 200px);
+            display: block;
+            cursor: grab;
+        }
+
+        #graphCanvas:active {
+            cursor: grabbing;
+        }
+
+        .legend {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(20, 30, 50, 0.9);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .legend-title {
+            font-size: 12px;
+            color: #80c0f0;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.lv1 { background: #60c0a0; }
+        .legend-dot.lv2 { background: #c0a060; }
+        .legend-dot.lv3 { background: #c060a0; }
+        .legend-dot.lv4 { background: #e08060; }
+        .legend-dot.lv5 { background: #a060e0; }
+
+        .legend-label {
+            color: #b0d0e0;
+        }
+
+        .info-panel {
+            position: fixed;
+            top: 100px;
+            right: 30px;
+            background: rgba(20, 30, 50, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+            backdrop-filter: blur(10px);
+            width: 280px;
+            display: none;
+        }
+
+        .info-panel.visible {
+            display: block;
+        }
+
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            color: #60c0f0;
+            font-weight: 600;
+        }
+
+        .info-close {
+            font-size: 20px;
+            cursor: pointer;
+            color: #80a0c0;
+            transition: color 0.2s;
+        }
+
+        .info-close:hover {
+            color: #d0e0f0;
+        }
+
+        .info-level {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .info-level.lv1 { background: rgba(100, 200, 160, 0.2); color: #60c0a0; }
+        .info-level.lv2 { background: rgba(200, 160, 100, 0.2); color: #c0a060; }
+        .info-level.lv3 { background: rgba(200, 100, 160, 0.2); color: #c060a0; }
+        .info-level.lv4 { background: rgba(220, 120, 100, 0.2); color: #e08060; }
+        .info-level.lv5 { background: rgba(160, 100, 220, 0.2); color: #a060e0; }
+
+        .info-desc {
+            font-size: 13px;
+            color: #b0d0e0;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .info-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #80a0c0;
+        }
+
+        .info-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #40a0e0, #60c0f0);
+            color: #0a0e18;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .info-btn:hover {
+            background: linear-gradient(135deg, #60c0f0, #80d0ff);
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 12px;
+            background: rgba(10, 14, 24, 0.8);
+            border-top: 1px solid rgba(80, 120, 180, 0.1);
+            font-size: 12px;
+            color: #6080a0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+
+            .logo-text {
+                font-size: 16px;
+            }
+
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+
+            .hero-title {
+                font-size: 24px;
+            }
+
+            .legend {
+                left: 15px;
+                bottom: 60px;
+                padding: 12px;
+            }
+
+            .info-panel {
+                right: 15px;
+                left: 15px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🧠</span>
+            <span class="logo-text">LEARNING AI</span>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn active" id="btnGraph">知识图谱</button>
+            <button class="nav-btn" id="btnHistory">进化史</button>
+            <button class="nav-btn" onclick="location.href='index.html'">返回主页</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="hero-section">
+            <h1 class="hero-title">KNOWLEDGE GRAPH</h1>
+            <p class="hero-subtitle">建立直觉，理解算法，掌握机器学习</p>
+            <p class="hero-hint">点击节点查看详情 · Ctrl+滚轮或双指缩放</p>
+        </div>
+
+        <canvas id="graphCanvas"></canvas>
+    </div>
+
+    <div class="legend">
+        <div class="legend-title">难度等级</div>
+        <div class="legend-items">
+            <div class="legend-item"><span class="legend-dot lv1"></span><span class="legend-label">Lv1 入门</span></div>
+            <div class="legend-item"><span class="legend-dot lv2"></span><span class="legend-label">Lv2 基础</span></div>
+            <div class="legend-item"><span class="legend-dot lv3"></span><span class="legend-label">Lv3 进阶</span></div>
+            <div class="legend-item"><span class="legend-dot lv4"></span><span class="legend-label">Lv4 高级</span></div>
+            <div class="legend-item"><span class="legend-dot lv5"></span><span class="legend-label">Lv5 专家</span></div>
+        </div>
+    </div>
+
+    <div class="info-panel" id="infoPanel">
+        <div class="info-header">
+            <span class="info-title" id="infoTitle">算法名称</span>
+            <span class="info-close" onclick="closeInfoPanel()">×</span>
+        </div>
+        <div class="info-level" id="infoLevel">Lv1</div>
+        <div class="info-desc" id="infoDesc"></div>
+        <div class="info-stats" id="infoStats"></div>
+        <button class="info-btn" id="infoBtn">查看详情</button>
+    </div>
+
+    <div class="footer">
+        个性化学习助手 - 机器学习可视化教学平台
+    </div>
+
+    <script>
+        const algorithms = [
+            { id: 'linear', name: '线性回归', level: 1, x: 0.2, y: 0.5, category: '回归' },
+            { id: 'logistic', name: '逻辑回归', level: 1, x: 0.35, y: 0.35, category: '分类' },
+            { id: 'knn', name: 'K近邻', level: 1, x: 0.35, y: 0.65, category: '分类' },
+            { id: 'kmeans', name: 'K-Means', level: 1, x: 0.5, y: 0.75, category: '聚类' },
+            { id: 'poly', name: '多项式回归', level: 1, x: 0.15, y: 0.35, category: '回归' },
+            { id: 'bayes', name: '朴素贝叶斯', level: 2, x: 0.5, y: 0.25, category: '分类' },
+            { id: 'pca', name: 'PCA', level: 2, x: 0.65, y: 0.5, category: '降维' },
+            { id: 'decision', name: '决策树', level: 2, x: 0.5, y: 0.5, category: '分类' },
+            { id: 'ridge', name: 'Ridge回归', level: 2, x: 0.15, y: 0.65, category: '回归' },
+            { id: 'lasso', name: 'Lasso回归', level: 2, x: 0.08, y: 0.5, category: '回归' },
+            { id: 'dbscan', name: 'DBSCAN', level: 2, x: 0.75, y: 0.65, category: '聚类' },
+            { id: 'tsne', name: 't-SNE', level: 2, x: 0.82, y: 0.5, category: '降维' },
+            { id: 'lda', name: 'LDA', level: 2, x: 0.65, y: 0.3, category: '降维' },
+            { id: 'hierarchical', name: '层次聚类', level: 2, x: 0.82, y: 0.7, category: '聚类' },
+            { id: 'svm', name: '支持向量机', level: 3, x: 0.65, y: 0.65, category: '分类' },
+            { id: 'random', name: '随机森林', level: 3, x: 0.45, y: 0.4, category: '分类' },
+            { id: 'nn', name: '神经网络', level: 4, x: 0.75, y: 0.35, category: '神经网络' },
+            { id: 'cnn', name: 'CNN', level: 4, x: 0.75, y: 0.2, category: '神经网络' },
+            { id: 'rnn', name: 'RNN', level: 4, x: 0.88, y: 0.35, category: '神经网络' },
+            { id: 'attention', name: '注意力机制', level: 4, x: 0.88, y: 0.2, category: '神经网络' },
+            { id: 'qlearning', name: 'Q-Learning', level: 5, x: 0.92, y: 0.5, category: '强化学习' },
+            { id: 'policy', name: '策略梯度', level: 5, x: 0.92, y: 0.35, category: '强化学习' },
+            { id: 'actor', name: 'Actor-Critic', level: 5, x: 0.92, y: 0.65, category: '强化学习' },
+        ];
+
+        const connections = [
+            ['linear', 'logistic'], ['linear', 'knn'], ['linear', 'kmeans'],
+            ['linear', 'poly'], ['linear', 'ridge'], ['ridge', 'lasso'],
+            ['logistic', 'bayes'], ['logistic', 'svm'], ['logistic', 'decision'],
+            ['decision', 'random'], ['knn', 'kmeans'], ['kmeans', 'dbscan'],
+            ['dbscan', 'hierarchical'], ['pca', 'lda'], ['lda', 'tsne'],
+            ['svm', 'nn'], ['nn', 'cnn'], ['nn', 'rnn'], ['rnn', 'attention'],
+            ['nn', 'qlearning'], ['qlearning', 'policy'], ['policy', 'actor']
+        ];
+
+        const levelColors = {
+            1: '#60c0a0',
+            2: '#c0a060',
+            3: '#c060a0',
+            4: '#e08060',
+            5: '#a060e0'
+        };
+
+        const algorithmDetails = {
+            linear: { desc: '最基础的回归算法，建立自变量与因变量之间的线性关系模型。', url: 'linear_regression.html' },
+            logistic: { desc: '二分类算法，通过Sigmoid函数将线性输出转换为概率值。', url: 'logistic_regression.html' },
+            knn: { desc: '基于实例的学习方法，通过测量距离进行分类。', url: '#' },
+            kmeans: { desc: '无监督聚类算法，将数据自动分组到K个簇中。', url: '#' },
+            poly: { desc: '扩展线性回归处理非线性关系的方法。', url: '#' },
+            bayes: { desc: '基于贝叶斯定理的概率分类算法。', url: '#' },
+            pca: { desc: '无监督降维算法，保留数据的主要方差。', url: '#' },
+            decision: { desc: '通过递归划分数据集构建的分类器。', url: '#' },
+            ridge: { desc: '带L2正则化的线性回归，防止过拟合。', url: '#' },
+            lasso: { desc: '带L1正则化的线性回归，可进行特征选择。', url: '#' },
+            dbscan: { desc: '基于密度的聚类算法，能发现任意形状的簇。', url: '#' },
+            tsne: { desc: '非线性降维算法，特别适合可视化。', url: '#' },
+            lda: { desc: '监督降维算法，最大化类间差异。', url: '#' },
+            hierarchical: { desc: '层次化聚类算法，构建树状聚类结构。', url: '#' },
+            svm: { desc: '找到最优超平面分隔不同类别数据。', url: '#' },
+            random: { desc: '集成学习算法，通过多个决策树提高准确性。', url: '#' },
+            nn: { desc: '模仿人脑神经元结构的深度学习模型。', url: '#' },
+            cnn: { desc: '专门处理网格数据的深度学习模型。', url: '#' },
+            rnn: { desc: '处理序列数据的递归神经网络。', url: '#' },
+            attention: { desc: 'Transformer架构的核心组成部分。', url: '#' },
+            qlearning: { desc: '基于值函数的强化学习算法。', url: '#' },
+            policy: { desc: '直接优化策略的强化学习算法。', url: '#' },
+            actor: { desc: '结合策略梯度和值函数的强化学习算法。', url: '#' },
+        };
+
+        let canvas, ctx;
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+        let hoveredNode = null;
+        let selectedNode = null;
+
+        function initCanvas() {
+            canvas = document.getElementById('graphCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            canvas.addEventListener('wheel', handleWheel);
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            canvas.addEventListener('mouseleave', handleMouseUp);
+            drawGraph();
+        }
+
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawGraph();
+        }
+
+        function handleWheel(e) {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.max(0.5, Math.min(3, scale * zoomFactor));
+            
+            offsetX = mouseX - (mouseX - offsetX) * (newScale / scale);
+            offsetY = mouseY - (mouseY - offsetY) * (newScale / scale);
+            scale = newScale;
+            
+            drawGraph();
+        }
+
+        function handleMouseDown(e) {
+            isDragging = true;
+            lastX = e.clientX - offsetX;
+            lastY = e.clientY - offsetY;
+        }
+
+        function handleMouseMove(e) {
+            if (isDragging) {
+                offsetX = e.clientX - lastX;
+                offsetY = e.clientY - lastY;
+                drawGraph();
+            } else {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = (e.clientX - rect.left - offsetX) / scale;
+                const mouseY = (e.clientY - rect.top - offsetY) / scale;
+                
+                hoveredNode = null;
+                for (const algo of algorithms) {
+                    const nodeX = algo.x * canvas.width;
+                    const nodeY = algo.y * canvas.height;
+                    const distance = Math.sqrt(Math.pow(mouseX - nodeX, 2) + Math.pow(mouseY - nodeY, 2));
+                    if (distance < 30) {
+                        hoveredNode = algo;
+                        break;
+                    }
+                }
+                canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+                drawGraph();
+            }
+        }
+
+        function handleMouseUp() {
+            if (!isDragging && hoveredNode) {
+                showInfoPanel(hoveredNode);
+            }
+            isDragging = false;
+        }
+
+        function drawGraph() {
+            ctx.fillStyle = '#0a0e18';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.translate(offsetX, offsetY);
+            ctx.scale(scale, scale);
+
+            drawConnections();
+            drawNodes();
+
+            ctx.restore();
+        }
+
+        function drawConnections() {
+            ctx.strokeStyle = 'rgba(80, 140, 200, 0.3)';
+            ctx.lineWidth = 1;
+
+            for (const [fromId, toId] of connections) {
+                const from = algorithms.find(a => a.id === fromId);
+                const to = algorithms.find(a => a.id === toId);
+                if (!from || !to) continue;
+
+                const x1 = from.x * canvas.width;
+                const y1 = from.y * canvas.height;
+                const x2 = to.x * canvas.width;
+                const y2 = to.y * canvas.height;
+
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
+            }
+        }
+
+        function drawNodes() {
+            for (const algo of algorithms) {
+                const x = algo.x * canvas.width;
+                const y = algo.y * canvas.height;
+                const isHovered = hoveredNode && hoveredNode.id === algo.id;
+                const isSelected = selectedNode && selectedNode.id === algo.id;
+                const radius = isHovered || isSelected ? 28 : 22;
+                const color = levelColors[algo.level];
+
+                if (isHovered || isSelected) {
+                    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+                    gradient.addColorStop(0, color + '40');
+                    gradient.addColorStop(1, color + '00');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = isHovered || isSelected ? 15 : 8;
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#0a0e18';
+                ctx.font = 'bold 12px "Noto Sans SC", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(algo.name, x, y);
+
+                ctx.font = '8px "Orbitron", sans-serif';
+                ctx.fillStyle = 'rgba(255,255,255,0.8)';
+                ctx.fillText(`Lv${algo.level}`, x, y + radius - 8);
+            }
+        }
+
+        function showInfoPanel(node) {
+            selectedNode = node;
+            const details = algorithmDetails[node.id];
+            
+            document.getElementById('infoTitle').textContent = node.name;
+            document.getElementById('infoLevel').textContent = `Lv${node.level}`;
+            document.getElementById('infoLevel').className = `info-level lv${node.level}`;
+            document.getElementById('infoDesc').textContent = details.desc;
+            document.getElementById('infoStats').innerHTML = `
+                <span>类别: ${node.category}</span>
+                <span>难度: Lv${node.level}</span>
+            `;
+            document.getElementById('infoBtn').onclick = () => {
+                if (details.url) {
+                    window.location.href = details.url;
+                }
+            };
+            
+            document.getElementById('infoPanel').classList.add('visible');
+            drawGraph();
+        }
+
+        function closeInfoPanel() {
+            document.getElementById('infoPanel').classList.remove('visible');
+            selectedNode = null;
+            drawGraph();
+        }
+
+        document.getElementById('btnGraph').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('btnHistory').classList.remove('active');
+        });
+
+        document.getElementById('btnHistory').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('btnGraph').classList.remove('active');
+            alert('进化史功能开发中...');
+        });
+
+        initCanvas();
+    </script>
+</body>
+</html>

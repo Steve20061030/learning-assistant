@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>决策树 - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #80e0c0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(128, 224, 192, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a080e0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(128, 224, 192, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(128, 224, 192, 0.15);
+            border: 1px solid rgba(128, 224, 192, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(128, 224, 192, 0.15), rgba(128, 224, 192, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Tree Visualization */
+        .tree-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #treeCanvas { width: 100%; height: 100%; }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(128, 224, 192, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(128, 224, 192, 0.15), rgba(128, 224, 192, 0.05));
+            border: 1px solid rgba(128, 224, 192, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(128, 224, 192, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .tree-canvas-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 2 · 进阶</div>
+            <h1 class="page-title">决策树</h1>
+            <p class="page-subtitle">Decision Tree</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是决策树？
+            </h2>
+            <p class="definition-text">
+                决策树是一种监督学习算法，通过递归地将数据集划分为子集来构建树结构。每个内部节点代表一个特征测试，每个分支代表测试结果，每个叶节点代表一个类别或回归值。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象你在玩一个猜动物的游戏——你问"它有翅膀吗？"，根据回答继续提问，直到猜出答案。决策树就是这样一个由一系列"是/否"问题组成的决策流程。
+            </div>
+        </section>
+
+        <!-- 决策树可视化 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🌳</span>
+                决策树结构
+            </h2>
+            <div class="tree-canvas-container">
+                <canvas id="treeCanvas"></canvas>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">信息增益 (Information Gain)</div>
+                <div class="formula-content">IG(D, A) = H(D) - H(D|A)</div>
+                <div class="formula-note">衡量特征A对数据集D分类的有用程度，信息增益越大越好</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">熵 (Entropy)</div>
+                <div class="formula-content">H(D) = -Σ pᵢ log₂(pᵢ)</div>
+                <div class="formula-note">衡量数据的混乱程度，熵越小越纯净</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">基尼不纯度 (Gini Impurity)</div>
+                <div class="formula-content">G(D) = 1 - Σ pᵢ²</div>
+                <div class="formula-note">另一种衡量纯度的指标，计算效率更高</div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">💼</div>
+                    <div class="scenario-name">风险评估</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">💊</div>
+                    <div class="scenario-name">医疗诊断</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-name">市场分析</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🏦</div>
+                    <div class="scenario-name">信用评分</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 随机森林</div>
+                    <div class="related-card-desc">集成多个决策树</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ XGBoost</div>
+                    <div class="related-card-desc">梯度提升树</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ LightGBM</div>
+                    <div class="related-card-desc">高效梯度提升</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ AdaBoost</div>
+                    <div class="related-card-desc">自适应提升</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 决策树 | Level 2 进阶</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('treeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const tree = {
+            value: '天气',
+            left: {
+                value: '晴朗',
+                left: { value: '出门' },
+                right: { value: '带伞' }
+            },
+            right: {
+                value: '下雨',
+                left: { value: '待在家' },
+                right: { value: '带雨衣' }
+            }
+        };
+
+        let currentNode = tree;
+        let animationStep = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            drawTree();
+        }
+
+        function drawTree() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawNode(tree, canvas.width / 2, 60, canvas.width / 2, 1);
+        }
+
+        function drawNode(node, x, y, maxWidth, depth) {
+            if (!node) return;
+
+            const nodeWidth = 120;
+            const nodeHeight = 50;
+            const levelGap = 100;
+
+            ctx.fillStyle = '#80e0c0';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(x - nodeWidth / 2, y - nodeHeight / 2, nodeWidth, nodeHeight, 10);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#fff';
+            ctx.font = '14px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(node.value, x, y);
+
+            if (node.left || node.right) {
+                const childWidth = maxWidth / 2;
+                const childY = y + levelGap;
+
+                if (node.left) {
+                    const leftX = x - childWidth / 2;
+                    ctx.strokeStyle = '#a0c0e0';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x - nodeWidth / 2, y + nodeHeight / 2);
+                    ctx.lineTo(leftX, childY - nodeHeight / 2);
+                    ctx.stroke();
+                    drawNode(node.left, leftX, childY, childWidth, depth + 1);
+                }
+
+                if (node.right) {
+                    const rightX = x + childWidth / 2;
+                    ctx.strokeStyle = '#a0c0e0';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x + nodeWidth / 2, y + nodeHeight / 2);
+                    ctx.lineTo(rightX, childY - nodeHeight / 2);
+                    ctx.stroke();
+                    drawNode(node.right, rightX, childY, childWidth, depth + 1);
+                }
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

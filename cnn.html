@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #e0a080;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(224, 160, 128, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a080e0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(224, 160, 128, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(224, 160, 128, 0.15);
+            border: 1px solid rgba(224, 160, 128, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(224, 160, 128, 0.15), rgba(224, 160, 128, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* CNN Architecture Visualization */
+        .cnn-viz-section {
+            background: linear-gradient(135deg, rgba(80, 50, 40, 0.5), rgba(60, 35, 25, 0.4));
+        }
+
+        .cnn-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .cnn-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #cnnCanvas { width: 100%; height: 100%; }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Architecture Grid */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .arch-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .arch-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 160, 128, 0.15);
+        }
+
+        .arch-icon { font-size: 36px; margin-bottom: 12px; }
+
+        .arch-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .arch-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(224, 160, 128, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(224, 160, 128, 0.15), rgba(224, 160, 128, 0.05));
+            border: 1px solid rgba(224, 160, 128, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 160, 128, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .cnn-canvas-container { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 4 · 高级</div>
+            <h1 class="page-title">CNN</h1>
+            <p class="page-subtitle">Convolutional Neural Network</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是CNN？
+            </h2>
+            <p class="definition-text">
+                卷积神经网络（Convolutional Neural Network）是一种专门处理网格数据（如图像）的深度学习模型。它通过卷积层、池化层和全连接层的组合，自动学习图像的层次化特征表示。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象你在看一幅画，首先看到的是整体轮廓，然后逐渐注意到细节——眼睛、鼻子、嘴巴。CNN就是这样逐层提取特征，从简单的边缘到复杂的物体部件，最后识别完整的对象。
+            </div>
+        </section>
+
+        <!-- 网络架构 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🏗️</span>
+                网络架构
+            </h2>
+            <div class="arch-grid">
+                <div class="arch-card">
+                    <div class="arch-icon">🖼️</div>
+                    <div class="arch-title">输入层</div>
+                    <div class="arch-desc">接收原始图像数据，保持空间结构（宽度×高度×通道数）。</div>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">🔍</div>
+                    <div class="arch-title">卷积层</div>
+                    <div class="arch-desc">使用卷积核扫描图像，提取局部特征如边缘、纹理、形状等。</div>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">📐</div>
+                    <div class="arch-title">池化层</div>
+                    <div class="arch-desc">降低特征图分辨率，减少参数数量，提高计算效率和鲁棒性。</div>
+                </div>
+                <div class="arch-card">
+                    <div class="arch-icon">🧠</div>
+                    <div class="arch-title">全连接层</div>
+                    <div class="arch-desc">将高级特征映射到类别概率，做出最终分类决策。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section cnn-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                CNN结构可视化
+            </h2>
+            <div class="cnn-viz-container">
+                <div class="cnn-canvas-container">
+                    <canvas id="cnnCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">卷积运算</div>
+                <div class="formula-content">(f * g)(i,j) = ΣΣ f(i-k,j-l)·g(k,l)</div>
+                <div class="formula-note">卷积核g在特征图f上滑动，逐点相乘后求和</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">ReLU激活函数</div>
+                <div class="formula-content">f(x) = max(0, x)</div>
+                <div class="formula-note">引入非线性，允许网络学习复杂模式</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">最大池化</div>
+                <div class="formula-content">pool(x) = max(x[i,j] for i,j in window)</div>
+                <div class="formula-note">在局部窗口内取最大值，保持最重要特征</div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">📷</div>
+                    <div class="scenario-name">图像分类</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔍</div>
+                    <div class="scenario-name">目标检测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎨</div>
+                    <div class="scenario-name">图像生成</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔮</div>
+                    <div class="scenario-name">图像分割</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="neural-network.html" class="related-card">
+                    <div class="related-card-title">→ 神经网络</div>
+                    <div class="related-card-desc">基础网络结构</div>
+                </a>
+                <a href="rnn.html" class="related-card">
+                    <div class="related-card-title">→ RNN</div>
+                    <div class="related-card-desc">序列数据处理</div>
+                </a>
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention</div>
+                    <div class="related-card-desc">注意力机制</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ Transformer</div>
+                    <div class="related-card-desc">注意力架构</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - CNN | Level 4 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('cnnCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const layers = [
+            { name: '输入', channels: 3, color: '#60c0f0', width: 28, height: 28 },
+            { name: '卷积1', channels: 16, color: '#e0a080', width: 24, height: 24 },
+            { name: '池化1', channels: 16, color: '#e0a080', width: 12, height: 12 },
+            { name: '卷积2', channels: 32, color: '#a080e0', width: 8, height: 8 },
+            { name: '池化2', channels: 32, color: '#a080e0', width: 4, height: 4 },
+            { name: '全连接', channels: 1, color: '#60c0a0', width: 1, height: 10 },
+            { name: '输出', channels: 1, color: '#e0c060', width: 1, height: 10 }
+        ];
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const totalWidth = canvas.width - 100;
+            const layerWidth = totalWidth / layers.length;
+            const startX = 50;
+
+            layers.forEach((layer, idx) => {
+                const x = startX + idx * layerWidth;
+                const y = canvas.height / 2;
+
+                const displayWidth = Math.max(20, layer.width * 4);
+                const displayHeight = Math.max(20, layer.height * 4);
+                const centerX = x + layerWidth / 2;
+                const centerY = y;
+
+                ctx.fillStyle = layer.color;
+                ctx.globalAlpha = 0.6;
+                ctx.beginPath();
+                ctx.roundRect(centerX - displayWidth / 2, centerY - displayHeight / 2, displayWidth, displayHeight, 8);
+                ctx.fill();
+
+                ctx.globalAlpha = 1;
+                ctx.strokeStyle = layer.color;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px Noto Sans SC';
+                ctx.textAlign = 'center';
+                ctx.fillText(layer.name, centerX, centerY - displayHeight / 2 - 15);
+
+                ctx.font = '11px Orbitron';
+                ctx.fillText(`${layer.width}x${layer.height}x${layer.channels}`, centerX, centerY + 5);
+
+                if (idx < layers.length - 1) {
+                    ctx.strokeStyle = 'rgba(160, 192, 224, 0.4)';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + displayWidth / 2 + 5, centerY);
+                    ctx.lineTo(startX + (idx + 1) * layerWidth - layerWidth / 2 - displayWidth / 2 - 5, centerY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            });
+        }
+
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        });
+
+        window.addEventListener('load', function() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神经网络 - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --accent-teal: #80e0c0;
+            --accent-purple: #a080e0;
+            --level-color: #a080e0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(160, 128, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), var(--accent-purple)); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(160, 128, 224, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(160, 128, 224, 0.15);
+            border: 1px solid rgba(160, 128, 224, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.15), rgba(160, 128, 224, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* Neural Network Visualization */
+        .nn-viz-section {
+            background: linear-gradient(135deg, rgba(40, 30, 80, 0.5), rgba(30, 20, 60, 0.4));
+        }
+
+        .nn-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .nn-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(10, 15, 30, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #nnCanvas { width: 100%; height: 100%; }
+
+        .layer-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .layer-control {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .layer-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .layer-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .layer-count {
+            font-family: 'Orbitron', monospace;
+            color: var(--level-color);
+            font-weight: 600;
+        }
+
+        .activation-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .activation-btn {
+            padding: 6px 12px;
+            background: rgba(160, 128, 224, 0.15);
+            border: 1px solid rgba(160, 128, 224, 0.3);
+            border-radius: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .activation-btn:hover, .activation-btn.active {
+            background: rgba(160, 128, 224, 0.35);
+            border-color: var(--level-color);
+            color: var(--level-color);
+        }
+
+        .viz-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .viz-stat {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid rgba(160, 128, 224, 0.2);
+        }
+
+        .viz-stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--level-color);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .viz-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 6px;
+        }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 16px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* History Timeline */
+        .history-section {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
+            border-color: rgba(160, 128, 224, 0.3);
+        }
+
+        .timeline { position: relative; padding-left: 30px; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), var(--accent-purple));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+        /* Architecture Cards */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .architecture-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .architecture-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(160, 128, 224, 0.15);
+        }
+
+        .arch-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .arch-title {
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .arch-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Related Cards */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.15), rgba(160, 128, 224, 0.05));
+            border: 1px solid rgba(160, 128, 224, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(160, 128, 224, 0.25);
+            border-color: var(--accent-purple);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--accent-purple);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Limitations */
+        .limitations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .limitation-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(224, 128, 96, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .limitation-card:hover {
+            border-color: rgba(224, 128, 96, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .limitation-title {
+            font-size: 15px;
+            color: #e08060;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .limitation-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .limitation-solution {
+            font-size: 12px;
+            color: var(--accent-cyan);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .viz-stats { grid-template-columns: repeat(2, 1fr); }
+            .nn-canvas-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 3 · 高级</div>
+            <h1 class="page-title">神经网络</h1>
+            <p class="page-subtitle">Neural Network / Multi-Layer Perceptron</p>
+        </div>
+
+        <!-- 定义与直觉 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是神经网络？
+            </h2>
+            <p class="definition-text">
+                神经网络是一种模仿人脑神经元结构的机器学习模型，由多层神经元组成。通过前向传播和反向传播进行训练，能够学习复杂的非线性关系。
+            </p>
+            <p class="definition-text">
+                <strong>典型应用：</strong>图像识别、语音识别、自然语言处理、游戏AI等需要从复杂数据中学习模式的任务。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象一个由许多微小处理器组成的网络，每个处理器接收输入，进行简单计算，然后将结果传递给下一层。通过大量数据训练，网络学会识别模式。
+            </div>
+        </section>
+
+        <!-- 交互式可视化 -->
+        <section class="section nn-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">🧠</span>
+                神经网络结构可视化
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                观察神经网络结构：输入层 → 隐藏层 → 输出层
+            </p>
+
+            <div class="nn-viz-container">
+                <div class="nn-canvas-container">
+                    <canvas id="nnCanvas"></canvas>
+                </div>
+
+                <div class="layer-controls">
+                    <div class="layer-control">
+                        <div class="layer-label">
+                            <span class="layer-dot" style="background: #60c0f0;"></span>
+                            输入层
+                        </div>
+                        <div class="layer-count" id="inputCount">2 个神经元</div>
+                    </div>
+                    <div class="layer-control">
+                        <div class="layer-label">
+                            <span class="layer-dot" style="background: #a080e0;"></span>
+                            隐藏层 1
+                        </div>
+                        <div class="layer-count" id="hidden1Count">4 个神经元</div>
+                    </div>
+                    <div class="layer-control">
+                        <div class="layer-label">
+                            <span class="layer-dot" style="background: #a080e0;"></span>
+                            隐藏层 2
+                        </div>
+                        <div class="layer-count" id="hidden2Count">4 个神经元</div>
+                    </div>
+                    <div class="layer-control">
+                        <div class="layer-label">
+                            <span class="layer-dot" style="background: #60c0a0;"></span>
+                            输出层
+                        </div>
+                        <div class="layer-count" id="outputCount">1 个神经元</div>
+                    </div>
+                </div>
+
+                <div class="viz-stats">
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="paramCount">25</div>
+                        <div class="viz-stat-label">权重参数</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="biasCount">9</div>
+                        <div class="viz-stat-label">偏置参数</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="totalParams">34</div>
+                        <div class="viz-stat-label">总参数</div>
+                    </div>
+                    <div class="viz-stat">
+                        <div class="viz-stat-value" id="depth">4</div>
+                        <div class="viz-stat-label">网络深度</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 网络架构 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🏗️</span>
+                网络架构
+            </h2>
+            <div class="architecture-grid">
+                <div class="architecture-card">
+                    <div class="arch-icon">📥</div>
+                    <div class="arch-title">输入层</div>
+                    <div class="arch-desc">接收原始数据，如图像像素、文本词向量。每个输入特征对应一个神经元。</div>
+                </div>
+                <div class="architecture-card">
+                    <div class="arch-icon">⚙️</div>
+                    <div class="arch-title">隐藏层</div>
+                    <div class="arch-desc">核心计算层，通过激活函数引入非线性。深层网络能学习更复杂的特征。</div>
+                </div>
+                <div class="architecture-card">
+                    <div class="arch-icon">📤</div>
+                    <div class="arch-title">输出层</div>
+                    <div class="arch-desc">产生最终预测结果。分类任务常用softmax，回归任务直接输出。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 历史 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: var(--accent-purple);">
+                <span class="section-icon">📜</span>
+                发展历史
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1943</div>
+                    <div class="timeline-content">
+                        <strong>McCulloch-Pitts神经元</strong>：首次提出人工神经元的数学模型。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1958</div>
+                    <div class="timeline-content">
+                        <strong>Rosenblatt感知机</strong>：提出感知机学习算法，是第一个可学习的神经网络。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1986</div>
+                    <div class="timeline-content">
+                        <strong>反向传播算法</strong>：Rumelhart、Hinton等人提出BP算法，使训练多层网络成为可能。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2006</div>
+                    <div class="timeline-content">
+                        <strong>深度学习元年</strong>：Hinton提出深度信念网络，逐层预训练方法开启深度学习时代。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2012</div>
+                    <div class="timeline-content">
+                        <strong>AlexNet突破</strong>：ImageNet竞赛中大幅领先，CNN引发计算机视觉革命。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">单个神经元计算</div>
+                <div class="formula-content">z = Σ(wᵢ · xᵢ) + b
+a = σ(z)</div>
+                <div class="formula-note">其中 w 是权重，b 是偏置，σ 是激活函数</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">常见激活函数</div>
+                <div class="formula-content">Sigmoid:  σ(z) = 1 / (1 + e^(-z))
+ReLU:     σ(z) = max(0, z)
+Tanh:     σ(z) = (e^z - e^(-z)) / (e^z + e^(-z))
+LeakyReLU: σ(z) = max(0.01z, z)</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">反向传播（链式法则）</div>
+                <div class="formula-content">∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w</div>
+                <div class="formula-note">通过链式法则从后向前计算梯度，逐步更新权重</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">梯度下降更新</div>
+                <div class="formula-content">w ← w - η · ∂L/∂w
+b ← b - η · ∂L/∂b</div>
+                <div class="formula-note">η 是学习率，控制更新步长</div>
+            </div>
+        </section>
+
+        <!-- 局限性 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #e08060;">
+                <span class="section-icon">⚠️</span>
+                局限性
+            </h2>
+            <div class="limitations-grid">
+                <div class="limitation-card">
+                    <div class="limitation-title">需要大量数据</div>
+                    <div class="limitation-desc">深层网络参数众多，需要大量标注数据才能有效训练</div>
+                    <div class="limitation-solution">→ 数据增强、迁移学习、预训练模型</div>
+                </div>
+                <div class="limitation-card">
+                    <div class="limitation-title">训练时间长</div>
+                    <div class="limitation-desc">反向传播需要多次迭代，GPU加速成为必需</div>
+                    <div class="limitation-solution">→ Mini-batch、批量正则化、优化器改进</div>
+                </div>
+                <div class="limitation-card">
+                    <div class="limitation-title">可解释性差</div>
+                    <div class="limitation-desc">"黑箱"特性使得决策过程难以理解和调试</div>
+                    <div class="limitation-solution">→ 可解释AI、注意力可视化</div>
+                </div>
+                <div class="limitation-card">
+                    <div class="limitation-title">容易过拟合</div>
+                    <div class="limitation-desc">大量参数容易记住训练数据，泛化能力差</div>
+                    <div class="limitation-solution">→ Dropout、L2正则化、早停</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: var(--accent-purple);">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="cnn.html" class="related-card">
+                    <div class="related-card-title">→ CNN 卷积神经网络</div>
+                    <div class="related-card-desc">图像处理的专用网络</div>
+                </a>
+                <a href="rnn.html" class="related-card">
+                    <div class="related-card-title">→ RNN 循环神经网络</div>
+                    <div class="related-card-desc">处理序列数据</div>
+                </a>
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention 注意力机制</div>
+                    <div class="related-card-desc">动态关注重要特征</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 深度学习</div>
+                    <div class="related-card-desc">多层神经网络的应用</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - 神经网络 | Level 3 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('nnCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const layers = [2, 4, 4, 1];
+        const layerColors = ['#60c0f0', '#a080e0', '#a080e0', '#60c0a0'];
+        let animationProgress = 0;
+        let connections = [];
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            calculateConnections();
+            draw();
+        }
+
+        function calculateConnections() {
+            connections = [];
+            for (let l = 0; l < layers.length - 1; l++) {
+                for (let i = 0; i < layers[l]; i++) {
+                    for (let j = 0; j < layers[l + 1]; j++) {
+                        connections.push({ from: l, to: l + 1, fromNeuron: i, toNeuron: j });
+                    }
+                }
+            }
+            updateStats();
+        }
+
+        function updateStats() {
+            let weights = 0;
+            for (let l = 0; l < layers.length - 1; l++) {
+                weights += layers[l] * layers[l + 1];
+            }
+            const biases = layers.slice(1).reduce((a, b) => a + b, 0);
+            document.getElementById('paramCount').textContent = weights;
+            document.getElementById('biasCount').textContent = biases;
+            document.getElementById('totalParams').textContent = weights + biases;
+            document.getElementById('depth').textContent = layers.length;
+            document.getElementById('inputCount').textContent = layers[0] + ' 个神经元';
+            document.getElementById('hidden1Count').textContent = layers[1] + ' 个神经元';
+            document.getElementById('hidden2Count').textContent = layers[2] + ' 个神经元';
+            document.getElementById('outputCount').textContent = layers[3] + ' 个神经元';
+        }
+
+        function getNeuronPos(layer, neuron, totalNeurons) {
+            const padding = 80;
+            const x = padding + (layer / (layers.length - 1)) * (canvas.width - padding * 2);
+            const y = padding + (neuron / (totalNeurons - 1)) * (canvas.height - padding * 2);
+            return { x, y };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            connections.forEach((conn, idx) => {
+                const fromPos = getNeuronPos(conn.from, conn.fromNeuron, layers[conn.from]);
+                const toPos = getNeuronPos(conn.to, conn.toNeuron, layers[conn.to]);
+
+                const progress = Math.max(0, Math.min(1, animationProgress - idx * 0.005));
+                if (progress > 0) {
+                    ctx.strokeStyle = `rgba(160, 128, 224, ${progress * 0.3})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(fromPos.x, fromPos.y);
+                    ctx.lineTo(toPos.x, toPos.y);
+                    ctx.stroke();
+                }
+            });
+
+            layers.forEach((count, layerIdx) => {
+                for (let i = 0; i < count; i++) {
+                    const pos = getNeuronPos(layerIdx, i, count);
+
+                    const pulseScale = 1 + Math.sin(Date.now() / 500 + i * 0.5) * 0.05;
+                    const radius = 20 * pulseScale;
+
+                    ctx.beginPath();
+                    ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = layerColors[layerIdx];
+                    ctx.fill();
+
+                    ctx.shadowColor = layerColors[layerIdx];
+                    ctx.shadowBlur = 15;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 10px Orbitron';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(i + 1, pos.x, pos.y);
+                }
+            });
+
+            ctx.fillStyle = '#a0c0e0';
+            ctx.font = '11px Noto Sans SC';
+            ctx.textAlign = 'center';
+            layers.forEach((count, layerIdx) => {
+                const pos = getNeuronPos(layerIdx, (count - 1) / 2, count);
+                const labels = ['输入层', '隐藏层1', '隐藏层2', '输出层'];
+                ctx.fillText(labels[layerIdx], pos.x, pos.y + 45);
+            });
+
+            animationProgress += 0.02;
+            if (animationProgress > connections.length * 0.01 + 1) {
+                animationProgress = 0;
+            }
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

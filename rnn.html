@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNN - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #80a0e0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(128, 160, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a080e0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(128, 160, 224, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(128, 160, 224, 0.15);
+            border: 1px solid rgba(128, 160, 224, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* RNN Visualization */
+        .rnn-viz-section {
+            background: linear-gradient(135deg, rgba(50, 60, 100, 0.5), rgba(40, 50, 80, 0.4));
+        }
+
+        .rnn-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .rnn-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #rnnCanvas { width: 100%; height: 100%; }
+
+        .controls-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .control-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .control-name { color: var(--text-secondary); }
+        .control-value { color: var(--level-color); font-family: 'Orbitron', monospace; font-weight: 600; }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--level-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--level-color);
+        }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(128, 160, 224, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05));
+            border: 1px solid rgba(128, 160, 224, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(128, 160, 224, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .rnn-canvas-container { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 4 · 高级</div>
+            <h1 class="page-title">RNN</h1>
+            <p class="page-subtitle">Recurrent Neural Network</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是RNN？
+            </h2>
+            <p class="definition-text">
+                循环神经网络（Recurrent Neural Network）是一种专门处理序列数据的深度学习模型。它通过循环连接，允许信息在序列中传递，能够捕捉时间或顺序依赖关系。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象你在阅读一本书，每读到一个句子时，你会根据之前读过的内容来理解当前句子的含义。RNN就是这样一种网络，它在处理每个时间步时，都会记住之前的信息。
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section rnn-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">🔄</span>
+                RNN结构可视化
+            </h2>
+            <div class="rnn-viz-container">
+                <div class="rnn-canvas-container">
+                    <canvas id="rnnCanvas"></canvas>
+                </div>
+
+                <div class="controls-panel">
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="control-name">时间步数</span>
+                            <span class="control-value" id="stepsValue">5</span>
+                        </div>
+                        <input type="range" class="slider" id="stepsSlider" min="3" max="8" step="1" value="5">
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">
+                            <span class="control-name">隐藏层大小</span>
+                            <span class="control-value" id="hiddenValue">4</span>
+                        </div>
+                        <input type="range" class="slider" id="hiddenSlider" min="2" max="8" step="1" value="4">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">隐藏状态更新</div>
+                <div class="formula-content">hₜ = tanh(Wₕₕhₜ₋₁ + Wₓₕxₜ + bₕ)</div>
+                <div class="formula-note">当前时刻的隐藏状态由前一时刻隐藏状态和当前输入共同决定</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">输出计算</div>
+                <div class="formula-content">yₜ = Wₕᵧhₜ + bᵧ</div>
+                <div class="formula-note">输出层基于当前隐藏状态生成预测</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">梯度消失问题</div>
+                <div class="formula-content">∂L/∂Wₕₕ ≈ Π tanh'(zᵢ) · ∂L/∂hₜ</div>
+                <div class="formula-note">tanh导数小于1，连乘后梯度指数级衰减，导致长期依赖难以学习</div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">💬</div>
+                    <div class="scenario-name">语言建模</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎵</div>
+                    <div class="scenario-name">音乐生成</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">机器翻译</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎬</div>
+                    <div class="scenario-name">视频分析</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="cnn.html" class="related-card">
+                    <div class="related-card-title">→ CNN</div>
+                    <div class="related-card-desc">空间数据处理</div>
+                </a>
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention</div>
+                    <div class="related-card-desc">注意力机制</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ LSTM</div>
+                    <div class="related-card-desc">长短期记忆网络</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ GRU</div>
+                    <div class="related-card-desc">门控循环单元</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - RNN | Level 4 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('rnnCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let timeSteps = 5;
+        let hiddenSize = 4;
+        let animationOffset = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = 50;
+            const totalWidth = canvas.width - padding * 2;
+            const totalHeight = canvas.height - padding * 2;
+
+            const cellWidth = totalWidth / (timeSteps + 2);
+            const cellHeight = totalHeight;
+
+            ctx.strokeStyle = 'rgba(80, 120, 180, 0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (i / 5) * totalHeight;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+
+            const inputRadius = 15;
+            const hiddenRadius = 22;
+            const outputRadius = 15;
+
+            const baseY = padding + totalHeight / 2;
+            const inputY = baseY - 80;
+            const hiddenY = baseY;
+            const outputY = baseY + 80;
+
+            const gradient = ctx.createLinearGradient(0, padding, 0, canvas.height - padding);
+            gradient.addColorStop(0, 'rgba(128, 160, 224, 0.3)');
+            gradient.addColorStop(1, 'rgba(160, 128, 224, 0.3)');
+
+            for (let t = 0; t < timeSteps; t++) {
+                const x = padding + (t + 1) * cellWidth;
+
+                ctx.fillStyle = '#60c0e0';
+                ctx.beginPath();
+                ctx.arc(x, inputY, inputRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#40a0c0';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(x, hiddenY, hiddenRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#80a0e0';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#a0e080';
+                ctx.beginPath();
+                ctx.arc(x, outputY, outputRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#80c060';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#fff';
+                ctx.font = '12px Noto Sans SC';
+                ctx.textAlign = 'center';
+                ctx.fillText('x', x, inputY + 4);
+                ctx.fillText('h', x, hiddenY + 5);
+                ctx.fillText('y', x, outputY + 4);
+
+                ctx.font = '10px Orbitron';
+                ctx.fillStyle = 'rgba(160, 192, 224, 0.6)';
+                ctx.fillText(`t=${t+1}`, x, padding + 20);
+
+                if (t > 0) {
+                    const prevX = padding + t * cellWidth;
+                    
+                    ctx.strokeStyle = 'rgba(128, 160, 224, 0.6)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(prevX + hiddenRadius, hiddenY);
+                    ctx.lineTo(x - hiddenRadius, hiddenY);
+                    ctx.stroke();
+
+                    ctx.fillStyle = 'rgba(128, 160, 224, 0.8)';
+                    ctx.beginPath();
+                    ctx.moveTo(x - hiddenRadius - 8, hiddenY - 4);
+                    ctx.lineTo(x - hiddenRadius, hiddenY);
+                    ctx.lineTo(x - hiddenRadius - 8, hiddenY + 4);
+                    ctx.fill();
+                }
+
+                ctx.strokeStyle = 'rgba(96, 192, 224, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(x, inputY + inputRadius);
+                ctx.lineTo(x, hiddenY - hiddenRadius);
+                ctx.stroke();
+
+                ctx.strokeStyle = 'rgba(160, 224, 128, 0.5)';
+                ctx.beginPath();
+                ctx.moveTo(x, hiddenY + hiddenRadius);
+                ctx.lineTo(x, outputY - outputRadius);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = '#80a0e0';
+            ctx.font = 'bold 14px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText('RNN 展开图', padding, padding - 15);
+        }
+
+        document.getElementById('stepsSlider').addEventListener('input', function() {
+            timeSteps = parseInt(this.value);
+            document.getElementById('stepsValue').textContent = timeSteps;
+            draw();
+        });
+
+        document.getElementById('hiddenSlider').addEventListener('input', function() {
+            hiddenSize = parseInt(this.value);
+            document.getElementById('hiddenValue').textContent = hiddenSize;
+            draw();
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>
