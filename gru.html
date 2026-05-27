@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRU - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #c0a080;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(192, 160, 128, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #a08060); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(192, 160, 128, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(192, 160, 128, 0.15);
+            border: 1px solid rgba(192, 160, 128, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(192, 160, 128, 0.15), rgba(192, 160, 128, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* GRU Visualization */
+        .gru-viz-section {
+            background: linear-gradient(135deg, rgba(80, 70, 50, 0.5), rgba(70, 60, 40, 0.4));
+        }
+
+        .gru-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .gru-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #gruCanvas { width: 100%; height: 100%; }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        .comparison-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--level-color);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(192, 160, 128, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(192, 160, 128, 0.15), rgba(192, 160, 128, 0.05));
+            border: 1px solid rgba(192, 160, 128, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(192, 160, 128, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        /* History */
+        .history-section {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
+            border-color: rgba(160, 128, 224, 0.3);
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #a080e0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .gru-canvas-container { height: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 4 · 高级</div>
+            <h1 class="page-title">GRU</h1>
+            <p class="page-subtitle">Gated Recurrent Unit</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是GRU？
+            </h2>
+            <p class="definition-text">
+                GRU（门控循环单元）是LSTM的简化版本，由Cho等人于2014年提出。它将LSTM的遗忘门和输入门合并为一个更新门，同时合并了细胞状态和隐藏状态，在保持性能的同时减少了参数数量。
+            </p>
+            <p class="definition-text">
+                GRU在许多任务上表现与LSTM相当，但计算效率更高，因此在资源受限的场景中更受欢迎。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>GRU就像一个更简洁的LSTM。它去掉了一些冗余的门，用更少的参数达到类似的效果，就像用更少的零件造出同样强大的机器。
+            </div>
+        </section>
+
+        <!-- 门控机制 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🚪</span>
+                GRU门控机制
+            </h2>
+            <p class="definition-text">
+                GRU只有两个门：更新门和重置门。更新门控制有多少过去的信息需要保留，重置门控制有多少过去的信息需要忘记。
+            </p>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔄</div>
+                    <div class="scenario-name">更新门 (Update Gate)</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔃</div>
+                    <div class="scenario-name">重置门 (Reset Gate)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section gru-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">🔄</span>
+                GRU结构可视化
+            </h2>
+            <div class="gru-viz-container">
+                <div class="gru-canvas-container">
+                    <canvas id="gruCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">重置门</div>
+                <div class="formula-content">rₜ = σ(Wᵣ·[hₜ₋₁, xₜ] + bᵣ)</div>
+                <div class="formula-note">决定如何组合新输入和之前的记忆</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">更新门</div>
+                <div class="formula-content">zₜ = σ(W_z·[hₜ₋₁, xₜ] + b_z)</div>
+                <div class="formula-note">决定有多少过去的信息需要传递到未来</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">候选隐藏状态</div>
+                <div class="formula-content">h̃ₜ = tanh(W·[rₜ⊙hₜ₋₁, xₜ] + b)</div>
+                <div class="formula-note">结合重置门和当前输入计算候选状态</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">最终隐藏状态</div>
+                <div class="formula-content">hₜ = (1-zₜ)⊙hₜ₋₁ + zₜ⊙h̃ₜ</div>
+                <div class="formula-note">通过更新门平衡过去和现在的信息</div>
+            </div>
+        </section>
+
+        <!-- 与LSTM对比 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">⚖️</span>
+                GRU vs LSTM
+            </h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>特性</th>
+                        <th>GRU</th>
+                        <th>LSTM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>门数量</td>
+                        <td>2个（更新门、重置门）</td>
+                        <td>3个（遗忘门、输入门、输出门）</td>
+                    </tr>
+                    <tr>
+                        <td>参数数量</td>
+                        <td>较少</td>
+                        <td>较多</td>
+                    </tr>
+                    <tr>
+                        <td>计算效率</td>
+                        <td>较高</td>
+                        <td>较低</td>
+                    </tr>
+                    <tr>
+                        <td>表达能力</td>
+                        <td>略弱</td>
+                        <td>略强</td>
+                    </tr>
+                    <tr>
+                        <td>适用场景</td>
+                        <td>序列较短、资源受限</td>
+                        <td>长序列、复杂任务</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 历史渊源 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2014</div>
+                    <div class="timeline-content">
+                        <strong>Cho等人</strong>在论文《Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation》中首次提出GRU。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2015</div>
+                    <div class="timeline-content">
+                        GRU被广泛应用于神经机器翻译，成为序列建模的主流选择之一。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">💬</div>
+                    <div class="scenario-name">对话系统</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎵</div>
+                    <div class="scenario-name">语音识别</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">文本生成</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-name">时间序列</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="rnn.html" class="related-card">
+                    <div class="related-card-title">→ RNN</div>
+                    <div class="related-card-desc">循环神经网络基础</div>
+                </a>
+                <a href="lstm.html" class="related-card">
+                    <div class="related-card-title">→ LSTM</div>
+                    <div class="related-card-desc">长短期记忆网络</div>
+                </a>
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention</div>
+                    <div class="related-card-desc">注意力机制</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ Transformer</div>
+                    <div class="related-card-desc">纯注意力架构</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - GRU | Level 4 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gruCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let animationOffset = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = 40;
+            const totalWidth = canvas.width - padding * 2;
+            const totalHeight = canvas.height - padding * 2;
+
+            ctx.fillStyle = '#c0a080';
+            ctx.font = 'bold 14px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText('GRU 单元结构', padding, padding - 15);
+
+            const centerX = padding + totalWidth / 2;
+            const centerY = padding + totalHeight / 2;
+            const radius = Math.min(totalWidth, totalHeight) * 0.25;
+
+            ctx.fillStyle = 'rgba(192, 160, 128, 0.2)';
+            ctx.strokeStyle = 'rgba(192, 160, 128, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#c0a080';
+            ctx.font = '12px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.fillText('重置门', centerX, centerY - 20);
+            ctx.fillText('更新门', centerX, centerY + 20);
+
+            ctx.fillStyle = '#60c0e0';
+            ctx.fillText('xₜ', padding - 10, centerY + 5);
+
+            ctx.fillStyle = '#c0a080';
+            ctx.fillText('hₜ', canvas.width - padding + 10, centerY + 5);
+
+            ctx.strokeStyle = 'rgba(192, 160, 128, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX - radius, centerY);
+            ctx.lineTo(centerX + radius, centerY);
+            ctx.stroke();
+
+            animationOffset += 0.02;
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

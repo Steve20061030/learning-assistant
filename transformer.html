@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #e080c0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(224, 128, 192, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #c060a0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(224, 128, 192, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(224, 128, 192, 0.15);
+            border: 1px solid rgba(224, 128, 192, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(224, 128, 192, 0.15), rgba(224, 128, 192, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* Transformer Visualization */
+        .transformer-viz-section {
+            background: linear-gradient(135deg, rgba(100, 50, 90, 0.5), rgba(90, 40, 80, 0.4));
+        }
+
+        .transformer-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .transformer-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #transformerCanvas { width: 100%; height: 100%; }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Components Grid */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .component-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(224, 128, 192, 0.2);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.3s;
+        }
+
+        .component-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 128, 192, 0.15);
+        }
+
+        .component-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .component-title {
+            font-size: 17px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .component-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(224, 128, 192, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(224, 128, 192, 0.15), rgba(224, 128, 192, 0.05));
+            border: 1px solid rgba(224, 128, 192, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(224, 128, 192, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        /* History */
+        .history-section {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
+            border-color: rgba(160, 128, 224, 0.3);
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #a080e0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* Architecture Table */
+        .arch-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .arch-table th, .arch-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        .arch-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--level-color);
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .transformer-canvas-container { height: 350px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 5 · 专家</div>
+            <h1 class="page-title">Transformer</h1>
+            <p class="page-subtitle">Attention Is All You Need</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是Transformer？
+            </h2>
+            <p class="definition-text">
+                Transformer是一种基于自注意力机制的深度学习架构，由Vaswani等人在2017年的论文《Attention Is All You Need》中提出。它完全抛弃了传统的循环神经网络结构，仅使用注意力机制来建模序列数据。
+            </p>
+            <p class="definition-text">
+                Transformer的出现彻底改变了自然语言处理领域，成为BERT、GPT、T5等大型语言模型的基础架构。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>Transformer就像一个聪明的读者，在理解一句话时，它会同时关注句子中的所有单词，并根据它们之间的关系来理解整个句子的含义。
+            </div>
+        </section>
+
+        <!-- 核心组件 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🧩</span>
+                核心组件
+            </h2>
+            <div class="components-grid">
+                <div class="component-card">
+                    <div class="component-icon">🔍</div>
+                    <div class="component-title">多头注意力 (Multi-Head Attention)</div>
+                    <div class="component-desc">将输入向量通过多个不同的线性变换投射到不同的子空间，并行计算多个注意力头，捕捉不同类型的依赖关系。</div>
+                </div>
+                <div class="component-card">
+                    <div class="component-icon">🔢</div>
+                    <div class="component-title">位置编码 (Positional Encoding)</div>
+                    <div class="component-desc">由于Transformer没有循环结构，需要显式地为每个位置添加位置信息，使模型能够理解序列的顺序。</div>
+                </div>
+                <div class="component-card">
+                    <div class="component-icon">🔄</div>
+                    <div class="component-title">残差连接 (Residual Connection)</div>
+                    <div class="component-desc">将输入直接加到输出上，缓解梯度消失问题，使深层网络的训练成为可能。</div>
+                </div>
+                <div class="component-card">
+                    <div class="component-icon">📊</div>
+                    <div class="component-title">前馈神经网络 (FFN)</div>
+                    <div class="component-desc">对每个位置的表示进行独立的非线性变换，增加模型的表达能力。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section transformer-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">🔄</span>
+                Transformer架构可视化
+            </h2>
+            <div class="transformer-viz-container">
+                <div class="transformer-canvas-container">
+                    <canvas id="transformerCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">缩放点积注意力</div>
+                <div class="formula-content">Attention(Q, K, V) = softmax(QKᵀ / √dₖ)V</div>
+                <div class="formula-note">Q是查询向量，K是键向量，V是值向量，dₖ是键向量的维度</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">多头注意力</div>
+                <div class="formula-content">MultiHead(Q,K,V) = Concat(head₁,...,headₕ)Wᵒ
+where headᵢ = Attention(QWᵠᵢ, KWᵏᵢ, VWᵛᵢ)</div>
+                <div class="formula-note">h是头的数量，W是可学习的权重矩阵</div>
+            </div>
+        </section>
+
+        <!-- 架构对比 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🏛️</span>
+                架构组成
+            </h2>
+            <table class="arch-table">
+                <thead>
+                    <tr>
+                        <th>组件</th>
+                        <th>编码器 (Encoder)</th>
+                        <th>解码器 (Decoder)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>多头注意力</td>
+                        <td>自注意力</td>
+                        <td>掩码自注意力 + 编码器-解码器注意力</td>
+                    </tr>
+                    <tr>
+                        <td>前馈网络</td>
+                        <td>有</td>
+                        <td>有</td>
+                    </tr>
+                    <tr>
+                        <td>残差连接</td>
+                        <td>有</td>
+                        <td>有</td>
+                    </tr>
+                    <tr>
+                        <td>层归一化</td>
+                        <td>有</td>
+                        <td>有</td>
+                    </tr>
+                    <tr>
+                        <td>位置编码</td>
+                        <td>有</td>
+                        <td>有</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 历史渊源 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">2017</div>
+                    <div class="timeline-content">
+                        <strong>Vaswani等人</strong>在论文《Attention Is All You Need》中首次提出Transformer架构。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2018</div>
+                    <div class="timeline-content">
+                        <strong>Google</strong>发布BERT，基于Transformer编码器，在NLP任务上取得革命性突破。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2018</div>
+                    <div class="timeline-content">
+                        <strong>OpenAI</strong>发布GPT-1，基于Transformer解码器的生成模型。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2020</div>
+                    <div class="timeline-content">
+                        <strong>GPT-3</strong>发布，参数规模达到1750亿，展现出强大的少样本学习能力。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">💬</div>
+                    <div class="scenario-name">机器翻译</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">文本生成</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">❓</div>
+                    <div class="scenario-name">问答系统</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎵</div>
+                    <div class="scenario-name">代码生成</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention</div>
+                    <div class="related-card-desc">注意力机制</div>
+                </a>
+                <a href="lstm.html" class="related-card">
+                    <div class="related-card-title">→ LSTM</div>
+                    <div class="related-card-desc">长短期记忆网络</div>
+                </a>
+                <a href="cnn.html" class="related-card">
+                    <div class="related-card-title">→ CNN</div>
+                    <div class="related-card-desc">卷积神经网络</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ BERT</div>
+                    <div class="related-card-desc">双向预训练模型</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - Transformer | Level 5 专家</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('transformerCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let animationOffset = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = 30;
+            const totalWidth = canvas.width - padding * 2;
+            const totalHeight = canvas.height - padding * 2;
+
+            ctx.fillStyle = '#e080c0';
+            ctx.font = 'bold 14px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText('Transformer 架构', padding, padding - 15);
+
+            const encoderWidth = totalWidth * 0.4;
+            const decoderWidth = totalWidth * 0.4;
+            const gap = totalWidth * 0.2;
+            const encoderX = padding;
+            const decoderX = padding + encoderWidth + gap;
+            const layerHeight = totalHeight / 6;
+
+            ctx.fillStyle = '#60c0e0';
+            ctx.font = '12px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.fillText('编码器', encoderX + encoderWidth / 2, padding - 25);
+            ctx.fillText('解码器', decoderX + decoderWidth / 2, padding - 25);
+
+            for (let i = 0; i < 3; i++) {
+                const y = padding + i * layerHeight;
+
+                ctx.fillStyle = 'rgba(96, 192, 224, 0.15)';
+                ctx.strokeStyle = 'rgba(96, 192, 224, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.roundRect(encoderX, y, encoderWidth, layerHeight - 10, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = 'rgba(224, 128, 192, 0.15)';
+                ctx.strokeStyle = 'rgba(224, 128, 192, 0.4)';
+                ctx.beginPath();
+                ctx.roundRect(decoderX, y, decoderWidth, layerHeight - 10, 8);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#60c0e0';
+                ctx.font = '10px Noto Sans SC';
+                ctx.fillText(`编码器层 ${i + 1}`, encoderX + encoderWidth / 2, y + layerHeight / 2);
+                ctx.fillStyle = '#e080c0';
+                ctx.fillText(`解码器层 ${i + 1}`, decoderX + decoderWidth / 2, y + layerHeight / 2);
+
+                if (i < 2) {
+                    ctx.strokeStyle = 'rgba(96, 192, 224, 0.5)';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(encoderX + encoderWidth / 2, y + layerHeight - 10);
+                    ctx.lineTo(encoderX + encoderWidth / 2, y + layerHeight);
+                    ctx.stroke();
+
+                    ctx.strokeStyle = 'rgba(224, 128, 192, 0.5)';
+                    ctx.beginPath();
+                    ctx.moveTo(decoderX + decoderWidth / 2, y + layerHeight - 10);
+                    ctx.lineTo(decoderX + decoderWidth / 2, y + layerHeight);
+                    ctx.stroke();
+                }
+            }
+
+            ctx.strokeStyle = 'rgba(160, 128, 224, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(encoderX + encoderWidth, padding + layerHeight * 1.5);
+            ctx.lineTo(decoderX, padding + layerHeight * 1.5);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            animationOffset += 0.02;
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

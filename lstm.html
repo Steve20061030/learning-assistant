@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSTM - 学习助手</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #a0c080;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 100, 180, 0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(100, 140, 200, 0.06), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        ::selection { background: rgba(160, 192, 128, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #80c0a0); border-radius: 4px; }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(160, 192, 128, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(160, 192, 128, 0.15);
+            border: 1px solid rgba(160, 192, 128, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; opacity: 0.9; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(160, 192, 128, 0.15), rgba(160, 192, 128, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        /* LSTM Visualization */
+        .lstm-viz-section {
+            background: linear-gradient(135deg, rgba(60, 80, 40, 0.5), rgba(50, 70, 30, 0.4));
+        }
+
+        .lstm-viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .lstm-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(10, 20, 40, 0.8);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+        }
+
+        #lstmCanvas { width: 100%; height: 100%; }
+
+        /* Formula Cards */
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', 'Microsoft YaHei', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            white-space: pre-wrap;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        /* Gate Explanation */
+        .gate-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .gate-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(160, 192, 128, 0.2);
+            border-radius: 16px;
+            padding: 22px;
+            transition: all 0.3s;
+        }
+
+        .gate-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(160, 192, 128, 0.15);
+        }
+
+        .gate-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .gate-title {
+            font-size: 17px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .gate-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Scenarios */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(160, 192, 128, 0.15);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); }
+
+        /* Related */
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(160, 192, 128, 0.15), rgba(160, 192, 128, 0.05));
+            border: 1px solid rgba(160, 192, 128, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(160, 192, 128, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .related-card-desc { font-size: 12px; color: var(--text-muted); }
+
+        /* History */
+        .history-section {
+            background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05));
+            border-color: rgba(160, 128, 224, 0.3);
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #a080e0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--level-color);
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .lstm-canvas-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 4 · 高级</div>
+            <h1 class="page-title">LSTM</h1>
+            <p class="page-subtitle">Long Short-Term Memory</p>
+        </div>
+
+        <!-- 定义 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是LSTM？
+            </h2>
+            <p class="definition-text">
+                LSTM（长短期记忆网络）是一种特殊的循环神经网络（RNN），专门设计用于解决传统RNN存在的梯度消失和梯度爆炸问题。它通过引入门控机制，能够有效捕捉长期依赖关系。
+            </p>
+            <p class="definition-text">
+                LSTM由Hochreiter和Schmidhuber于1997年提出，是深度学习领域最重要的架构之一，广泛应用于自然语言处理、语音识别、时间序列预测等任务。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象你在读一本书，当你读到后面的章节时，你需要记住前面提到的关键信息。LSTM就像一个有记忆的读者，它能够选择性地记住重要信息，忘记无关细节。
+            </div>
+        </section>
+
+        <!-- 门控机制详解 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🚪</span>
+                门控机制
+            </h2>
+            <p class="definition-text">
+                LSTM通过三个门控单元来控制信息的流动：遗忘门、输入门和输出门。这些门决定了哪些信息应该被记住，哪些应该被遗忘。
+            </p>
+            <div class="gate-grid">
+                <div class="gate-card">
+                    <div class="gate-icon">🗑️</div>
+                    <div class="gate-title">遗忘门 (Forget Gate)</div>
+                    <div class="gate-desc">决定从细胞状态中丢弃哪些信息。通过sigmoid层输出0到1之间的值，1表示完全保留，0表示完全遗忘。</div>
+                </div>
+                <div class="gate-card">
+                    <div class="gate-icon">➕</div>
+                    <div class="gate-title">输入门 (Input Gate)</div>
+                    <div class="gate-desc">决定哪些新信息应该被存储到细胞状态中。由两部分组成：sigmoid层决定更新哪些值，tanh层创建新的候选值。</div>
+                </div>
+                <div class="gate-card">
+                    <div class="gate-icon">📤</div>
+                    <div class="gate-title">输出门 (Output Gate)</div>
+                    <div class="gate-desc">决定细胞状态的哪一部分会输出到隐藏状态。先通过sigmoid层决定输出部分，再将细胞状态经过tanh处理后乘以sigmoid的输出。</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 可视化 -->
+        <section class="section lstm-viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">🔄</span>
+                LSTM结构可视化
+            </h2>
+            <div class="lstm-viz-container">
+                <div class="lstm-canvas-container">
+                    <canvas id="lstmCanvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数学原理 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">遗忘门</div>
+                <div class="formula-content">fₜ = σ(Wբ·[hₜ₋₁, xₜ] + bբ)</div>
+                <div class="formula-note">σ是sigmoid函数，Wբ是遗忘门的权重矩阵，bբ是偏置</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">输入门与候选值</div>
+                <div class="formula-content">iₜ = σ(Wᵢ·[hₜ₋₁, xₜ] + bᵢ)
+C̃ₜ = tanh(W_c·[hₜ₋₁, xₜ] + b_c)</div>
+                <div class="formula-note">iₜ决定哪些值更新，C̃ₜ是新的候选细胞状态值</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">细胞状态更新</div>
+                <div class="formula-content">Cₜ = fₜ ⊙ Cₜ₋₁ + iₜ ⊙ C̃ₜ</div>
+                <div class="formula-note">⊙表示元素级乘法，旧状态选择性遗忘后加上新的候选值</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">输出门与隐藏状态</div>
+                <div class="formula-content">oₜ = σ(Wₒ·[hₜ₋₁, xₜ] + bₒ)
+hₜ = oₜ ⊙ tanh(Cₜ)</div>
+                <div class="formula-note">隐藏状态是细胞状态的过滤版本</div>
+            </div>
+        </section>
+
+        <!-- 历史渊源 -->
+        <section class="section history-section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1997</div>
+                    <div class="timeline-content">
+                        <strong>Sepp Hochreiter和Jürgen Schmidhuber</strong>首次提出LSTM架构，解决了传统RNN的长期依赖问题。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2000</div>
+                    <div class="timeline-content">
+                        <strong>Felix Gers等人</strong>引入了"peephole连接"，允许门直接查看细胞状态，进一步改进了LSTM。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">2014</div>
+                    <div class="timeline-content">
+                        <strong>Google</strong>使用LSTM实现了神经机器翻译，取得了突破性进展。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 应用场景 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">💬</div>
+                    <div class="scenario-name">机器翻译</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🎵</div>
+                    <div class="scenario-name">语音识别</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-name">时间序列预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">📝</div>
+                    <div class="scenario-name">文本生成</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关算法 -->
+        <section class="section">
+            <h2 class="section-title" style="color: #a080e0;">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="rnn.html" class="related-card">
+                    <div class="related-card-title">→ RNN</div>
+                    <div class="related-card-desc">循环神经网络基础</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ GRU</div>
+                    <div class="related-card-desc">门控循环单元</div>
+                </a>
+                <a href="attention.html" class="related-card">
+                    <div class="related-card-title">→ Attention</div>
+                    <div class="related-card-desc">注意力机制</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ Transformer</div>
+                    <div class="related-card-desc">纯注意力架构</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - LSTM | Level 4 高级</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('lstmCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let animationOffset = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const padding = 40;
+            const totalWidth = canvas.width - padding * 2;
+            const totalHeight = canvas.height - padding * 2;
+
+            ctx.fillStyle = '#a0c080';
+            ctx.font = 'bold 14px Noto Sans SC';
+            ctx.textAlign = 'left';
+            ctx.fillText('LSTM 单元结构', padding, padding - 15);
+
+            const cellWidth = totalWidth / 3;
+            const cellHeight = totalHeight * 0.7;
+            const centerY = padding + totalHeight / 2;
+
+            for (let t = 0; t < 3; t++) {
+                const x = padding + t * cellWidth + cellWidth / 2;
+
+                ctx.fillStyle = 'rgba(160, 192, 128, 0.2)';
+                ctx.strokeStyle = 'rgba(160, 192, 128, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(x - cellWidth / 2 + 20, centerY - cellHeight / 2, cellWidth - 40, cellHeight, 15);
+                ctx.fill();
+                ctx.stroke();
+
+                const innerY = centerY - cellHeight / 2 + 30;
+                const innerGap = cellHeight / 5;
+
+                ctx.fillStyle = '#6080a0';
+                ctx.font = '11px Noto Sans SC';
+                ctx.textAlign = 'center';
+                ctx.fillText(`时间步 t${t === 0 ? '' : `-${2-t}`}`, x, innerY);
+
+                ctx.fillStyle = '#a0c080';
+                ctx.font = '12px Noto Sans SC';
+                ctx.fillText('输入门', x, innerY + innerGap);
+                ctx.fillText('遗忘门', x, innerY + innerGap * 2);
+                ctx.fillText('细胞状态', x, innerY + innerGap * 3);
+                ctx.fillText('输出门', x, innerY + innerGap * 4);
+
+                if (t < 2) {
+                    const nextX = padding + (t + 1) * cellWidth + cellWidth / 2;
+                    ctx.strokeStyle = 'rgba(160, 192, 128, 0.6)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(x + cellWidth / 2 - 20, centerY);
+                    ctx.lineTo(nextX - cellWidth / 2 + 20, centerY);
+                    ctx.stroke();
+
+                    ctx.fillStyle = 'rgba(160, 192, 128, 0.8)';
+                    ctx.beginPath();
+                    ctx.moveTo(nextX - cellWidth / 2 + 12, centerY - 4);
+                    ctx.lineTo(nextX - cellWidth / 2 + 20, centerY);
+                    ctx.lineTo(nextX - cellWidth / 2 + 12, centerY + 4);
+                    ctx.fill();
+                }
+            }
+
+            ctx.fillStyle = '#60c0e0';
+            ctx.font = '12px Noto Sans SC';
+            ctx.textAlign = 'right';
+            ctx.fillText('输入 xₜ', padding - 10, centerY + 5);
+
+            ctx.fillStyle = '#a0c080';
+            ctx.textAlign = 'left';
+            ctx.fillText('输出 hₜ', canvas.width - padding + 10, centerY + 5);
+
+            animationOffset += 0.02;
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>
