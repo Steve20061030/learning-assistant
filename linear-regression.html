@@ -339,6 +339,76 @@
             font-weight: 300;
         }
 
+        .formula-section {
+            margin-bottom: 30px;
+        }
+
+        .formula-section-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-left: 10px;
+            border-left: 3px solid var(--level-color);
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--level-color);
+            transition: all 0.3s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateX(5px);
+            border-left-color: #80e0c0;
+            box-shadow: 0 8px 25px rgba(96, 192, 160, 0.15);
+        }
+
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .formula-label {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+        }
+
+        .formula-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(96, 192, 160, 0.2);
+            border-radius: 12px;
+            color: #80e0c0;
+            font-weight: 300;
+        }
+
+        .formula-content {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 18px;
+            color: #c8e4f8;
+            line-height: 2.4;
+            font-weight: 400;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
         .history-section {
             background: linear-gradient(135deg, rgba(96, 192, 160, 0.1), rgba(96, 192, 160, 0.05));
             border-color: rgba(96, 192, 160, 0.3);
@@ -653,23 +723,204 @@
                 数学原理
             </h2>
 
-            <div class="formula-card">
-                <div class="formula-title">模型</div>
-                <div class="formula-content">ŷ = wx + b</div>
-                <div class="formula-note">w 是斜率（权重），b 是截距（偏置），ŷ 是预测值</div>
+            <div class="formula-section">
+                <div class="formula-section-title">📊 基础模型</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">一元线性回归</span>
+                        <span class="formula-tag">基础</span>
+                    </div>
+                    <div class="formula-content">ŷ = w·x + b</div>
+                    <div class="formula-note">ŷ 为预测值，w 为权重（斜率），b 为偏置（截距）</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">多元线性回归</span>
+                        <span class="formula-tag">扩展</span>
+                    </div>
+                    <div class="formula-content">ŷ = w₀ + w₁x₁ + w₂x₂ + ... + wₙxₙ</div>
+                    <div class="formula-note">多个特征的线性组合，w₀ = b 为偏置项</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">矩阵形式</span>
+                        <span class="formula-tag">进阶</span>
+                    </div>
+                    <div class="formula-content">ŷ = X·w</div>
+                    <div class="formula-note">X ∈ ℝⁿˣᵈ⁺¹ 为特征矩阵，w ∈ ℝᵈ⁺¹ 为权重向量</div>
+                </div>
             </div>
 
-            <div class="formula-card">
-                <div class="formula-title">损失函数（均方误差 MSE）</div>
-                <div class="formula-content">J(w, b) = (1/n) Σ(ŷᵢ - yᵢ)²</div>
-                <div class="formula-note">最小化所有样本预测值与真实值之间的平方误差之和</div>
+            <div class="formula-section">
+                <div class="formula-section-title">🎯 损失函数</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">均方误差（MSE）</span>
+                        <span class="formula-tag">常用</span>
+                    </div>
+                    <div class="formula-content">J(w) = (1/(2n)) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)²</div>
+                    <div class="formula-note">最小化预测值与真实值的平方差，1/2 便于求导</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">均方根误差（RMSE）</span>
+                        <span class="formula-tag">评价</span>
+                    </div>
+                    <div class="formula-content">RMSE = √[(1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)²]</div>
+                    <div class="formula-note">衡量预测误差的标准差，与原始数据同量纲</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">平均绝对误差（MAE）</span>
+                        <span class="formula-tag">鲁棒</span>
+                    </div>
+                    <div class="formula-content">MAE = (1/n) Σᵢ₌₁ⁿ |ŷᵢ - yᵢ|</div>
+                    <div class="formula-note">对异常值不敏感，梯度为常数</div>
+                </div>
             </div>
 
-            <div class="formula-card">
-                <div class="formula-title">闭式解</div>
-                <div class="formula-content">w = Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²
-b = ȳ - wx̄</div>
-                <div class="formula-note">可以直接计算出最优解，不需要迭代训练</div>
+            <div class="formula-section">
+                <div class="formula-section-title">⚡ 参数求解</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">闭式解（一元）</span>
+                        <span class="formula-tag">解析</span>
+                    </div>
+                    <div class="formula-content">w = Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²
+b = ȳ - w·x̄</div>
+                    <div class="formula-note">直接求解最优参数，无需迭代训练</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">正规方程（多元）</span>
+                        <span class="formula-tag">矩阵</span>
+                    </div>
+                    <div class="formula-content">w = (XᵀX)⁻¹Xᵀy</div>
+                    <div class="formula-note">直接求解多元线性回归的最优解，复杂度 O(d³)</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">梯度下降</span>
+                        <span class="formula-tag">优化</span>
+                    </div>
+                    <div class="formula-content">w ← w - α·∇J(w)
+∂J/∂wⱼ = (1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)xᵢⱼ
+∂J/∂b = (1/n) Σᵢ₌₁ⁿ (ŷᵢ - yᵢ)</div>
+                    <div class="formula-note">α 为学习率，通过迭代更新参数</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">牛顿法</span>
+                        <span class="formula-tag">快速</span>
+                    </div>
+                    <div class="formula-content">w ← w - H⁻¹·∇J(w)</div>
+                    <div class="formula-note">H 为海森矩阵，收敛速度快但计算量大</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">📈 模型评估</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">决定系数 R²</span>
+                        <span class="formula-tag">核心指标</span>
+                    </div>
+                    <div class="formula-content">R² = 1 - SSₑᵣᵣ/SSₜₒₜ
+SSₑᵣᵣ = Σ(ŷᵢ - yᵢ)²
+SSₜₒₜ = Σ(yᵢ - ȳ)²</div>
+                    <div class="formula-note">衡量模型解释数据方差的能力，范围 [0,1]</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">调整 R²</span>
+                        <span class="formula-tag">改进</span>
+                    </div>
+                    <div class="formula-content">Rₐᵢ⳱² = 1 - [(1-R²)(n-1)]/(n-d-1)</div>
+                    <div class="formula-note">考虑特征数量的影响，防止过拟合</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">F 统计量</span>
+                        <span class="formula-tag">检验</span>
+                    </div>
+                    <div class="formula-content">F = (SSᵣₑ₉/d) / (SSₑᵣᵣ/(n-d-1))</div>
+                    <div class="formula-note">检验回归模型整体显著性</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">🛡️ 正则化</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Ridge 回归（L2）</span>
+                        <span class="formula-tag">常用</span>
+                    </div>
+                    <div class="formula-content">J(w) = (1/(2n)) Σ(ŷᵢ - yᵢ)² + (λ/2)Σwⱼ²</div>
+                    <div class="formula-note">λ ≥ 0 控制正则化强度，防止过拟合</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Lasso 回归（L1）</span>
+                        <span class="formula-tag">稀疏</span>
+                    </div>
+                    <div class="formula-content">J(w) = (1/(2n)) Σ(ŷᵢ - yᵢ)² + λΣ|wⱼ|</div>
+                    <div class="formula-note">可实现特征选择，产生稀疏解</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">Elastic Net</span>
+                        <span class="formula-tag">混合</span>
+                    </div>
+                    <div class="formula-content">J(w) = MSE + λ₁Σ|wⱼ| + λ₂Σwⱼ²</div>
+                    <div class="formula-note">结合 L1 和 L2 正则化的优点</div>
+                </div>
+            </div>
+
+            <div class="formula-section">
+                <div class="formula-section-title">📊 统计推断</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">系数标准误差</span>
+                        <span class="formula-tag">误差分析</span>
+                    </div>
+                    <div class="formula-content">SE(wⱼ) = √[(XᵀX)⁻¹ⱼⱼ · σ²]</div>
+                    <div class="formula-note">σ² 为残差方差的估计值</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">t 统计量</span>
+                        <span class="formula-tag">检验</span>
+                    </div>
+                    <div class="formula-content">tⱼ = wⱼ / SE(wⱼ)</div>
+                    <div class="formula-note">检验单个系数的显著性</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">置信区间</span>
+                        <span class="formula-tag">推断</span>
+                    </div>
+                    <div class="formula-content">wⱼ ± tₐ/₂·SE(wⱼ)</div>
+                    <div class="formula-note">tₐ/₂ 为 t 分布的分位数</div>
+                </div>
             </div>
         </section>
 
