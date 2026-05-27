@@ -1506,13 +1506,18 @@
                 'LSTM': 'lstm.html',
                 'GRU': 'gru.html',
                 'Attention': 'attention.html',
-                'Transformer': 'transformer.html'
+                'Transformer': 'transformer.html',
+                '多项式回归': 'polynomial-regression.html',
+                '朴素贝叶斯': 'naive-bayes.html',
+                'PCA': 'pca.html',
+                '随机森林': 'random-forest.html',
+                'Ridge回归': 'ridge-regression.html',
+                'Lasso回归': 'lasso-regression.html'
             };
             const page = pageMap[name];
             if (page) {
                 window.location.href = page;
             } else {
-                // 其他知识点使用内置详情页
                 showNodeDetail(name);
             }
         }

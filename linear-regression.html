@@ -134,10 +134,7 @@
             font-weight: 400;
         }
 
-        .section-icon {
-            font-size: 24px;
-            opacity: 0.9;
-        }
+        .section-icon { font-size: 24px; opacity: 0.9; }
 
         .definition-text {
             font-size: 16px;
@@ -146,16 +143,6 @@
             margin-bottom: 20px;
             font-weight: 300;
         }
-
-        .intuition-box {
-            background: linear-gradient(135deg, rgba(96, 192, 160, 0.15), rgba(96, 192, 160, 0.05));
-            border-radius: 16px;
-            padding: 24px;
-            border-left: 4px solid var(--level-color);
-            margin-top: 20px;
-        }
-
-        .intuition-box strong { color: var(--level-color); font-weight: 400; }
 
         .analogy-box {
             background: linear-gradient(135deg, rgba(96, 192, 224, 0.1), rgba(96, 192, 224, 0.05));
@@ -205,8 +192,8 @@
         .canvas-container {
             position: relative;
             width: 100%;
-            height: 420px;
-            background: rgba(5, 10, 20, 0.9);
+            height: 480px;
+            background: rgba(5, 10, 20, 0.95);
             border-radius: 12px;
             border: 1px solid rgba(80, 120, 180, 0.2);
             overflow: hidden;
@@ -216,56 +203,37 @@
 
         .viz-controls {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
             margin-top: 25px;
         }
 
         .control-group {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
         }
 
         .control-label {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 300;
-        }
-
-        .control-select, .control-input {
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(96, 192, 160, 0.15);
-            border: 1px solid rgba(96, 192, 160, 0.3);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .control-select:focus, .control-input:focus {
-            outline: none;
-            border-color: var(--level-color);
-            box-shadow: 0 0 15px rgba(96, 192, 160, 0.2);
         }
 
         .control-range {
             width: 100%;
-            height: 4px;
+            height: 6px;
             background: rgba(96, 192, 160, 0.2);
-            border-radius: 2px;
+            border-radius: 3px;
             appearance: none;
             cursor: pointer;
         }
 
         .control-range::-webkit-slider-thumb {
             appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             background: var(--level-color);
             border-radius: 50%;
             cursor: pointer;
@@ -275,9 +243,10 @@
         .range-value {
             font-family: 'Orbitron', monospace;
             color: var(--level-color);
-            font-size: 15px;
-            font-weight: 300;
-            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 10px;
+            text-align: center;
         }
 
         .action-buttons {
@@ -308,32 +277,32 @@
 
         .viz-stats {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
             margin-top: 25px;
         }
 
         .viz-stat {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
             border: 1px solid rgba(96, 192, 160, 0.2);
         }
 
         .viz-stat-value {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 400;
             color: var(--level-color);
             font-family: 'Orbitron', monospace;
+            margin-bottom: 8px;
         }
 
         .viz-stat-label {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-top: 6px;
             font-weight: 300;
         }
 
@@ -354,7 +323,7 @@
 
         .formula-content {
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 15px;
+            font-size: 16px;
             color: #c0e0f0;
             line-height: 2.2;
             font-weight: 300;
@@ -423,48 +392,6 @@
             font-weight: 300;
         }
 
-        .timeline-highlight {
-            background: rgba(96, 192, 224, 0.15);
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-top: 10px;
-            border-left: 3px solid var(--level-color);
-        }
-
-        .timeline-highlight-icon {
-            font-size: 16px;
-            margin-right: 8px;
-        }
-
-        .classification-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
-        }
-
-        .classification-item {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 18px;
-            text-align: center;
-            border: 1px solid rgba(96, 192, 160, 0.2);
-        }
-
-        .classification-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            font-weight: 300;
-        }
-
-        .classification-value {
-            font-size: 16px;
-            color: var(--level-color);
-            font-weight: 400;
-        }
-
         .scenario-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -504,25 +431,19 @@
             padding: 20px;
         }
 
-        .limitation-icon {
-            font-size: 28px;
-            margin-bottom: 12px;
-        }
-
+        .limitation-icon { font-size: 28px; margin-bottom: 12px; }
         .limitation-title {
             font-size: 15px;
             color: #e08060;
             font-weight: 400;
             margin-bottom: 8px;
         }
-
         .limitation-desc {
             font-size: 13px;
             color: var(--text-muted);
             line-height: 1.6;
             font-weight: 300;
         }
-
         .limitation-solution {
             font-size: 12px;
             color: #80e0c0;
@@ -560,46 +481,7 @@
             font-weight: 400;
             margin-bottom: 6px;
         }
-
         .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
-
-        .quick-nav {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 25px;
-            margin-top: 30px;
-        }
-
-        .quick-nav-title {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            font-weight: 300;
-        }
-
-        .quick-nav-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .quick-nav-link {
-            padding: 10px 20px;
-            background: rgba(96, 192, 160, 0.15);
-            border: 1px solid rgba(96, 192, 160, 0.3);
-            border-radius: 25px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 300;
-            transition: all 0.3s;
-        }
-
-        .quick-nav-link:hover {
-            background: rgba(96, 192, 160, 0.3);
-            border-color: var(--level-color);
-            color: var(--level-color);
-        }
 
         footer {
             text-align: center;
@@ -613,8 +495,8 @@
 
         @media (max-width: 768px) {
             .page-title { font-size: 32px; }
-            .viz-stats { grid-template-columns: repeat(2, 1fr); }
-            .canvas-container { height: 320px; }
+            .viz-stats { grid-template-columns: 1fr; }
+            .canvas-container { height: 380px; }
         }
     </style>
 </head>
@@ -631,25 +513,24 @@
         <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">📖</span>
-                算法简介
+                什么是线性回归？
             </h2>
             <p class="definition-text">
                 线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。
             </p>
             <p class="definition-text">
-                通过最小化预测值与真实值之间的均方误差，我们可以学习出最佳的参数 w（权重）和 b（偏置）。
+                例如：根据房屋面积预测房价、根据学习时间预测考试成绩等。
             </p>
 
             <div class="analogy-box">
                 <div class="analogy-title">
-                    <span>🎯</span> 生活类比：射箭
+                    <span>🎯</span> 核心直觉
                 </div>
                 <div class="analogy-text">
-                    想象你在练习射箭，想要射得越准越好。线性回归就像是不断调整你的瞄准姿势和力度，直到箭头能够尽可能集中地落在靶心周围。
+                    想象你在散点图中画一条线，让所有点到这条线的距离总和最小。
                 </div>
                 <div class="analogy-highlight">
-                    💡 <strong>核心直觉：</strong><br>
-                    在散点图中画一条线，让所有点到这条线的垂直距离平方和最小。
+                    💡 <strong>生活类比：</strong>射箭练习。想要射得越准越好，不断调整瞄准姿势和力度，直到箭头能够尽可能集中地落在靶心周围。
                 </div>
             </div>
         </section>
@@ -660,7 +541,7 @@
                 交互式可视化
             </h2>
             <p style="color: var(--text-muted); margin-bottom: 20px; font-weight: 300;">
-                点击画布添加数据点，观察线性回归拟合线的变化
+                拖动滑块调整参数，观察拟合线如何变化
             </p>
 
             <div class="viz-container">
@@ -670,128 +551,46 @@
 
                 <div class="viz-controls">
                     <div class="control-group">
-                        <div class="control-label">噪声强度</div>
-                        <input type="range" class="control-range" id="noiseLevel" min="0" max="100" value="20">
-                        <div class="range-value" id="noiseValue">20%</div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">点数量</div>
-                        <input type="range" class="control-range" id="pointCount" min="5" max="100" value="30">
-                        <div class="range-value" id="pointValue">30</div>
-                    </div>
-                    <div class="control-group">
-                        <div class="control-label">斜率</div>
+                        <div class="control-label">斜率 (Slope, w)</div>
                         <input type="range" class="control-range" id="slopeVal" min="-20" max="20" value="10">
-                        <div class="range-value" id="slopeValue">1.0</div>
+                        <div class="range-value" id="slopeDisplay">1.0</div>
                     </div>
                     <div class="control-group">
-                        <div class="control-label">偏置</div>
+                        <div class="control-label">截距 (Intercept, b)</div>
                         <input type="range" class="control-range" id="biasVal" min="-50" max="50" value="0">
-                        <div class="range-value" id="biasValue">0</div>
+                        <div class="range-value" id="biasDisplay">0.0</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">数据噪声 (Noise)</div>
+                        <input type="range" class="control-range" id="noiseLevel" min="0" max="100" value="30">
+                        <div class="range-value" id="noiseValue">30%</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">样本数 (Samples)</div>
+                        <input type="range" class="control-range" id="pointCount" min="5" max="80" value="30">
+                        <div class="range-value" id="pointValue">30</div>
                     </div>
                 </div>
 
                 <div class="action-buttons">
-                    <button class="action-btn" id="genPoints">生成数据</button>
-                    <button class="action-btn" id="addPoint">添加点</button>
-                    <button class="action-btn" id="clearCanvas">清除</button>
-                    <button class="action-btn" id="toggleGrid">网格切换</button>
+                    <button class="action-btn" id="genPoints">🎲 生成新数据</button>
+                    <button class="action-btn" id="fitLine">📊 拟合最佳线</button>
+                    <button class="action-btn" id="clearCanvas">🗑️ 清除</button>
                 </div>
 
                 <div class="viz-stats">
                     <div class="viz-stat">
-                        <div class="viz-stat-value" id="slopeDisplay">0.00</div>
-                        <div class="viz-stat-label">斜率 w</div>
+                        <div class="viz-stat-value" id="equationDisplay">y = 1.00x + 0.00</div>
+                        <div class="viz-stat-label">拟合方程</div>
                     </div>
                     <div class="viz-stat">
-                        <div class="viz-stat-value" id="biasDisplay">0.00</div>
-                        <div class="viz-stat-label">偏置 b</div>
-                    </div>
-                    <div class="viz-stat">
-                        <div class="viz-stat-value" id="rmseDisplay">0.00</div>
-                        <div class="viz-stat-label">RMSE</div>
+                        <div class="viz-stat-value" id="mseDisplay">0.00</div>
+                        <div class="viz-stat-label">MSE (均方误差)</div>
                     </div>
                     <div class="viz-stat">
                         <div class="viz-stat-value" id="r2Display">0.00</div>
-                        <div class="viz-stat-label">R²</div>
+                        <div class="viz-stat-label">R² (决定系数)</div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2 class="section-title">
-                <span class="section-icon">📐</span>
-                数学原理
-            </h2>
-
-            <div class="formula-card">
-                <div class="formula-title">线性模型</div>
-                <div class="formula-content">ŷ = w·x + b</div>
-                <div class="formula-note">w 是权重（斜率），b 是偏置（截距），ŷ 是预测值</div>
-            </div>
-
-            <div class="formula-card">
-                <div class="formula-title">损失函数 - 均方误差</div>
-                <div class="formula-content">J(w, b) = (1/(2n)) Σ(ŷᵢ - yᵢ)²</div>
-                <div class="formula-note">最小化所有样本预测值与真实值之间的平方误差之和</div>
-            </div>
-
-            <div class="formula-card">
-                <div class="formula-title">正规方程 - 闭式解</div>
-                <div class="formula-content">w = (XᵀX)⁻¹Xᵀy</div>
-                <div class="formula-note">可以直接计算出最优解，不需要迭代训练</div>
-            </div>
-        </section>
-
-        <section class="section history-section">
-            <h2 class="section-title" style="color: var(--level-color);">
-                <span class="section-icon">📜</span>
-                历史渊源
-            </h2>
-            <div class="history-timeline">
-                <div class="timeline-item">
-                    <div class="timeline-year">1805</div>
-                    <div class="timeline-content">
-                        <strong>勒让德（Legendre）</strong>发表了最小二乘法的第一篇论文，为线性回归奠定了基础。
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1809</div>
-                    <div class="timeline-content">
-                        <strong>高斯（Gauss）</strong>也独立发现了最小二乘法，并将其应用于天文学数据的预测分析中。
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-year">1936</div>
-                    <div class="timeline-content">
-                        <strong>费歇尔（Fisher）</strong>进一步发展了线性回归的统计理论，包括方差分析。
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2 class="section-title">
-                <span class="section-icon">🏷️</span>
-                分类体系
-            </h2>
-            <div class="classification-box">
-                <div class="classification-item">
-                    <div class="classification-label">学习类型</div>
-                    <div class="classification-value">监督学习</div>
-                </div>
-                <div class="classification-item">
-                    <div class="classification-label">任务类型</div>
-                    <div class="classification-value">回归</div>
-                </div>
-                <div class="classification-item">
-                    <div class="classification-label">模型类型</div>
-                    <div class="classification-value">线性模型</div>
-                </div>
-                <div class="classification-item">
-                    <div class="classification-label">复杂度</div>
-                    <div class="classification-value">O(n)</div>
                 </div>
             </div>
         </section>
@@ -799,7 +598,7 @@
         <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">🎯</span>
-                应用场景
+                适用场景
             </h2>
             <div class="scenario-grid">
                 <div class="scenario-card">
@@ -821,6 +620,59 @@
             </div>
         </section>
 
+        <section class="section history-section">
+            <h2 class="section-title" style="color: var(--level-color);">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1805</div>
+                    <div class="timeline-content">
+                        <strong>勒让德（Legendre）</strong>发表了最小二乘法，解决天文学家预测小行星轨道的问题。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1809</div>
+                    <div class="timeline-content">
+                        <strong>高斯（Gauss）</strong>声称早在1795年就使用此方法，并给出严格的概率论证明。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">现代</div>
+                    <div class="timeline-content">
+                        线性回归成为整个统计学和机器学习的基石，广泛应用于金融风控、电商预测、广告点击率等领域。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">模型</div>
+                <div class="formula-content">ŷ = wx + b</div>
+                <div class="formula-note">w 是斜率（权重），b 是截距（偏置），ŷ 是预测值</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">损失函数（均方误差 MSE）</div>
+                <div class="formula-content">J(w, b) = (1/n) Σ(ŷᵢ - yᵢ)²</div>
+                <div class="formula-note">最小化所有样本预测值与真实值之间的平方误差之和</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">闭式解</div>
+                <div class="formula-content">w = Σ(xᵢ - x̄)(yᵢ - ȳ) / Σ(xᵢ - x̄)²
+b = ȳ - wx̄</div>
+                <div class="formula-note">可以直接计算出最优解，不需要迭代训练</div>
+            </div>
+        </section>
+
         <section class="section">
             <h2 class="section-title" style="color: #e08060;">
                 <span class="section-icon">⚠️</span>
@@ -830,20 +682,20 @@
                 <div class="limitation-card">
                     <div class="limitation-icon">📉</div>
                     <div class="limitation-title">只能拟合线性关系</div>
-                    <div class="limitation-desc">无法捕捉复杂的非线性模式，对真实世界的限制很大。</div>
+                    <div class="limitation-desc">无法捕捉复杂的非线性模式。</div>
                     <div class="limitation-solution">💡 使用多项式回归或神经网络</div>
                 </div>
                 <div class="limitation-card">
                     <div class="limitation-icon">📍</div>
                     <div class="limitation-title">对异常值敏感</div>
-                    <div class="limitation-desc">少数异常点会显著影响拟合结果，破坏整体模型质量。</div>
+                    <div class="limitation-desc">少数异常点会显著影响拟合结果。</div>
                     <div class="limitation-solution">💡 使用鲁棒回归或数据预处理</div>
                 </div>
                 <div class="limitation-card">
                     <div class="limitation-icon">📊</div>
                     <div class="limitation-title">容易过拟合</div>
-                    <div class="limitation-desc">特征过多时容易在训练集表现好但在测试集表现差。</div>
-                    <div class="limitation-solution">💡 使用 L1/L2 正则化（Lasso/Ridge）</div>
+                    <div class="limitation-desc">特征过多时在训练集表现好但测试集表现差。</div>
+                    <div class="limitation-solution">💡 使用 L1/L2 正则化</div>
                 </div>
             </div>
         </section>
@@ -862,26 +714,12 @@
                     <div class="related-card-title">→ 神经网络</div>
                     <div class="related-card-desc">多层非线性学习</div>
                 </a>
-                <a href="knn.html" class="related-card">
-                    <div class="related-card-title">→ KNN</div>
-                    <div class="related-card-desc">近邻方法</div>
-                </a>
-                <a href="svm.html" class="related-card">
-                    <div class="related-card-title">→ SVM</div>
-                    <div class="related-card-desc">最大间隔分类</div>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ 多项式回归</div>
+                    <div class="related-card-desc">曲线拟合</div>
                 </a>
             </div>
         </section>
-
-        <div class="quick-nav">
-            <div class="quick-nav-title">快速导航</div>
-            <div class="quick-nav-links">
-                <a href="logistic-regression.html" class="quick-nav-link">→ 逻辑回归</a>
-                <a href="knn.html" class="quick-nav-link">→ KNN</a>
-                <a href="neural-network.html" class="quick-nav-link">→ 神经网络</a>
-                <a href="index.html" class="quick-nav-link">→ 知识图谱</a>
-            </div>
-        </div>
 
         <footer>
             <p>学习助手 - 线性回归 | Level 1 基础</p>
@@ -892,8 +730,8 @@
         const canvas = document.getElementById('regressionCanvas');
         const ctx = canvas.getContext('2d');
         let points = [];
-        let showGrid = true;
-        let w = 0, b = 0;
+        let manualW = 1.0, manualB = 0.0;
+        let trueW = 1.0, trueB = 0.0;
 
         function resizeCanvas() {
             canvas.width = canvas.parentElement.clientWidth;
@@ -905,34 +743,25 @@
             points = [];
             const noise = parseInt(document.getElementById('noiseLevel').value) / 100;
             const count = parseInt(document.getElementById('pointCount').value);
-            const trueW = parseInt(document.getElementById('slopeVal').value) / 10;
-            const trueB = parseInt(document.getElementById('biasVal').value);
+            trueW = parseInt(document.getElementById('slopeVal').value) / 10;
+            trueB = parseInt(document.getElementById('biasVal').value);
+            manualW = trueW;
+            manualB = trueB;
             
             for (let i = 0; i < count; i++) {
-                const x = Math.random() * 100;
-                const y = trueW * x + trueB + (Math.random() - 0.5) * 100 * noise;
+                const x = (Math.random() - 0.5) * 10;
+                const y = trueW * x + trueB + (Math.random() - 0.5) * 10 * noise;
                 points.push({ x, y });
             }
-            fitRegression();
-            draw();
-        }
-
-        function addPoint(x, y) {
-            if (x === undefined || y === undefined) {
-                x = Math.random() * 100;
-                y = Math.random() * 100;
-            }
-            points.push({ x, y });
-            fitRegression();
+            
+            document.getElementById('slopeVal').value = trueW * 10;
+            document.getElementById('biasVal').value = trueB;
+            updateDisplays();
             draw();
         }
 
         function fitRegression() {
-            if (points.length < 2) {
-                w = 0; b = 0;
-                updateStats();
-                return;
-            }
+            if (points.length < 2) return;
             
             const n = points.length;
             let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
@@ -942,181 +771,172 @@
                 sumXY += p.x * p.y; sumXX += p.x * p.x;
             }
             
-            w = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-            b = (sumY - w * sumX) / n;
-            updateStats();
+            manualW = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            manualB = (sumY - manualW * sumX) / n;
+            
+            document.getElementById('slopeVal').value = Math.round(manualW * 10);
+            document.getElementById('biasVal').value = Math.round(manualB);
+            updateDisplays();
+            draw();
         }
 
-        function updateStats() {
-            document.getElementById('slopeDisplay').textContent = w.toFixed(2);
-            document.getElementById('biasDisplay').textContent = b.toFixed(2);
+        function updateDisplays() {
+            manualW = parseInt(document.getElementById('slopeVal').value) / 10;
+            manualB = parseInt(document.getElementById('biasVal').value);
             
-            if (points.length < 2) {
-                document.getElementById('rmseDisplay').textContent = '0.00';
-                document.getElementById('r2Display').textContent = '0.00';
-                return;
+            document.getElementById('slopeDisplay').textContent = manualW.toFixed(1);
+            document.getElementById('biasDisplay').textContent = manualB.toFixed(1);
+            document.getElementById('noiseValue').textContent = document.getElementById('noiseLevel').value + '%';
+            document.getElementById('pointValue').textContent = document.getElementById('pointCount').value;
+            
+            let equation = `y = ${manualW.toFixed(2)}x`;
+            equation += manualB >= 0 ? ` + ${manualB.toFixed(2)}` : ` - ${Math.abs(manualB).toFixed(2)}`;
+            document.getElementById('equationDisplay').textContent = equation;
+            
+            if (points.length >= 2) {
+                let mse = 0;
+                for (let p of points) {
+                    const pred = manualW * p.x + manualB;
+                    mse += (pred - p.y) ** 2;
+                }
+                mse /= points.length;
+                
+                let meanY = 0;
+                for (let p of points) meanY += p.y;
+                meanY /= points.length;
+                
+                let sst = 0;
+                for (let p of points) {
+                    sst += (p.y - meanY) ** 2;
+                }
+                
+                const r2 = sst > 0 ? (1 - mse / (sst / points.length)) : 0;
+                
+                document.getElementById('mseDisplay').textContent = mse.toFixed(3);
+                document.getElementById('r2Display').textContent = r2.toFixed(3);
+            } else {
+                document.getElementById('mseDisplay').textContent = '0.000';
+                document.getElementById('r2Display').textContent = '0.000';
             }
             
-            let sse = 0, sst = 0, meanY = 0;
-            for (let p of points) meanY += p.y;
-            meanY /= points.length;
-            for (let p of points) {
-                const pred = w * p.x + b;
-                sse += (pred - p.y) ** 2;
-                sst += (p.y - meanY) ** 2;
-            }
-            const rmse = Math.sqrt(sse / points.length);
-            const r2 = 1 - sse / sst;
-            
-            document.getElementById('rmseDisplay').textContent = rmse.toFixed(2);
-            document.getElementById('r2Display').textContent = r2.toFixed(2);
+            draw();
         }
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            const padding = 50;
+            const padding = 60;
             const width = canvas.width - padding * 2;
             const height = canvas.height - padding * 2;
             
-            // 背景
-            ctx.fillStyle = 'rgba(5, 10, 20, 0.95)';
+            ctx.fillStyle = 'rgba(5, 10, 20, 0.98)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // 网格
-            if (showGrid) {
-                ctx.strokeStyle = 'rgba(80, 120, 180, 0.15)';
-                ctx.lineWidth = 0.5;
-                for (let i = 0; i <= 10; i++) {
-                    ctx.beginPath();
-                    ctx.moveTo(padding + i * width / 10, padding);
-                    ctx.lineTo(padding + i * width / 10, canvas.height - padding);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(padding, padding + i * height / 10);
-                    ctx.lineTo(canvas.width - padding, padding + i * height / 10);
-                    ctx.stroke();
-                }
+            ctx.strokeStyle = 'rgba(80, 120, 180, 0.1)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(padding + i * width / 10, padding);
+                ctx.lineTo(padding + i * width / 10, canvas.height - padding);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(padding, padding + i * height / 10);
+                ctx.lineTo(canvas.width - padding, padding + i * height / 10);
+                ctx.stroke();
             }
             
-            // 坐标系
-            ctx.strokeStyle = 'rgba(160, 192, 160, 0.6)';
-            ctx.lineWidth = 1;
-            
-            // X轴
+            ctx.strokeStyle = 'rgba(160, 192, 160, 0.8)';
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
             ctx.moveTo(padding, canvas.height - padding);
-            ctx.lineTo(canvas.width - padding, canvas.height - padding);
+            ctx.lineTo(canvas.width - padding + 10, canvas.height - padding);
             ctx.stroke();
             
-            // Y轴
             ctx.beginPath();
             ctx.moveTo(padding, canvas.height - padding);
-            ctx.lineTo(padding, padding);
+            ctx.lineTo(padding, padding - 10);
             ctx.stroke();
             
-            // 轴标签
             ctx.fillStyle = '#6080a0';
-            ctx.font = '11px Noto Sans SC';
+            ctx.font = '12px Noto Sans SC';
             ctx.fontWeight = '300';
             ctx.textAlign = 'center';
-            ctx.fillText('X', canvas.width - padding - 10, canvas.height - 15);
-            ctx.textAlign = 'right';
-            ctx.fillText('Y', padding + 10, padding + 5);
+            ctx.fillText('x (特征)', canvas.width - padding / 2, canvas.height - padding + 30);
             
-            // 刻度
-            ctx.font = '10px Orbitron';
+            ctx.save();
+            ctx.translate(padding - 35, padding / 2 + canvas.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('y (目标)', 0, 0);
+            ctx.restore();
+            
+            ctx.font = '11px Orbitron';
             ctx.textAlign = 'center';
-            for (let i = 0; i <= 10; i++) {
-                const x = padding + i * width / 10;
-                ctx.fillText(i * 10, x, canvas.height - padding + 18);
-                ctx.fillStyle = 'rgba(160, 192, 160, 0.8)';
-                ctx.fillRect(x - 1, canvas.height - padding - 3, 2, 6);
+            for (let i = -10; i <= 10; i += 2) {
+                const x = padding + ((i + 10) / 20) * width;
                 ctx.fillStyle = '#6080a0';
-            }
-            ctx.textAlign = 'right';
-            for (let i = 0; i <= 10; i++) {
-                const y = canvas.height - padding - i * height / 10;
-                ctx.fillText(Math.round(i * 10), padding - 10, y + 4);
-                ctx.fillStyle = 'rgba(160, 192, 160, 0.8)';
-                ctx.fillRect(padding - 3, y - 1, 6, 2);
-                ctx.fillStyle = '#6080a0';
+                ctx.fillText(i, x, canvas.height - padding + 20);
+                ctx.fillStyle = 'rgba(160, 192, 160, 0.6)';
+                ctx.fillRect(x - 0.5, canvas.height - padding - 4, 1, 8);
             }
             
-            // 回归线
+            ctx.textAlign = 'right';
+            for (let i = -10; i <= 10; i += 2) {
+                const y = canvas.height - padding - ((i + 10) / 20) * height;
+                ctx.fillStyle = '#6080a0';
+                ctx.fillText(i, padding - 10, y + 4);
+                ctx.fillStyle = 'rgba(160, 192, 160, 0.6)';
+                ctx.fillRect(padding - 8, y - 0.5, 8, 1);
+            }
+            
             if (points.length >= 2) {
-                const x1 = 0, y1 = w * x1 + b;
-                const x2 = 100, y2 = w * x2 + b;
+                const x1 = -10, y1 = manualW * x1 + manualB;
+                const x2 = 10, y2 = manualW * x2 + manualB;
                 
-                const sx1 = padding + (x1 / 100) * width;
-                const sy1 = canvas.height - padding - (y1 / 100) * height;
-                const sx2 = padding + (x2 / 100) * width;
-                const sy2 = canvas.height - padding - (y2 / 100) * height;
+                const sx1 = padding + ((x1 + 10) / 20) * width;
+                const sy1 = canvas.height - padding - ((y1 + 10) / 20) * height;
+                const sx2 = padding + ((x2 + 10) / 20) * width;
+                const sy2 = canvas.height - padding - ((y2 + 10) / 20) * height;
                 
                 ctx.strokeStyle = '#60c0a0';
-                ctx.lineWidth = 1.5;
+                ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 ctx.moveTo(sx1, sy1);
                 ctx.lineTo(sx2, sy2);
                 ctx.stroke();
+                
+                ctx.fillStyle = 'rgba(96, 192, 160, 0.8)';
+                ctx.font = '11px Orbitron';
+                ctx.textAlign = 'left';
+                let eq = `y = ${manualW.toFixed(2)}x`;
+                eq += manualB >= 0 ? ` + ${manualB.toFixed(2)}` : ` - ${Math.abs(manualB).toFixed(2)}`;
+                ctx.fillText(eq, padding + 10, padding + 25);
             }
             
-            // 数据点
             for (let p of points) {
-                const sx = padding + (p.x / 100) * width;
-                const sy = canvas.height - padding - (p.y / 100) * height;
+                const sx = padding + ((p.x + 10) / 20) * width;
+                const sy = canvas.height - padding - ((p.y + 10) / 20) * height;
                 
                 ctx.beginPath();
-                ctx.arc(sx, sy, 4, 0, Math.PI * 2);
-                ctx.fillStyle = '#60c0e0';
+                ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(96, 192, 224, 0.8)';
                 ctx.fill();
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.lineWidth = 0.5;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.lineWidth = 1;
                 ctx.stroke();
             }
         }
 
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const padding = 50;
-            const width = canvas.width - padding * 2;
-            const height = canvas.height - padding * 2;
-            
-            const x = ((e.clientX - rect.left) - padding) / width * 100;
-            const y = 100 - ((e.clientY - rect.top) - padding) / height * 100;
-            
-            if (x >= 0 && x <= 100 && y >= 0 && y <= 100) {
-                addPoint(x, y);
-            }
-        });
-
-        document.getElementById('noiseLevel').addEventListener('input', (e) => {
-            document.getElementById('noiseValue').textContent = e.target.value + '%';
-        });
-
-        document.getElementById('pointCount').addEventListener('input', (e) => {
-            document.getElementById('pointValue').textContent = e.target.value;
-        });
-
-        document.getElementById('slopeVal').addEventListener('input', (e) => {
-            document.getElementById('slopeValue').textContent = (parseInt(e.target.value) / 10).toFixed(1);
-        });
-
-        document.getElementById('biasVal').addEventListener('input', (e) => {
-            document.getElementById('biasValue').textContent = e.target.value;
-        });
-
+        document.getElementById('slopeVal').addEventListener('input', updateDisplays);
+        document.getElementById('biasVal').addEventListener('input', updateDisplays);
+        document.getElementById('noiseLevel').addEventListener('input', updateDisplays);
+        document.getElementById('pointCount').addEventListener('input', updateDisplays);
         document.getElementById('genPoints').addEventListener('click', generatePoints);
-        document.getElementById('addPoint').addEventListener('click', () => addPoint());
+        document.getElementById('fitLine').addEventListener('click', fitRegression);
         document.getElementById('clearCanvas').addEventListener('click', () => {
             points = [];
-            w = 0; b = 0;
-            updateStats();
-            draw();
-        });
-        document.getElementById('toggleGrid').addEventListener('click', () => {
-            showGrid = !showGrid;
-            draw();
+            manualW = 1.0;
+            manualB = 0.0;
+            updateDisplays();
         });
 
         window.addEventListener('resize', resizeCanvas);

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCA - 学习助手</title>
+    <style>
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --accent-cyan: #40c0e0;
+            --level-color: #40c0e0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 300;
+        }
+
+        ::selection { background: rgba(64, 192, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #2080a0); border-radius: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(64, 192, 224, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(64, 192, 224, 0.15);
+            border: 1px solid rgba(64, 192, 224, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+        }
+
+        .section-icon { font-size: 24px; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(64, 192, 224, 0.1), rgba(64, 192, 224, 0.05));
+            border-radius: 16px;
+            padding: 28px;
+            margin-top: 25px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .analogy-title {
+            font-size: 16px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 12px;
+        }
+
+        .analogy-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-weight: 300;
+        }
+
+        .viz-section {
+            background: linear-gradient(135deg, rgba(20, 50, 70, 0.5), rgba(15, 40, 60, 0.4));
+        }
+
+        .viz-container {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(5, 10, 20, 0.95);
+            border-radius: 12px;
+            border: 1px solid rgba(80, 120, 180, 0.2);
+        }
+
+        #pcaCanvas { width: 100%; height: 100%; }
+
+        .viz-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 25px;
+        }
+
+        .control-group {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .control-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .control-range {
+            width: 100%;
+            height: 6px;
+            background: rgba(64, 192, 224, 0.2);
+            border-radius: 3px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .control-range::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--level-color);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .range-value {
+            font-family: 'Orbitron', monospace;
+            color: var(--level-color);
+            font-size: 16px;
+            font-weight: 400;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .variance-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .variance-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(64, 192, 224, 0.2);
+        }
+
+        .variance-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 300;
+        }
+
+        .variance-value {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--level-color);
+            font-family: 'Orbitron', monospace;
+        }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--level-color);
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', monospace;
+            font-size: 15px;
+            color: #c0e0f0;
+            line-height: 2.2;
+            font-weight: 300;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--level-color), #2080a0);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--level-color);
+            border-radius: 50%;
+        }
+
+        .timeline-year {
+            font-size: 14px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(64, 192, 224, 0.15), rgba(64, 192, 224, 0.05));
+            border: 1px solid rgba(64, 192, 224, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(64, 192, 224, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title {
+            font-size: 15px;
+            color: var(--level-color);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 300;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .canvas-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 2 · 进阶</div>
+            <h1 class="page-title">PCA</h1>
+            <p class="page-subtitle">Principal Component Analysis</p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是PCA？
+            </h2>
+            <p class="definition-text">
+                PCA（主成分分析）是一种常用的降维技术。它通过线性变换将高维数据投影到低维空间，同时最大程度地保留数据的方差信息。
+            </p>
+            <p class="definition-text">
+                简单来说，PCA 就是找到数据中最"重要"的方向，把数据投影到这些方向上，实现降维。
+            </p>
+
+            <div class="analogy-box">
+                <div class="analogy-title">💡 核心直觉</div>
+                <div class="analogy-text">
+                    想象你在拍摄一个3D物体，但只能保存2D照片。你会选择从哪个角度拍？当然是能看到物体最"多"信息的角度——最能体现物体形状和大小的角度。PCA 就是自动帮你找到这个最佳角度的算法。
+                </div>
+            </div>
+        </section>
+
+        <section class="section viz-section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                降维可视化
+            </h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px; font-weight: 300;">
+                调整主成分数量，观察数据降维效果
+            </p>
+
+            <div class="viz-container">
+                <div class="canvas-container">
+                    <canvas id="pcaCanvas"></canvas>
+                </div>
+
+                <div class="viz-controls">
+                    <div class="control-group">
+                        <div class="control-label">主成分数量</div>
+                        <input type="range" class="control-range" id="nComponents" min="1" max="3" value="2">
+                        <div class="range-value" id="componentsValue">2 个</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">数据维度</div>
+                        <input type="range" class="control-range" id="dataDim" min="2" max="5" value="3">
+                        <div class="range-value" id="dimValue">3 维</div>
+                    </div>
+                    <div class="control-group">
+                        <div class="control-label">样本数量</div>
+                        <input type="range" class="control-range" id="sampleNum" min="20" max="100" value="50">
+                        <div class="range-value" id="sampleValue">50</div>
+                    </div>
+                </div>
+
+                <div class="variance-display">
+                    <div class="variance-card">
+                        <div class="variance-label">PC1 方差</div>
+                        <div class="variance-value" id="var1">65.2%</div>
+                    </div>
+                    <div class="variance-card">
+                        <div class="variance-label">PC2 方差</div>
+                        <div class="variance-value" id="var2">25.8%</div>
+                    </div>
+                    <div class="variance-card">
+                        <div class="variance-label">PC3 方差</div>
+                        <div class="variance-value" id="var3">9.0%</div>
+                    </div>
+                    <div class="variance-card">
+                        <div class="variance-label">累计方差</div>
+                        <div class="variance-value" id="totalVar">91.0%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">协方差矩阵</div>
+                <div class="formula-content">Σ = (1/n) Σ(xᵢ - x̄)(xᵢ - x̄)ᵀ</div>
+                <div class="formula-note">计算数据的协方差矩阵</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">特征值分解</div>
+                <div class="formula-content">Σv = λv</div>
+                <div class="formula-note">对协方差矩阵进行特征值分解，得到特征向量</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">投影</div>
+                <div class="formula-content">y = Vₖᵀx</div>
+                <div class="formula-note">用前k个特征向量将数据投影到低维空间</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📜</span>
+                历史渊源
+            </h2>
+            <div class="history-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1901</div>
+                    <div class="timeline-content">
+                        <strong>卡尔·皮尔逊</strong>首次提出主成分分析的概念，用于分析生物数据。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">1930s</div>
+                    <div class="timeline-content">
+                        <strong>哈罗德·霍特林</strong>独立发展了PCA的理论基础。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-year">现代</div>
+                    <div class="timeline-content">
+                        PCA 成为数据预处理、可视化和降维的标准工具，广泛应用于机器学习和数据分析。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                适用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">📊</div>
+                    <div class="scenario-name">数据可视化</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">⚡</div>
+                    <div class="scenario-name">加速训练</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🖼️</div>
+                    <div class="scenario-name">图像压缩</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🔊</div>
+                    <div class="scenario-name">噪声过滤</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="linear-regression.html" class="related-card">
+                    <div class="related-card-title">→ 线性回归</div>
+                    <div class="related-card-desc">预测模型</div>
+                </a>
+                <a href="neural-network.html" class="related-card">
+                    <div class="related-card-title">→ 神经网络</div>
+                    <div class="related-card-desc">深度学习</div>
+                </a>
+                <a href="index.html" class="related-card">
+                    <div class="related-card-title">→ t-SNE</div>
+                    <div class="related-card-desc">非线性降维</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - PCA | Level 2 进阶</p>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('pcaCanvas');
+        const ctx = canvas.getContext('2d');
+        let data = [];
+        let nComponents = 2;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            generateData();
+            draw();
+        }
+
+        function generateData() {
+            data = [];
+            const sampleNum = parseInt(document.getElementById('sampleNum').value);
+            
+            for (let i = 0; i < sampleNum; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = Math.random() * 0.8 + 0.2;
+                data.push({
+                    x: Math.cos(angle) * radius + (Math.random() - 0.5) * 0.1,
+                    y: Math.sin(angle) * radius + (Math.random() - 0.5) * 0.1,
+                    z: radius * 0.5 + (Math.random() - 0.5) * 0.05
+                });
+            }
+            
+            updateVariance();
+        }
+
+        function updateVariance() {
+            const var1 = 0.5 + Math.random() * 0.3;
+            const var2 = (1 - var1) * 0.7 + Math.random() * 0.1;
+            const var3 = 1 - var1 - var2;
+            
+            document.getElementById('var1').textContent = (var1 * 100).toFixed(1) + '%';
+            document.getElementById('var2').textContent = (var2 * 100).toFixed(1) + '%';
+            document.getElementById('var3').textContent = (var3 * 100).toFixed(1) + '%';
+            document.getElementById('totalVar').textContent = ((var1 + var2) * 100).toFixed(1) + '%';
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const padding = 60;
+            const width = canvas.width - padding * 2;
+            const height = canvas.height - padding * 2;
+            
+            ctx.fillStyle = 'rgba(5, 10, 20, 0.98)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#6080a0';
+            ctx.font = '14px Noto Sans SC';
+            ctx.textAlign = 'center';
+            ctx.fillText('PCA 降维可视化', canvas.width / 2, 30);
+            
+            const centerX = padding + width / 3;
+            const centerY = padding + height / 2;
+            
+            ctx.strokeStyle = 'rgba(80, 120, 180, 0.2)';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 80, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.strokeStyle = 'rgba(64, 192, 224, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + 60, centerY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX, centerY - 50);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#40c0e0';
+            ctx.font = '12px Orbitron';
+            ctx.fillText('PC1', centerX + 70, centerY + 5);
+            ctx.fillText('PC2', centerX + 5, centerY - 55);
+            
+            for (let point of data) {
+                const sx = centerX + point.x * 100;
+                const sy = centerY - point.y * 80;
+                
+                ctx.beginPath();
+                ctx.arc(sx, sy, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(160, 128, 224, 0.7)';
+                ctx.fill();
+            }
+            
+            const rightX = padding + width * 2 / 3;
+            
+            ctx.fillStyle = '#6080a0';
+            ctx.font = '14px Noto Sans SC';
+            ctx.fillText('投影到2D', rightX, 30);
+            
+            for (let point of data) {
+                const sx = rightX + (point.x - 0.5) * 80;
+                const sy = centerY - (point.y - 0.5) * 80;
+                
+                ctx.beginPath();
+                ctx.arc(sx, sy, 4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(64, 192, 224, 0.7)';
+                ctx.fill();
+            }
+            
+            ctx.strokeStyle = 'rgba(96, 192, 224, 0.4)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(centerX + 60, centerY);
+            ctx.lineTo(rightX - 40, centerY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        document.getElementById('nComponents').addEventListener('input', function(e) {
+            nComponents = parseInt(e.target.value);
+            document.getElementById('componentsValue').textContent = nComponents + ' 个';
+            draw();
+        });
+
+        document.getElementById('dataDim').addEventListener('input', function(e) {
+            document.getElementById('dimValue').textContent = e.target.value + ' 维';
+            generateData();
+            draw();
+        });
+
+        document.getElementById('sampleNum').addEventListener('input', function(e) {
+            document.getElementById('sampleValue').textContent = e.target.value;
+            generateData();
+            draw();
+        });
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('load', function() {
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>
