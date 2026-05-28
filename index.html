@@ -483,7 +483,6 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 16px;
         }
 
         .course-topic {
@@ -510,22 +509,6 @@
             display: flex;
             align-items: center;
             gap: 6px;
-        }
-
-        .course-progress { margin-top: 12px; }
-
-        .progress-bar-bg {
-            height: 6px;
-            background: rgba(10, 20, 40, 0.8);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-teal));
-            border-radius: 3px;
-            transition: width 1s ease-out;
         }
 
         .main-content {
@@ -785,6 +768,108 @@
             border-radius: 50%;
         }
 
+        .analysis-toggle-btn {
+            margin-top: 16px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(100, 200, 140, 0.2), rgba(80, 180, 120, 0.1));
+            border: 1px solid rgba(100, 200, 140, 0.4);
+            border-radius: 10px;
+            color: #80e0a0;
+            font-size: 14px;
+            font-family: 'Noto Sans SC', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .analysis-toggle-btn:hover {
+            background: linear-gradient(135deg, rgba(100, 200, 140, 0.3), rgba(80, 180, 120, 0.2));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(100, 200, 140, 0.2);
+        }
+
+        .analysis-toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .analysis-toggle-btn.active {
+            background: linear-gradient(135deg, rgba(100, 200, 140, 0.35), rgba(80, 180, 120, 0.25));
+            border-color: rgba(100, 200, 140, 0.6);
+        }
+
+        .analysis-toggle-btn .arrow {
+            transition: transform 0.3s;
+        }
+
+        .analysis-toggle-btn.active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .analysis-content {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(80, 140, 100, 0.15), rgba(60, 120, 80, 0.08));
+            border-radius: 12px;
+            border: 1px solid rgba(100, 200, 140, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .analysis-content.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .analysis-title {
+            font-size: 15px;
+            color: #80e0a0;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analysis-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(100, 200, 140, 0.15);
+        }
+
+        .analysis-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .analysis-question {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .analysis-answer {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            padding-left: 16px;
+            border-left: 3px solid rgba(100, 200, 140, 0.4);
+        }
+
         .ai-chat-box { padding: 16px; }
 
         #aiMessages {
@@ -899,52 +984,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-
-        .learn-stats { padding: 16px; }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(80, 120, 180, 0.15);
-        }
-
-        .stat-row:last-child { border-bottom: none; }
-
-        .stat-name { font-size: 14px; color: var(--text-secondary); }
-
-        .stat-num {
-            font-family: 'Orbitron', monospace;
-            font-size: 16px;
-            color: var(--accent-cyan);
-            font-weight: 600;
-        }
-
-        .progress-section { margin-top: 16px; }
-
-        .progress-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: rgba(10, 20, 40, 0.8);
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #20a060, #40c080);
-            border-radius: 3px;
-            transition: width 1s ease-out;
         }
 
         footer {
@@ -1168,40 +1207,6 @@
                         <button class="btn btn-main" style="width:100%;" onclick="showNoteModal()">+ 添加笔记</button>
                     </div>
                 </div>
-
-                <div class="panel-box">
-                    <div class="panel-head">
-                        <div class="panel-icon-box">📊</div>
-                        <h2 class="panel-name">学习统计</h2>
-                    </div>
-                    <div class="learn-stats">
-                        <div class="stat-row">
-                            <span class="stat-name">今日学习</span>
-                            <span class="stat-num">45 分钟</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">连续学习</span>
-                            <span class="stat-num">7 天</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">完成课程</span>
-                            <span class="stat-num">12 门</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">学习笔记</span>
-                            <span class="stat-num" id="notesCount">0 篇</span>
-                        </div>
-                        <div class="progress-section">
-                            <div class="progress-label">
-                                <span>总体进度</span>
-                                <span style="color:var(--accent-cyan);">68%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width:68%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1275,12 +1280,165 @@
         ];
 
         const courseData = [
-            { id: 'ai_math', title: '人工智能数学思维', icon: '🤖', desc: '从数学角度解析AI核心原理', topics: ['课程概述', '发展现状', '智能简史', '机器学习', 'DNN深度网络', '卷积神经网络'], progress: 75, lessons: 24 },
-            { id: 'data_struct', title: '数据结构与算法', icon: '📊', desc: '学习常用数据结构和算法', topics: ['C++基础', '栈与队列', '链表', '树与图', '查找与排序', '哈希表'], progress: 60, lessons: 32 },
-            { id: 'discrete_math', title: '离散数学', icon: '🔢', desc: '学习离散数学基础', topics: ['命题逻辑', '集合与关系', '图论', '树', '组合数学'], progress: 45, lessons: 20 },
-            { id: 'comp_systems', title: '计算机系统', icon: '💻', desc: '学习计算机系统底层原理', topics: ['信息表示', '浮点数', '机器指令', '内存层次', '链接', '异常与信号'], progress: 30, lessons: 18 },
-            { id: 'algorithms', title: '算法设计与分析', icon: '🧮', desc: '学习经典算法设计方法', topics: ['排序算法', '搜索算法', '动态规划', '贪心算法', '时间复杂度'], progress: 55, lessons: 28 }
+            { id: 'ai_math', title: '人工智能数学思维', icon: '🤖', desc: '从数学角度解析AI核心原理', topics: ['课程概述', '发展现状', '智能简史', '机器学习', 'DNN深度网络', '卷积神经网络'] },
+            { id: 'data_struct', title: '数据结构与算法', icon: '📊', desc: '学习常用数据结构和算法', topics: ['C++基础', '栈与队列', '链表', '树与图', '查找与排序', '哈希表'] },
+            { id: 'discrete_math', title: '离散数学', icon: '🔢', desc: '学习离散数学基础', topics: ['命题逻辑', '集合与关系', '图论', '树', '组合数学'] },
+            { id: 'comp_systems', title: '计算机系统', icon: '💻', desc: '学习计算机系统底层原理', topics: ['信息表示', '浮点数', '机器指令', '内存层次', '链接', '异常与信号'] },
+            { id: 'algorithms', title: '算法设计与分析', icon: '🧮', desc: '学习经典算法设计方法', topics: ['排序算法', '搜索算法', '动态规划', '贪心算法', '时间复杂度'] }
         ];
+
+        const exerciseAnalyses = {
+            ai_math: {
+                '课程概述': [
+                    { question: '总结本节内容的核心要点', answer: '人工智能数学思维课程的核心在于建立对AI算法的数学直觉。关键要点包括：1）线性代数基础：矩阵运算、向量空间、特征值分解；2）概率统计：条件概率、贝叶斯定理、分布函数；3）优化理论：梯度下降、牛顿法、凸优化。这些数学工具是理解机器学习和深度学习算法内部工作原理的基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '数学思维在AI实际应用中的作用：1）推荐系统：利用矩阵分解理解用户与物品的关系；2）自然语言处理：词向量 embedding 使用线性代数；3）计算机视觉：卷积操作本质是矩阵运算；4）强化学习：马尔可夫决策过程基于概率论。掌握数学思维能帮助我们更好地调参与优化模型。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '简单来说，AI的数学思维就像建造房子的蓝图：线性代数提供了"建筑材料"（向量、矩阵），概率论告诉我们"材料的质量分布"（不确定性），优化理论则是"施工方法"（如何一步步改进）。三者结合，才能构建出可靠的AI系统。' }
+                ],
+                '发展现状': [
+                    { question: '总结本节内容的核心要点', answer: 'AI发展现状的核心要点：1）大模型时代：GPT、BERT等预训练模型改变了NLP格局；2）多模态融合：视觉-语言-音频的统一理解；3）边缘AI：模型压缩、知识蒸馏让AI跑在设备端；4）可解释AI：SHAP、LIME等方法帮助理解模型决策；5）AI伦理：公平性、隐私保护成为重要议题。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '当前AI技术的商业应用：1）ChatGPT类应用：智能客服、内容创作、教育辅助；2）Stable Diffusion：AI绘画、设计自动化；3）自动驾驶：感知-决策-控制的完整链路；4）医疗AI：影像诊断、药物发现；5）金融风控：欺诈检测、信用评估。这些应用正在深刻改变各行各业。' },
+                    { question: '尝试用自己的话解释相关概念', answer: 'AI发展就像一场马拉松，目前我们已经跑过了机器学习、深度学习两个里程碑，正在向通用人工智能(AGI)迈进。每个阶段都有新的技术突破，但也面临新的挑战。理解发展历程能帮助我们更好地把握未来方向。' }
+                ],
+                '智能简史': [
+                    { question: '总结本节内容的核心要点', answer: 'AI发展简史的核心脉络：1）1950s-1960s：符号主义兴起，图灵测试提出，专家系统诞生；2）1980s-1990s：机器学习复苏，神经网络遇冷；3）2006年后：深度学习突破，ImageNet竞赛改变格局；4）2017年后：Transformer架构一统天下，大模型时代开启；5）未来：AGI成为终极目标。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '了解AI历史的意义：1）避免重复造轮子，很多问题历史上已有解决方案；2）理解技术局限性，每个方法都有其适用边界；3）把握发展趋势，在正确的方向上投入；4）培养科研思维，学习从问题到解决方案的演进过程。' },
+                    { question: '尝试用自己的话解释相关概念', answer: 'AI发展就像人类探索未知世界：先是符号主义的"理性派"，试图用规则描述一切；后来是连接主义的"经验派"，让机器从数据中学习；现在两者融合，走向更通用的智能。理解这段历史，能帮助我们理解当前各种AI技术的起源和演进。' }
+                ],
+                '机器学习': [
+                    { question: '总结本节内容的核心要点', answer: '机器学习的三大范式：1）监督学习：有标签数据，学习输入到输出的映射（如分类、回归）；2）无监督学习：无标签，发现数据内在结构（如聚类、降维）；3）强化学习：通过与环境交互学习最优策略。核心思想是从数据中自动提取模式和规律，而非人工编写规则。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '机器学习的应用领域：1）电商推荐：根据用户行为预测喜好；2）金融风控：信用评分、欺诈检测；3）医疗诊断：影像分析、疾病预测；4）自然语言处理：机器翻译、情感分析；5）计算机视觉：人脸识别、目标检测。每个领域都有独特的ML pipeline。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '机器学习可以类比为"照镜子学穿衣"：监督学习就像有老师指导的穿搭课（有正确答案）；无监督学习就像自己观察时尚杂志找出搭配规律（无答案）；强化学习就像不断尝试不同穿搭根据他人反馈调整（试错学习）。' }
+                ],
+                'DNN深度网络': [
+                    { question: '总结本节内容的核心要点', answer: '深度神经网络的核心要素：1）层次结构：多层神经元逐层提取特征；2）非线性变换：激活函数（如ReLU）引入非线性；3）反向传播：通过梯度下降优化网络参数；4）表示学习：自动学习数据的多层次表示。深度网络的核心优势是能从原始数据中自动学习有用的特征表示。' },
+                    { question: '思考该知识在实际中的应用场景', answer: 'DNN的典型应用：1）语音识别：声学模型使用深度 RNN/Transformer；2）推荐系统：深度学习模型捕捉用户复杂偏好；3）自然语言理解：BERT等预训练模型微调；4）搜索排序：深度语义匹配模型。深度网络的优势在于处理非结构化数据（图像、文本、语音）。' },
+                    { question: '尝试用自己的话解释相关概念', answer: 'DNN的工作原理可以想象成层层过滤：就像我们识别一只猫，眼睛→轮廓→纹理→整体，一层比一层抽象。每一层神经元都在对信息进行加工和提炼，最终得到高层语义表示。这就是"深度"的意义——多层次的理解。' }
+                ],
+                '卷积神经网络': [
+                    { question: '总结本节内容的核心要点', answer: 'CNN的核心原理：1）局部连接：每个神经元只连接局部区域（感受野）；2）权重共享：同一卷积核的参数在整张图上共享；3）平移不变性：无论目标在哪里，卷积核都能检测到相同特征；4）层次结构：浅层检测边缘，深层检测复杂模式。这些设计让CNN高效处理图像数据。' },
+                    { question: '思考该知识在实际中的应用场景', answer: 'CNN的广泛应用：1）图像分类：ResNet、EfficientNet等 backbone；2）目标检测：YOLO、Faster R-CNN；3）语义分割：U-Net、DeepLab；4）人脸识别：FaceNet、ArcFace；5）医学影像：CT/MRI分析。CNN是计算机视觉的基础架构。' },
+                    { question: '尝试用自己的话解释相关概念', answer: 'CNN就像用不同滤镜检查图片：第一个滤镜专门找边缘，第二个找纹理，第三个找形状...每过一层，信息的"语义层次"就提升一点。就像专家鉴定一幅画，先看笔触（低层），再看风格（中层），最后判断真伪（高层）。' }
+                ]
+            },
+            data_struct: {
+                'C++基础': [
+                    { question: '总结本节内容的核心要点', answer: 'C++基础的核心要点：1）指针与引用：理解内存地址和间接访问；2）类和对象：面向对象编程的封装、继承、多态；3）STL容器：vector、list、map等标准库的使用；4）内存管理：new/delete、RAII原则。这些是学习数据结构和算法的编程基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: 'C++在实际工程中的应用：1）系统编程：操作系统、游戏引擎；2）高频交易：低延迟系统；3）嵌入式开发：资源受限环境；4）科学计算：性能关键应用。C++的零成本抽象让你既能写高层代码，又能控制底层细节。' },
+                    { question: '尝试用自己的话解释相关概念', answer: 'C++的指针就像房间的门牌号，通过它你可以找到任何数据。引用则是房间的另一个名字。指针可以改变指向（换房间），引用一旦绑定就不能改变（固定房间）。理解这个比喻，就能理解C++的内存操作。' }
+                ],
+                '栈与队列': [
+                    { question: '总结本节内容的核心要点', answer: '栈和队列的核心特点：1）栈（LIFO）：后进先出，只允许在一端操作，如叠盘子；2）队列（FIFO）：先进先出，一端入另一端出，如排队买票；3）实现方式：可以用数组或链表；4）时间复杂度：入栈/出栈、入队/出队都是O(1)。这两种是基础但重要的数据结构。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '栈的应用：函数调用栈、表达式求值、括号匹配、撤销操作、历史记录。队列的应用：任务调度、广度优先搜索、消息队列、打印机队列。理解这些应用能帮助你选择合适的数据结构解决实际问题。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '栈就像邮箱，只从上面放取信件——最后放进去的最先被取出。队列就像排队买奶茶——先来的人先拿到。记住"栈是倒过来的队列"这个口诀，就能区分它们的特性。' }
+                ],
+                '链表': [
+                    { question: '总结本节内容的核心要点', answer: '链表的核心特点：1）节点结构：数据+指针；2）动态性：不需要连续内存，容量可变；3）操作特点：插入/删除O(1)，但访问需要O(n)；4）类型：单链表、双链表、循环链表。链表的优势在于频繁的插入删除操作。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '链表的应用：1）操作系统的内存管理；2）浏览器的历史记录（前进/后退）；3）音乐播放器的播放列表；4）LRU缓存实现；5）哈希表的链地址法解决冲突。链表是理解更复杂数据结构的基础。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '链表就像寻宝游戏：每个线索卡片告诉你下一个宝藏在哪里，直到找到最后一个（NULL）。不像数组的连续房间，链表可以分散在各处，但只能按顺序找。这种"跳跃式"存储让插入删除很快，但随机访问很慢。' }
+                ],
+                '树与图': [
+                    { question: '总结本节内容的核心要点', answer: '树的核心概念：1）层次结构：根节点、子节点、叶节点；2）二叉树：每个节点最多两个子节点；3）遍历：前序、中序、后序、层序；4）特殊树：BST、AVL、红黑树、B树。图的节点间可以有多个连接。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '树的应用：1）文件系统目录结构；2）XML/HTML的DOM树；3）数据库索引（B+树）；4）表达式树；5）霍夫曼编码。图的應用：1）社交网络关系；2）地图导航；3）任务调度；4）电路网络。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '树就像家族族谱：每个人只有一个父亲（根节点除外），但可能有多个孩子。二叉树是严格的计划生育，每对父母最多两个孩子。图则像城市交通图，道路可以双向、多条连接，更复杂但也更真实。' }
+                ],
+                '查找与排序': [
+                    { question: '总结本节内容的核心要点', answer: '排序算法：1）O(n²)：冒泡、选择、插入排序，简单但慢；2）O(n log n)：快速、归并、堆排序，常用高效算法；3）O(n)：计数、桶、基数排序，适合特殊数据。查找算法：1）顺序查找O(n)；2）二分查找O(log n)，但需要有序。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '排序的应用：1）数据库 ORDER BY；2）文件整理；3）排行榜；4）数据预处理。查找的应用：1）字典查找；2）数据库索引查询；3）编译器符号表；4）拼写检查。排序和查找是计算机科学最基础的问题。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '排序就像整理书架：冒泡排序是相邻两本比较交换，像相邻气泡冒上去；快速排序是选一本书当"中间人"分区；归并排序是先分小组整理再合并。查找就像在字典里找词，二分查找每次排除一半。' }
+                ],
+                '哈希表': [
+                    { question: '总结本节内容的核心要点', answer: '哈希表的核心原理：1）哈希函数：将键转换为数组索引；2）冲突处理：链地址法（链表）、开放地址法；3）负载因子：存储数量/槽位，影响性能；4）复杂度：理想情况下查找、插入、删除都是O(1)。哈希表是效率极高的键值存储结构。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '哈希表的应用：1）缓存系统（Redis等）；2）去重检测；3）字符串查找（Rabin-Karp）；4）编译器符号表；5）区块链的默克尔树。几乎所有需要快速键值查询的场景都离不开哈希表。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '哈希表就像图书管理员的编码系统：每本书根据书名的某种规则被分配到特定书架。同一规则可能让不同书分配到同一位置（冲突），这时就需要排队或开辟新区域。好的哈希函数让分配更均匀，查找更快。' }
+                ]
+            },
+            discrete_math: {
+                '命题逻辑': [
+                    { question: '总结本节内容的核心要点', answer: '命题逻辑的核心概念：1）命题：具有真假值的陈述句；2）联结词：∧（且）、∨（或）、¬（非）、→（蕴含）、↔（等价）；3）真值表：描述命题间关系；4）等价式：德摩根律、双重否定律等；5）推理规则：肯定前件、否定后件。这是数理逻辑的基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '命题逻辑的应用：1）数字电路设计：逻辑门实现命题运算；2）程序语言中的布尔表达式；3）数据库查询的AND/OR/NOT；4）AI中的命题推理；5）数学证明的基础。命题逻辑让我们能够精确表达和推理命题关系。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '命题逻辑就像搭积木：每个命题是一个积木块（真或假），联结词是胶水，把积木粘成不同形状。"A→B"意味着如果A成立，B就必须成立。这就像"如果明天下雨，地面就会湿"这样的因果关系。' }
+                ],
+                '集合与关系': [
+                    { question: '总结本节内容的核心要点', answer: '集合论的核心概念：1）集合：确定对象的无序聚集；2）运算：∪（并）、∩（交）、−（差）、′（补）；3）关系：集合笛卡尔积的子集；4）特殊关系：等价关系（自反、对称、传递）、偏序关系。集合论是现代数学的基础语言。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '集合论的应用：1）数据库：关系代数基于集合操作；2）社交网络：好友关系是集合；3）搜索引擎：文档与查询的匹配；4）机器学习：样本空间、特征空间；5）程序设计：集合类型、过滤操作。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '集合就像一个袋子，里面装着一类东西。并集是两个袋子东西合一起，交集是共同拥有的，差集是减去共有的。关系则是描述袋子里的东西之间如何"配对"，比如"同班同学"就是学生集合上的一个关系。' }
+                ],
+                '图论': [
+                    { question: '总结本节内容的核心要点', answer: '图论的核心概念：1）图：顶点集+边集；2）路径、回路、连通性；3）特殊图：树（无回路连通图）、二分图、平面图；4）算法：最短路径、最小生成树、欧拉回路；5）应用：网络流、匹配问题。图论是离散数学的重要分支。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '图论的应用：1）社交网络分析：朋友关系、六度分隔；2）导航系统：最短路径算法；3）任务调度：拓扑排序；4）电路设计：网络流；5）生物信息学：蛋白质交互网络。图论提供了一种强大的建模工具。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '图就像城市地图：每个地点是顶点，道路是边。两地之间的路线就是路径，能绕一圈回到原点的叫回路。树是连接所有点但没有环路的特殊图，就像一棵倒置的树，树枝不会形成圈。' }
+                ],
+                '树': [
+                    { question: '总结本节内容的核心要点', answer: '树结构的核心特性：1）树的定义：n个结点，n-1条边，连通无回路；2）二叉树：每个结点最多两个子节点；3）遍历：深度优先（前/中/后序）、广度优先（层序）；4）BST：左小右大的二叉搜索树；5）树的存储：顺序存储、链式存储。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '树的应用：1）文件系统：目录结构；2）XML/HTML解析：DOM树；3）数据库索引：B+树；4）编译器：语法树；5）游戏AI：决策树。层次化的数据结构天然适合表示包含关系和顺序关系的信息。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '树就像族谱：最上面是祖先（根），下面是后代。族谱的每一代就是一层，同一个人下面的两个孩子就是左子树和右子树。从根到某个人的路径长度就是树的深度，所有叶子中最长的路径长度就是树的高度。' }
+                ],
+                '组合数学': [
+                    { question: '总结本节内容的核心要点', answer: '组合数学的核心内容：1）计数原理：加法原理、乘法原理；2）排列：P(n,r) = n!/(n-r)!；3）组合：C(n,r) = n!/(r!(n-r)!)；4）递推关系：斐波那契数列等；5）容斥原理：解决包含-排除问题。组合数学研究"数数"的技术。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '组合数学的应用：1）概率计算：骰子、扑克概率；2）算法复杂度分析：计数操作次数；3）密码学：密钥空间大小；4）数据库：查询结果计数；5）软件开发：测试用例数量估算。组合数学是量化分析的基础工具。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '组合数学就像计算开密码锁的可能组合数。排列考虑顺序（密码的位数有顺序），组合不考虑顺序（选哪些数字）。乘法原理是分步完成一件事（每步方法相乘），加法原理是分类完成一件事（每类方法相加）。' }
+                ]
+            },
+            comp_systems: {
+                '信息表示': [
+                    { question: '总结本节内容的核心要点', answer: '信息表示的核心概念：1）二进制：计算机只用0和1；2）进位制：二进制、八进制、十六进制；3）编码：ASCII、Unicode；4）位运算：与、或、非、异或、移位；5）补码：解决负数表示问题。理解信息表示是理解计算机的基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '信息表示的应用：1）压缩算法：霍夫曼编码；2）加密技术：位运算实现加密；3）网络协议：数据打包解析；4）图像处理：颜色表示（RGB）；5）音频编码：采样量化。掌握二进制思维对底层编程至关重要。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '信息表示就像用积木搭房子：每个积木只有两种状态（有/无），但无数个积木组合可以表示任何信息。二进制是计算机的"语言"，就像我们用10个数字和字母表示所有文字一样。' }
+                ],
+                '浮点数': [
+                    { question: '总结本节内容的核心要点', answer: '浮点数的核心原理：1）IEEE 754标准：符号位+指数位+尾数位；2）精度：单精度32位、双精度64位；3）特殊值：+∞、-∞、NaN；4）误差：舍入误差、浮点精度问题；5）比较：浮点数比较要小心精度。浮点数不能精确表示所有小数。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '浮点数的应用：1）科学计算：物理模拟、数值分析；2）图形处理：坐标变换；3）机器学习：梯度计算；4）游戏开发：3D坐标。理解浮点数的限制能避免很多bug，比如比较0.1+0.2==0.3的陷阱。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '浮点数就像科学计数法：123.456 = 1.23456 × 10²。IEEE 754用类似方式表示实数。但就像分数1/3只能近似一样，很多小数也无法精确表示。精度限制导致0.1+0.2≈0.300000004，这就是浮点误差。' }
+                ],
+                '机器指令': [
+                    { question: '总结本节内容的核心要点', answer: '机器指令的核心概念：1）指令格式：操作码+操作数；2）指令类型：数据传送、算术逻辑、控制转移；3）寻址方式：立即寻址、直接寻址、间接寻址、寄存器寻址；4）指令周期：取指-译码-执行-存储；5）RISC vs CISC。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '机器指令的应用：1）编译器优化：选择高效指令序列；2）反汇编分析：理解程序行为；3）性能优化：减少指令数；4）安全分析：检测恶意代码；5）嵌入式开发：编写底层驱动。理解指令有助于理解程序执行。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '机器指令就像做菜的步骤说明书：操作码是"切"、"炒"、"煮"，操作数是"土豆"、"3个"、"5分钟"。CPU按照指令一步步执行，就像厨师按步骤做菜。不同CPU有不同指令集，就像不同厨房有不同工具。' }
+                ],
+                '内存层次': [
+                    { question: '总结本节内容的核心要点', answer: '内存层次的核心概念：1）层次结构：寄存器→缓存→主存→磁盘；2）局部性原理：时间局部性、空间局部性；3）缓存机制：直接映射、组相联、全相联；4）缓存策略：LRU、FIFO；5）性能影响：缓存命中/未命中。理解内存层次是性能优化的基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '内存层次的应用：1）程序性能优化：利用局部性提升缓存命中率；2）数据结构设计：数组vs链表的选择；3）系统调优：配置缓存大小；4）数据库优化：索引和数据布局；5）游戏开发：资源预加载。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '内存层次就像图书馆：寄存器是桌上的书（最快），缓存是手边的书架，主存是图书馆的书架，磁盘是仓库。越近越快但越小。CPU会预测你要用的书，提前从仓库搬到书架，这就是预取。' }
+                ],
+                '链接': [
+                    { question: '总结本节内容的核心要点', answer: '链接的核心概念：1）静态链接：链接器合并目标文件，生成可执行文件；2）动态链接：运行时加载共享库；3）符号解析：函数和变量地址绑定；4）重定位：调整相对地址；5）符号表：记录导出和导入的符号。链接是构建完整程序的关键步骤。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '链接的应用：1）代码复用：使用标准库；2）插件系统：动态加载模块；3）软件更新：只更新部分库；4）内存优化：共享库节省空间；5）解决命名冲突：命名空间。理解链接能帮助调试"undefined reference"等错误。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '链接就像组装宜家家具：每个部件（目标文件）有说明书（符号表），告诉你要用哪个螺丝（符号）。静态链接是把所有部件和工具打包一起发货（可执行文件），动态链接是只给说明书，实际工具（共享库）在电脑里已经安装好了。' }
+                ],
+                '异常与信号': [
+                    { question: '总结本节内容的核心要点', answer: '异常与信号的核心概念：1）异常类型：中断、陷阱、故障、终止；2）异常处理：向量表、优先级；3）信号：Unix系统的软件中断；4）信号处理：默认处理、忽略、捕获；5）上下文切换：保存/恢复程序状态。异常和信号是处理突发事件和错误的重要机制。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '异常与信号的应用：1）错误处理：try-catch、异常抛出；2）系统监控：心跳检测、超时处理；3）调试：断点、单步执行；4）进程通信：kill命令发送信号；5）资源管理：清理函数。理解异常机制能写出更健壮的程序。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '异常就像突然响起的火警：当火灾发生（异常），CPU停止当前工作去处理消防（异常处理程序）。信号则是手机通知，操作系统告诉你"有新的微信消息"（信号），你可以选择立即查看、稍后处理或忽略。' }
+                ]
+            },
+            algorithms: {
+                '排序算法': [
+                    { question: '总结本节内容的核心要点', answer: '排序算法的核心分类：1）O(n²)算法：冒泡、选择、插入，简单但慢；2）O(n log n)算法：快速排序（分治）、归并排序（分治）、堆排序（树形）；3）O(n)算法：计数、桶、基数排序（需要特殊条件）；4）稳定性：相等元素相对位置是否保持。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '排序的应用：1）数据库ORDER BY：高效查询；2）排行榜：快速找出Top K；3）搜索优化：二分查找需要有序数组；4）数据预处理：便于后续处理；5）统计计算：中位数、分位数。选择合适排序算法要考虑数据规模和特征。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '排序算法就像整理书架：冒泡排序是相邻比较慢慢冒上去；选择排序是每次选最小的放前面；插入排序是像打牌时摸牌插入；快速排序是选个标准分区整理；归并排序是先分小组整理再合并；堆排序是用优先队列的思想。' }
+                ],
+                '搜索算法': [
+                    { question: '总结本节内容的核心要点', answer: '搜索算法的核心类型：1）线性搜索：O(n)，适用于无序数据；2）二分搜索：O(log n)，要求有序；3）哈希搜索：O(1)平均，需要哈希表；4）深度优先搜索(DFS)：栈实现，回溯搜索；5）广度优先搜索(BFS)：队列实现，层次搜索。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '搜索的应用：1）数据库索引：B+树加速查询；2）编译器：符号表查找；3）游戏：寻路算法（A*）；4）网络爬虫：遍历网页；5）推荐系统：协同过滤中的近邻搜索。不同场景选择不同搜索策略。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '搜索就像在字典里找词：线性搜索是逐页翻，二分搜索是打开大概位置再折半，DFS是深挖一条线再回退，BFS是先看周围再扩散。选择哪种方法取决于数据结构和你要找的东西的特征。' }
+                ],
+                '动态规划': [
+                    { question: '总结本节内容的核心要点', answer: '动态规划的核心要素：1）最优子结构：问题的最优解包含子问题的最优解；2）重叠子问题：子问题被重复计算；3）状态定义：dp[i]表示什么；4）转移方程：dp[i]如何从dp[j]推导；5）边界条件：初始状态。记忆化递归或自底向上实现。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '动态规划的应用：1）最短路径：Dijkstra、Bellman-Ford；2）字符串处理：编辑距离、最长公共子序列；3）资源分配：背包问题；4）序列对比：DNA序列比对；5）博弈论：棋盘游戏。DP是优化问题的强大工具。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '动态规划就像算账本：当你算第100天的账时，不是从第1天开始重算，而是记住第99天的账再加上今天的。这个"记住"就是记忆化，"加今天的"就是转移方程。避免重复计算就是DP的核心思想。' }
+                ],
+                '贪心算法': [
+                    { question: '总结本节内容的核心要点', answer: '贪心算法的核心特征：1）局部最优选择：每步选择当前最优；2）不回溯：一旦做出选择不改变；3）适用条件：贪心选择性质+最优子结构；4）证明难度：需要证明能得到全局最优；5）效率：通常O(n)或O(n log n)。贪心简单但适用范围有限。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '贪心算法的应用：1）最小生成树：Prim、Kruskal；2）单源最短路：Dijkstra；3）霍夫曼编码：最优前缀码；4）活动选择：安排最多不冲突活动；5）找零钱：常用面值贪心。贪心算法适用于有"最优前缀"性质的问题。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '贪心就像在迷宫里总是走看起来最接近出口的方向：它不全局考虑，而是只看眼前。选择这个方向后就不再回头。虽然不一定能找到最优路线，但效率很高。有些问题用贪心能得到最优解（需要证明），有些则不行。' }
+                ],
+                '时间复杂度': [
+                    { question: '总结本节内容的核心要点', answer: '时间复杂度的核心概念：1）大O表示法：上界（最坏情况）；2）大Ω表示法：下界（最好情况）；3）大Θ表示法：紧界；4）分析方法：循环、主定理、递归树；5）常见复杂度：O(1)、O(log n)、O(n)、O(n log n)、O(n²)、O(2^n)、O(n!)。复杂度分析是评估算法效率的理论基础。' },
+                    { question: '思考该知识在实际中的应用场景', answer: '复杂度分析的应用：1）算法选型：根据数据规模选择算法；2）性能优化：定位瓶颈；3）系统设计：评估能否扩展；4）面试考察：算法能力体现；5）理论计算机科学：P vs NP问题。理解复杂度能帮助写出更高效的代码。' },
+                    { question: '尝试用自己的话解释相关概念', answer: '时间复杂度就像估算出行时间：O(1)是家门口直达，O(log n)是每站都让路程减半的公交，O(n)是普通开车，O(n²)是绕路跑了两圈，O(2^n)是尝试所有可能的路线。我们关心的是当数据量很大时，算法性能如何。' }
+                ]
+            }
+        };
 
         const topicDetails = {
             '线性回归': { level: 1, definition: '线性回归是最基础的机器学习算法之一。它的目标是找到一条最佳直线（或超平面），用来描述因变量和自变量之间的线性关系。', intuition: '想象你在散点图中画一条线，让所有点到这条线的距离平方和最小。这条线就是最佳拟合线。', formula: 'ŷ = w₁x₁ + w₂x₂ + ... + wₙxₙ + b', loss: '均方误差: J(w,b) = (1/n) Σ(yᵢ - ŷᵢ)²', scenarios: ['房价预测', '销量预测', '成绩预测', '温度预测'], related: ['逻辑回归', '岭回归', 'Lasso回归', '多项式回归'], history: '1805年由法国数学家勒让德发表，后由高斯完善，是整个统计学和机器学习的基石。', limitations: ['只能拟合线性关系', '对异常值敏感', '容易过拟合'], stats: { accuracy: 92, complexity: 'O(n)', usage: '广泛' } },
@@ -1326,15 +1484,7 @@
                         ${course.topics.slice(0, 4).map(t => `<span class="course-topic">${t}</span>`).join('')}
                         ${course.topics.length > 4 ? `<span class="course-topic">+${course.topics.length - 4}</span>` : ''}
                     </div>
-                    <div class="course-progress">
-                        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                            <span style="font-size:12px;color:var(--text-muted);">学习进度</span>
-                            <span style="font-size:12px;color:var(--accent-cyan);">${course.progress}%</span>
-                        </div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${course.progress}%"></div></div>
-                    </div>
                     <div class="course-meta">
-                        <span class="course-meta-item">📚 ${course.lessons} 节课</span>
                         <span class="course-meta-item">📑 ${course.topics.length} 章节</span>
                     </div>`;
                 el.onclick = () => showCourseDetail(course);
@@ -1420,15 +1570,22 @@
                         <div class="related-topics">${course.topics.map(t => `<span class="related-tag" onclick="showTopicContent('${course.id}', '${t}')">${t}</span>`).join('')}</div>
                     </div>
                     <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-value" style="color:var(--level-1);">${course.lessons}</div><div class="stat-label">总课时</div></div>
-                        <div class="stat-card"><div class="stat-value" style="color:var(--accent-cyan);">${course.progress}%</div><div class="stat-label">完成进度</div></div>
-                        <div class="stat-card"><div class="stat-value" style="color:var(--accent-purple);">${course.topics.length}</div><div class="stat-label">章节数</div></div>
-                    </div>
-                    <div class="progress-section">
-                        <div class="progress-label"><span>学习进度</span><span style="color:var(--accent-cyan);">${course.progress}%</span></div>
-                        <div class="progress-bar"><div class="progress-fill" style="width:${course.progress}%"></div></div>
+                        <div class="stat-card"><div class="stat-value" style="color:var(--accent-cyan);">${course.topics.length}</div><div class="stat-label">章节数</div></div>
                     </div>
                 </div>`;
+        }
+
+        function toggleAnalysis() {
+            const btn = document.querySelector('.analysis-toggle-btn');
+            const content = document.querySelector('.analysis-content');
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                btn.classList.remove('active');
+            } else {
+                content.classList.add('show');
+                btn.classList.add('active');
+            }
         }
 
         function showTopicContent(courseId, topic) {
@@ -1472,6 +1629,15 @@
                     '时间复杂度': '时间复杂度分析衡量算法效率，用O()表示渐进上界。'
                 }
             };
+
+            const analyses = exerciseAnalyses[courseId]?.[topic] || [];
+            const analysisHtml = analyses.map(a => `
+                <div class="analysis-item">
+                    <div class="analysis-question">❓ ${a.question}</div>
+                    <div class="analysis-answer">💡 ${a.answer}</div>
+                </div>
+            `).join('');
+
             const content = contentMap[courseId]?.[topic] || '该内容正在整理中...';
             document.getElementById('contentDetail').innerHTML = `
                 <div class="content-card">
@@ -1484,6 +1650,13 @@
                             <li class="try-item">思考该知识在实际中的应用场景</li>
                             <li class="try-item">尝试用自己的话解释相关概念</li>
                         </ul>
+                        <button class="analysis-toggle-btn" onclick="toggleAnalysis()">
+                            📖 查看习题解析 <span class="arrow">▼</span>
+                        </button>
+                        <div class="analysis-content">
+                            <div class="analysis-title">📚 习题解析</div>
+                            ${analysisHtml}
+                        </div>
                     </div>
                 </div>`;
         }
