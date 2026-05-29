@@ -1178,22 +1178,6 @@
             <div class="right-panel">
                 <div class="panel-box">
                     <div class="panel-head">
-                        <div class="panel-icon-box">🤖</div>
-                        <h2 class="panel-name">AI智能辅导</h2>
-                    </div>
-                    <div class="ai-chat-box">
-                        <div id="aiMessages">
-                            <div class="ai-message ai-message-bot">🤖 您好！我是您的AI学习助手，有什么问题可以问我~</div>
-                        </div>
-                        <div class="ai-input-area">
-                            <input type="text" id="aiInput" class="input" placeholder="输入问题，按Enter发送..." onkeydown="if(event.keyCode===13)sendAIMessage()">
-                            <button class="btn btn-main" onclick="sendAIMessage()">发送</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel-box">
-                    <div class="panel-head">
                         <div class="panel-icon-box">📝</div>
                         <h2 class="panel-name">学习笔记</h2>
                     </div>
@@ -1500,20 +1484,25 @@
             nodes.forEach((node, i) => {
                 const data = knowledgeNodes[i];
                 if (category === 'all' || data.category === category) {
-                    node.style.display = 'block';
+                    node.style.display = '';
                     node.style.animation = 'fadeIn 0.5s ease-out forwards';
                 } else { node.style.display = 'none'; }
             });
         }
 
         function filterByLevel(level) {
+            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+            document.querySelector('.category-tag:nth-child(1)').classList.add('active');
+            const targetLevel = level === 'all' ? 'all' : parseInt(level);
             const nodes = document.querySelectorAll('.graph-node');
             nodes.forEach((node, i) => {
                 const data = knowledgeNodes[i];
-                if (level === 'all' || data.level === level) {
-                    node.style.display = 'block';
+                if (targetLevel === 'all' || data.level === targetLevel) {
+                    node.style.display = '';
                     node.style.animation = 'fadeIn 0.5s ease-out forwards';
-                } else { node.style.display = 'none'; }
+                } else { 
+                    node.style.display = 'none'; 
+                }
             });
         }
 
@@ -1753,19 +1742,6 @@
             container.innerHTML = filtered.map(n => `<div class="note-item"><div class="note-title">${n.title}</div><div class="note-content">${n.body || '无内容'}</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${n.time}</div></div>`).join('');
         }
         function updateNotesCount() { document.getElementById('notesCount').textContent = `${notes.length} 篇`; }
-        function sendAIMessage() {
-            const input = document.getElementById('aiInput'); const msg = input.value.trim();
-            if (!msg) return;
-            const messages = document.getElementById('aiMessages');
-            messages.innerHTML += `<div class="ai-message ai-message-user"><strong>你：</strong>${msg}</div>`;
-            input.value = ''; messages.scrollTop = messages.scrollHeight;
-            setTimeout(() => {
-                const replies = ['这是一个很好的问题！让我为你详细解答...', '我来帮你分析这个概念。首先，我们需要理解...', '这个知识点确实很重要，让我从基础开始讲起...', '好的，我来为你解释一下这个问题的关键点...', '这个问题涉及到多个方面，让我逐一为你说明...'];
-                const reply = replies[Math.floor(Math.random() * replies.length)];
-                messages.innerHTML += `<div class="ai-message ai-message-bot"><strong>🤖 AI助手：</strong>${reply}</div>`;
-                messages.scrollTop = messages.scrollHeight;
-            }, 800);
-        }
         function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
 
         document.addEventListener('DOMContentLoaded', () => { initGraph(); initCourses(); renderNotes(); });
