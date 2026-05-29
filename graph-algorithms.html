@@ -8,61 +8,281 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&family=Fira+Code:wght@300;400;500&display=swap');
+        
         .katex { font-size: 1.1em; }
-        :root { --bg-primary: #0a0e18; --bg-secondary: #111a28; --bg-card: rgba(30, 40, 60, 0.7); --text-primary: #e0f0ff; --text-secondary: #a0c0e0; --text-muted: #6080a0; --level-color: #80a0e0; --border-subtle: rgba(80, 120, 180, 0.3); }
+        
+        :root { 
+            --bg-primary: #0a0e18; 
+            --bg-secondary: #111a28; 
+            --bg-card: rgba(30, 40, 60, 0.7); 
+            --text-primary: #e0f0ff; 
+            --text-secondary: #a0c0e0; 
+            --text-muted: #6080a0; 
+            --level-color: #80a0e0; 
+            --border-subtle: rgba(80, 120, 180, 0.3);
+            --code-bg: #0d1117;
+            --code-border: #304060;
+        }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%); color: var(--text-primary); font-family: 'Noto Sans SC', 'Segoe UI', sans-serif; min-height: 100vh; line-height: 1.8; -webkit-font-smoothing: antialiased; font-weight: 300; }
+        
+        body { 
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%); 
+            color: var(--text-primary); 
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif; 
+            min-height: 100vh; 
+            line-height: 1.8; 
+            -webkit-font-smoothing: antialiased; 
+            font-weight: 300; 
+        }
+        
         ::selection { background: rgba(128, 160, 224, 0.3); color: #fff; }
+        
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
         ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #6080c0); border-radius: 4px; }
+        
         .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; padding: 8px 16px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; margin-bottom: 30px; transition: all 0.3s; }
+        
+        .back-btn { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 14px; 
+            padding: 8px 16px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border-radius: 20px; 
+            margin-bottom: 30px; 
+            transition: all 0.3s; 
+        }
+        
         .back-btn:hover { color: var(--level-color); background: rgba(128, 160, 224, 0.1); }
+        
         .page-header { text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid var(--border-subtle); }
-        .level-badge { display: inline-block; padding: 6px 16px; background: rgba(128, 160, 224, 0.15); border: 1px solid rgba(128, 160, 224, 0.4); border-radius: 20px; font-size: 12px; color: var(--level-color); margin-bottom: 15px; letter-spacing: 1px; font-weight: 300; }
+        
+        .level-badge { 
+            display: inline-block; 
+            padding: 6px 16px; 
+            background: rgba(128, 160, 224, 0.15); 
+            border: 1px solid rgba(128, 160, 224, 0.4); 
+            border-radius: 20px; 
+            font-size: 12px; 
+            color: var(--level-color); 
+            margin-bottom: 15px; 
+            letter-spacing: 1px; 
+            font-weight: 300; 
+        }
+        
         .page-title { font-size: 48px; font-weight: 400; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 4px; }
+        
         .page-subtitle { font-size: 18px; color: var(--text-muted); font-weight: 300; }
-        .section { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 35px; margin-bottom: 30px; backdrop-filter: blur(10px); }
+        
+        .section { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: 20px; 
+            padding: 35px; 
+            margin-bottom: 30px; 
+            backdrop-filter: blur(10px); 
+        }
+        
         .section-title { font-size: 22px; color: var(--level-color); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
+        
         .section-icon { font-size: 24px; }
+        
         .definition-text { font-size: 16px; color: var(--text-secondary); line-height: 2; margin-bottom: 20px; font-weight: 300; }
-        .analogy-box { background: linear-gradient(135deg, rgba(128, 160, 224, 0.1), rgba(128, 160, 224, 0.05)); border-radius: 16px; padding: 28px; margin-top: 25px; border-left: 4px solid var(--level-color); }
+        
+        .analogy-box { 
+            background: linear-gradient(135deg, rgba(128, 160, 224, 0.1), rgba(128, 160, 224, 0.05)); 
+            border-radius: 16px; 
+            padding: 28px; 
+            margin-top: 25px; 
+            border-left: 4px solid var(--level-color); 
+        }
+        
         .analogy-title { font-size: 16px; color: var(--level-color); font-weight: 400; margin-bottom: 12px; }
+        
         .analogy-text { font-size: 15px; color: var(--text-secondary); line-height: 1.9; font-weight: 300; }
+        
         .formula-section { margin-bottom: 30px; }
+        
         .formula-section-title { font-size: 16px; color: var(--level-color); margin-bottom: 20px; font-weight: 400; padding-left: 10px; border-left: 3px solid var(--level-color); }
-        .formula-card { background: rgba(0, 0, 0, 0.45); border-radius: 14px; padding: 22px; margin-bottom: 16px; border-left: 4px solid var(--level-color); transition: all 0.3s ease; }
+        
+        .formula-card { 
+            background: rgba(0, 0, 0, 0.45); 
+            border-radius: 14px; 
+            padding: 22px; 
+            margin-bottom: 16px; 
+            border-left: 4px solid var(--level-color); 
+            transition: all 0.3s ease; 
+        }
+        
         .formula-card:hover { transform: translateX(5px); border-left-color: #a0c0f0; box-shadow: 0 8px 25px rgba(128, 160, 224, 0.15); }
+        
         .formula-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        
         .formula-label { font-size: 14px; color: var(--level-color); font-weight: 400; }
+        
         .formula-tag { font-size: 11px; padding: 4px 10px; background: rgba(128, 160, 224, 0.2); border-radius: 12px; color: #a0c0f0; font-weight: 300; }
+        
         .formula-content { font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 18px; color: #c8e4f8; line-height: 2.4; font-weight: 400; white-space: pre-wrap; letter-spacing: 0.5px; }
+        
         .formula-note { font-size: 13px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(80, 120, 180, 0.2); font-weight: 300; line-height: 1.7; }
+        
         .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+        
         .scenario-card { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s; }
+        
         .scenario-card:hover { border-color: var(--level-color); transform: translateY(-3px); }
+        
         .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        
         .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+        
         .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-        .related-card { background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05)); border: 1px solid rgba(128, 160, 224, 0.3); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.3s; display: block; }
+        
+        .related-card { 
+            background: linear-gradient(135deg, rgba(128, 160, 224, 0.15), rgba(128, 160, 224, 0.05)); 
+            border: 1px solid rgba(128, 160, 224, 0.3); 
+            border-radius: 12px; 
+            padding: 20px; 
+            text-decoration: none; 
+            transition: all 0.3s; 
+            display: block; 
+        }
+        
         .related-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(128, 160, 224, 0.25); border-color: var(--level-color); }
+        
         .related-card-title { font-size: 15px; color: var(--level-color); font-weight: 400; margin-bottom: 6px; }
+        
         .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+        
+        /* 可视化控制 */
         .viz-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .viz-btn { padding: 10px 16px; background: linear-gradient(135deg, #80a0e0, #6080c0); border: none; border-radius: 8px; color: #fff; font-weight: 500; cursor: pointer; transition: all 0.3s; font-family: inherit; font-size: 13px; }
+        
+        .viz-btn { 
+            padding: 10px 16px; 
+            background: linear-gradient(135deg, #80a0e0, #6080c0); 
+            border: none; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            font-family: inherit; 
+            font-size: 13px; 
+        }
+        
         .viz-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(128, 160, 224, 0.3); }
+        
         .viz-btn-active { background: linear-gradient(135deg, #a0e080, #80c060); }
-        .viz-canvas { background: rgba(0,0,0,0.3); border-radius: 12px; width: 100%; max-width: 900px; display: block; }
-        .viz-info { margin-top: 15px; font-size: 13px; color: var(--text-muted); }
+        
+        .viz-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        
+        .viz-canvas { 
+            background: rgba(10, 15, 25, 0.9); 
+            border-radius: 12px; 
+            width: 100%; 
+            max-width: 900px; 
+            display: block;
+            border: 1px solid rgba(128, 160, 224, 0.2);
+            margin: 0 auto;
+        }
+        
+        .viz-info { 
+            margin-top: 15px; 
+            font-size: 13px; 
+            color: var(--text-muted); 
+            text-align: center;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        
+        .viz-info.success { color: #a0e080; }
+        .viz-info.warning { color: #e0c080; }
+        
+        /* 代码块样式 */
+        .code-section {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--code-border);
+        }
+        
+        .code-lang {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        
+        .code-copy-btn {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: rgba(128, 160, 224, 0.2);
+            border: 1px solid rgba(128, 160, 224, 0.3);
+            border-radius: 6px;
+            color: var(--level-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .code-copy-btn:hover {
+            background: rgba(128, 160, 224, 0.3);
+        }
+        
+        .code-copy-btn.copied {
+            background: rgba(160, 224, 128, 0.2);
+            border-color: rgba(160, 224, 128, 0.5);
+            color: #a0e080;
+        }
+        
+        .code-content {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #d0e0f0;
+            white-space: pre;
+        }
+        
+        .code-comment { color: #6080a0; }
+        .code-keyword { color: #e080c0; }
+        .code-string { color: #a0e080; }
+        .code-function { color: #80c0e0; }
+        .code-variable { color: #e0c080; }
+        .code-number { color: #c080e0; }
+        
         footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; font-weight: 300; border-top: 1px solid var(--border-subtle); margin-top: 50px; }
-        @media (max-width: 768px) { .page-title { font-size: 32px; } }
+        
+        @media (max-width: 768px) { 
+            .page-title { font-size: 32px; } 
+            .viz-canvas { max-width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <a href="index.html" class="back-btn">← 返回知识图谱</a>
+        
         <div class="page-header">
             <div class="level-badge">Level 3 · 进阶</div>
             <h1 class="page-title">图算法</h1>
@@ -71,7 +291,7 @@
 
         <section class="section">
             <h2 class="section-title"><span class="section-icon">📖</span>什么是图算法？</h2>
-            <p class="definition-text">图算法是在图数据结构上执行的各种算法，用于解决路径查找、连通性检测、最短路径等问题。图由顶点和边组成，可以表示实体之间的关系。</p>
+            <p class="definition-text">图算法是在图数据结构上执行的各种算法，用于解决路径查找、连通性检测、最短路径等问题。图由顶点(V)和边(E)组成，可以表示实体之间的关系。</p>
             <div class="analogy-box">
                 <div class="analogy-title">💡 核心直觉</div>
                 <div class="analogy-text">想象一张城市地图，城市是顶点，道路是边。图算法就是帮你找到从一个城市到另一个城市的最短路径，或者判断两个城市是否连通。</div>
@@ -84,12 +304,13 @@
             <div class="viz-controls">
                 <button class="viz-btn viz-btn-active" id="bfsBtn" onclick="runBFS()">BFS 广度优先</button>
                 <button class="viz-btn" id="dfsBtn" onclick="runDFS()">DFS 深度优先</button>
+                <button class="viz-btn" id="dijkstraBtn" onclick="runDijkstra()">Dijkstra 最短路径</button>
                 <button class="viz-btn" onclick="resetGraph()">重置图</button>
             </div>
             
-            <canvas id="graphCanvas" class="viz-canvas" width="900" height="400"></canvas>
+            <canvas id="graphCanvas" class="viz-canvas" width="900" height="450"></canvas>
             
-            <div id="graphInfo" class="viz-info">点击画布添加节点 | 按住Shift点击拖动连接</div>
+            <div id="graphInfo" class="viz-info">点击画布添加节点 | 双击删除节点 | 拖拽节点移动 | 点击节点连接</div>
             
             <script>
                 const canvas = document.getElementById('graphCanvas');
@@ -100,10 +321,10 @@
                         this.x = x;
                         this.y = y;
                         this.id = id;
-                        this.adj = [];
                         this.visited = false;
                         this.dist = Infinity;
                         this.order = -1;
+                        this.color = '#80a0e0';
                     }
                 }
                 
@@ -112,13 +333,13 @@
                 let nodeIdCounter = 0;
                 let isDragging = false;
                 let dragNode = null;
-                let connectMode = false;
                 let connectFrom = null;
                 let traversalOrder = [];
                 let animationIndex = 0;
                 let animationTimer = null;
+                let currentAlgorithm = 'bfs';
                 
-                const nodeRadius = 25;
+                const nodeRadius = 28;
                 const colors = {
                     default: '#80a0e0',
                     visited: '#a0e080',
@@ -126,41 +347,60 @@
                     queued: '#e0c080',
                     edge: '#6080a0',
                     edgeVisited: '#a0e080',
-                    text: '#0a0e18'
+                    edgeActive: '#e08080',
+                    text: '#0a0e18',
+                    distance: '#c0e0f0'
                 };
                 
                 function draw() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     
                     edges.forEach(edge => {
-                        const from = nodes[edge.from];
-                        const to = nodes[edge.to];
+                        const from = nodes.find(n => n.id === edge.from);
+                        const to = nodes.find(n => n.id === edge.to);
+                        if (!from || !to) return;
                         
-                        ctx.strokeStyle = edge.visited ? colors.edgeVisited : colors.edge;
-                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = edge.active ? colors.edgeActive : 
+                                          edge.visited ? colors.edgeVisited : colors.edge;
+                        ctx.lineWidth = edge.active ? 3 : 2;
                         ctx.beginPath();
                         ctx.moveTo(from.x, from.y);
                         ctx.lineTo(to.x, to.y);
                         ctx.stroke();
+                        
+                        if (edge.weight && !edge.active) {
+                            ctx.fillStyle = colors.distance;
+                            ctx.font = '300 12px "Noto Sans SC"';
+                            ctx.textAlign = 'center';
+                            const midX = (from.x + to.x) / 2;
+                            const midY = (from.y + to.y) / 2;
+                            ctx.fillText(edge.weight, midX, midY - 5);
+                        }
                     });
                     
                     nodes.forEach(node => {
                         ctx.fillStyle = node.visited ? colors.visited : 
-                                        node.order >= 0 ? colors.current : colors.default;
+                                        node.color === colors.current ? colors.current : node.color;
                         ctx.beginPath();
                         ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
                         ctx.fill();
                         
                         ctx.fillStyle = colors.text;
-                        ctx.font = '500 14px "Noto Sans SC"';
+                        ctx.font = '500 16px "Noto Sans SC"';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
                         ctx.fillText(node.id, node.x, node.y);
                         
                         if (node.order >= 0) {
-                            ctx.fillStyle = '#0a0e18';
+                            ctx.fillStyle = colors.text;
+                            ctx.font = '300 11px "Noto Sans SC"';
+                            ctx.fillText(`#${node.order}`, node.x, node.y + 38);
+                        }
+                        
+                        if (currentAlgorithm === 'dijkstra' && node.dist !== Infinity) {
+                            ctx.fillStyle = '#fff';
                             ctx.font = '300 10px "Noto Sans SC"';
-                            ctx.fillText(node.order, node.x, node.y + 35);
+                            ctx.fillText(`d=${node.dist}`, node.x, node.y - 38);
                         }
                     });
                 }
@@ -185,7 +425,7 @@
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
                     
-                    if (connectMode && connectFrom) {
+                    if (connectFrom) {
                         const target = getNodeAt(x, y);
                         if (target && target !== connectFrom) {
                             const exists = edges.some(e => 
@@ -193,24 +433,26 @@
                                 (e.from === target.id && e.to === connectFrom.id)
                             );
                             if (!exists) {
-                                edges.push({from: connectFrom.id, to: target.id, visited: false});
+                                const weight = Math.floor(Math.random() * 10) + 1;
+                                edges.push({from: connectFrom.id, to: target.id, visited: false, active: false, weight});
                             }
                         }
-                        connectMode = false;
+                        connectFrom.color = colors.default;
                         connectFrom = null;
-                        draw();
+                        document.getElementById('graphInfo').textContent = 
+                            '点击画布添加节点 | 双击删除节点 | 拖拽节点移动 | 点击节点连接';
                     } else {
                         const node = getNodeAt(x, y);
                         if (node) {
-                            if (connectFrom === null) {
-                                connectFrom = node;
-                                connectMode = true;
-                                document.getElementById('graphInfo').textContent = `选择目标节点连接 (从 ${connectFrom.id})`;
-                            }
+                            connectFrom = node;
+                            node.color = colors.current;
+                            document.getElementById('graphInfo').textContent = 
+                                `点击目标节点连接 (从 ${node.id})`;
                         } else {
                             addNode(x, y);
                         }
                     }
+                    draw();
                 });
                 
                 canvas.addEventListener('mousedown', e => {
@@ -218,7 +460,7 @@
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
                     const node = getNodeAt(x, y);
-                    if (node && !e.shiftKey) {
+                    if (node) {
                         isDragging = true;
                         dragNode = node;
                     }
@@ -227,8 +469,8 @@
                 canvas.addEventListener('mousemove', e => {
                     if (isDragging && dragNode) {
                         const rect = canvas.getBoundingClientRect();
-                        dragNode.x = e.clientX - rect.left;
-                        dragNode.y = e.clientY - rect.top;
+                        dragNode.x = Math.max(nodeRadius, Math.min(canvas.width - nodeRadius, e.clientX - rect.left));
+                        dragNode.y = Math.max(nodeRadius, Math.min(canvas.height - nodeRadius, e.clientY - rect.top));
                         draw();
                     }
                 });
@@ -246,6 +488,7 @@
                     if (node) {
                         nodes = nodes.filter(n => n !== node);
                         edges = edges.filter(e => e.from !== node.id && e.to !== node.id);
+                        nodeIdCounter = Math.min(...nodes.map(n => n.id.charCodeAt(0) - 65 + 1), 0);
                         draw();
                     }
                 });
@@ -302,12 +545,58 @@
                     return order;
                 }
                 
+                function dijkstra(startId) {
+                    const dist = {};
+                    const visited = new Set();
+                    const order = [];
+                    
+                    nodes.forEach(n => {
+                        dist[n.id] = n.id === startId ? 0 : Infinity;
+                    });
+                    
+                    while (visited.size < nodes.length) {
+                        let minDist = Infinity;
+                        let current = null;
+                        
+                        nodes.forEach(n => {
+                            if (!visited.has(n.id) && dist[n.id] < minDist) {
+                                minDist = dist[n.id];
+                                current = n.id;
+                            }
+                        });
+                        
+                        if (current === null) break;
+                        
+                        visited.add(current);
+                        order.push({node: current, dist: dist[current]});
+                        
+                        nodes.forEach(n => {
+                            if (!visited.has(n.id)) {
+                                const edge = edges.find(e => 
+                                    (e.from === current && e.to === n.id) ||
+                                    (e.to === current && e.from === n.id)
+                                );
+                                if (edge) {
+                                    const newDist = dist[current] + (edge.weight || 1);
+                                    if (newDist < dist[n.id]) {
+                                        dist[n.id] = newDist;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                    return {order, dist};
+                }
+                
                 function runBFS() {
                     if (nodes.length === 0) return;
                     
                     clearTraversal();
+                    currentAlgorithm = 'bfs';
                     document.getElementById('bfsBtn').classList.add('viz-btn-active');
                     document.getElementById('dfsBtn').classList.remove('viz-btn-active');
+                    document.getElementById('dijkstraBtn').classList.remove('viz-btn-active');
                     
                     traversalOrder = bfs(nodes[0].id);
                     animateTraversal();
@@ -317,10 +606,31 @@
                     if (nodes.length === 0) return;
                     
                     clearTraversal();
+                    currentAlgorithm = 'dfs';
                     document.getElementById('dfsBtn').classList.add('viz-btn-active');
                     document.getElementById('bfsBtn').classList.remove('viz-btn-active');
+                    document.getElementById('dijkstraBtn').classList.remove('viz-btn-active');
                     
                     traversalOrder = dfs(nodes[0].id);
+                    animateTraversal();
+                }
+                
+                function runDijkstra() {
+                    if (nodes.length === 0) return;
+                    
+                    clearTraversal();
+                    currentAlgorithm = 'dijkstra';
+                    document.getElementById('dijkstraBtn').classList.add('viz-btn-active');
+                    document.getElementById('bfsBtn').classList.remove('viz-btn-active');
+                    document.getElementById('dfsBtn').classList.remove('viz-btn-active');
+                    
+                    const result = dijkstra(nodes[0].id);
+                    traversalOrder = result.order.map(o => o.node);
+                    
+                    nodes.forEach(n => {
+                        n.dist = result.dist[n.id];
+                    });
+                    
                     animateTraversal();
                 }
                 
@@ -332,8 +642,10 @@
                     animationTimer = setInterval(() => {
                         if (animationIndex >= traversalOrder.length) {
                             clearInterval(animationTimer);
-                            document.getElementById('graphInfo').textContent = 
-                                `遍历完成 | 访问顺序: ${traversalOrder.join(' → ')}`;
+                            const info = document.getElementById('graphInfo');
+                            info.textContent = 
+                                `${currentAlgorithm.toUpperCase()}遍历完成 | 访问顺序: ${traversalOrder.join(' → ')}`;
+                            info.className = 'viz-info success';
                             return;
                         }
                         
@@ -344,18 +656,21 @@
                             node.order = animationIndex;
                             
                             edges.forEach(edge => {
-                                if (edge.from === nodeId || edge.to === nodeId) {
+                                if ((edge.from === nodeId && nodes.find(n => n.id === edge.to)?.visited) ||
+                                    (edge.to === nodeId && nodes.find(n => n.id === edge.from)?.visited)) {
                                     edge.visited = true;
                                 }
                             });
                         }
                         
                         draw();
-                        document.getElementById('graphInfo').textContent = 
-                            `BFS遍历: ${traversalOrder.slice(0, animationIndex + 1).join(' → ')}`;
+                        const info = document.getElementById('graphInfo');
+                        info.textContent = 
+                            `${currentAlgorithm.toUpperCase()}遍历: ${traversalOrder.slice(0, animationIndex + 1).join(' → ')}`;
+                        info.className = 'viz-info';
                         
                         animationIndex++;
-                    }, 500);
+                    }, 600);
                 }
                 
                 function clearTraversal() {
@@ -363,37 +678,46 @@
                     nodes.forEach(n => {
                         n.visited = false;
                         n.order = -1;
+                        n.dist = Infinity;
+                        n.color = colors.default;
                     });
-                    edges.forEach(e => e.visited = false);
+                    edges.forEach(e => {
+                        e.visited = false;
+                        e.active = false;
+                    });
                     traversalOrder = [];
                     animationIndex = 0;
+                    document.getElementById('graphInfo').className = 'viz-info';
                 }
                 
                 function resetGraph() {
                     clearTraversal();
-                    if (nodes.length === 0) {
-                        addNode(200, 100);
-                        addNode(400, 100);
-                        addNode(600, 100);
-                        addNode(300, 250);
-                        addNode(500, 250);
-                        addNode(400, 380);
-                        
-                        edges = [
-                            {from: 'A', to: 'B', visited: false},
-                            {from: 'B', to: 'C', visited: false},
-                            {from: 'A', to: 'D', visited: false},
-                            {from: 'B', to: 'D', visited: false},
-                            {from: 'B', to: 'E', visited: false},
-                            {from: 'C', to: 'E', visited: false},
-                            {from: 'D', to: 'E', visited: false},
-                            {from: 'E', to: 'F', visited: false},
-                            {from: 'D', to: 'F', visited: false}
-                        ];
-                    }
+                    nodes = [];
+                    edges = [];
+                    nodeIdCounter = 0;
+                    
+                    addNode(150, 120);
+                    addNode(350, 80);
+                    addNode(550, 120);
+                    addNode(250, 250);
+                    addNode(450, 250);
+                    addNode(350, 380);
+                    
+                    edges = [
+                        {from: 'A', to: 'B', visited: false, active: false, weight: 2},
+                        {from: 'B', to: 'C', visited: false, active: false, weight: 3},
+                        {from: 'A', to: 'D', visited: false, active: false, weight: 4},
+                        {from: 'B', to: 'D', visited: false, active: false, weight: 1},
+                        {from: 'B', to: 'E', visited: false, active: false, weight: 5},
+                        {from: 'C', to: 'E', visited: false, active: false, weight: 2},
+                        {from: 'D', to: 'E', visited: false, active: false, weight: 3},
+                        {from: 'E', to: 'F', visited: false, active: false, weight: 2},
+                        {from: 'D', to: 'F', visited: false, active: false, weight: 5}
+                    ];
+                    
                     draw();
                     document.getElementById('graphInfo').textContent = 
-                        '图已重置 | 节点数: 6 | 边数: 9';
+                        '图已重置 | 节点数: 6 | 边数: 9 | 点击运行算法';
                 }
                 
                 resetGraph();
@@ -402,25 +726,137 @@
 
         <section class="section">
             <h2 class="section-title"><span class="section-icon">📐</span>核心算法</h2>
+            
             <div class="formula-section">
                 <div class="formula-section-title">🔍 遍历算法</div>
+                
                 <div class="formula-card">
                     <div class="formula-header"><span class="formula-label">BFS（广度优先搜索）</span><span class="formula-tag">O(V+E)</span></div>
                     <div class="formula-content">$$T = O(|V| + |E|)$$</div>
                     <div class="formula-note">逐层遍历，用于最短路径（无权图）</div>
                 </div>
+                
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'bfsCode')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="bfsCode"><span class="code-comment">// BFS 广度优先搜索</span>
+<span class="code-keyword">function</span> <span class="code-function">bfs</span>(graph, start) {
+    <span class="code-keyword">const</span> <span class="code-variable">queue</span> = [start];
+    <span class="code-keyword">const</span> <span class="code-variable">visited</span> = <span class="code-keyword">new</span> <span class="code-function">Set</span>([start]);
+    <span class="code-keyword">const</span> <span class="code-variable">order</span> = [];
+
+    <span class="code-keyword">while</span> (queue.length > <span class="code-number">0</span>) {
+        <span class="code-keyword">const</span> <span class="code-variable">current</span> = queue.<span class="code-function">shift</span>();
+        order.<span class="code-function">push</span>(current);
+
+        <span class="code-comment">// 遍历相邻节点</span>
+        graph[current].<span class="code-function">forEach</span>(neighbor => {
+            <span class="code-keyword">if</span> (!visited.<span class="code-function">has</span>(neighbor)) {
+                visited.<span class="code-function">add</span>(neighbor);
+                queue.<span class="code-function">push</span>(neighbor);
+            }
+        });
+    }
+    <span class="code-keyword">return</span> order;
+}</pre>
+                    </div>
+                </div>
+                
                 <div class="formula-card">
                     <div class="formula-header"><span class="formula-label">DFS（深度优先搜索）</span><span class="formula-tag">O(V+E)</span></div>
                     <div class="formula-content">$$T = O(|V| + |E|)$$</div>
                     <div class="formula-note">深入到底再回溯，用于连通性检测</div>
                 </div>
+                
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'dfsCode')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="dfsCode"><span class="code-comment">// DFS 深度优先搜索 (迭代版)</span>
+<span class="code-keyword">function</span> <span class="code-function">dfs</span>(graph, start) {
+    <span class="code-keyword">const</span> <span class="code-variable">stack</span> = [start];
+    <span class="code-keyword">const</span> <span class="code-variable">visited</span> = <span class="code-keyword">new</span> <span class="code-function">Set</span>();
+    <span class="code-keyword">const</span> <span class="code-variable">order</span> = [];
+
+    <span class="code-keyword">while</span> (stack.length > <span class="code-number">0</span>) {
+        <span class="code-keyword">const</span> <span class="code-variable">current</span> = stack.<span class="code-function">pop</span>();
+        
+        <span class="code-keyword">if</span> (!visited.<span class="code-function">has</span>(current)) {
+            visited.<span class="code-function">add</span>(current);
+            order.<span class="code-function">push</span>(current);
+
+            <span class="code-comment">// 逆序入栈以保持顺序</span>
+            [...graph[current]].<span class="code-function">reverse</span>().<span class="code-function">forEach</span>(neighbor => {
+                <span class="code-keyword">if</span> (!visited.<span class="code-function">has</span>(neighbor)) {
+                    stack.<span class="code-function">push</span>(neighbor);
+                }
+            });
+        }
+    }
+    <span class="code-keyword">return</span> order;
+}</pre>
+                    </div>
+                </div>
             </div>
+            
             <div class="formula-section">
                 <div class="formula-section-title">📍 最短路径</div>
+                
                 <div class="formula-card">
                     <div class="formula-header"><span class="formula-label">Dijkstra算法</span><span class="formula-tag">O((V+E)logV)</span></div>
                     <div class="formula-content">$$d[v] = \min(d[v], d[u] + w(u,v))$$</div>
                     <div class="formula-note">单源最短路径，边权非负</div>
+                </div>
+                
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'dijkstraCode')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="dijkstraCode"><span class="code-comment">// Dijkstra 最短路径算法</span>
+<span class="code-keyword">function</span> <span class="code-function">dijkstra</span>(graph, start) {
+    <span class="code-keyword">const</span> <span class="code-variable">dist</span> = {};
+    <span class="code-keyword">const</span> <span class="code-variable">visited</span> = <span class="code-keyword">new</span> <span class="code-function">Set</span>();
+    
+    <span class="code-comment">// 初始化距离</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> node <span class="code-keyword">in</span> graph) {
+        dist[node] = node === start ? <span class="code-number">0</span> : <span class="code-keyword">Infinity</span>;
+    }
+
+    <span class="code-keyword">while</span> (visited.size < <span class="code-function">Object</span>.<span class="code-function">keys</span>(graph).length) {
+        <span class="code-comment">// 找到未访问的最小距离节点</span>
+        <span class="code-keyword">let</span> <span class="code-variable">minNode</span> = <span class="code-keyword">null</span>;
+        <span class="code-keyword">let</span> <span class="code-variable">minDist</span> = <span class="code-keyword">Infinity</span>;
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> node <span class="code-keyword">in</span> dist) {
+            <span class="code-keyword">if</span> (!visited.<span class="code-function">has</span>(node) && dist[node] < minDist) {
+                minDist = dist[node];
+                minNode = node;
+            }
+        }
+
+        <span class="code-keyword">if</span> (minNode === <span class="code-keyword">null</span>) <span class="code-keyword">break</span>;
+        visited.<span class="code-function">add</span>(minNode);
+
+        <span class="code-comment">// 松弛操作</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> neighbor <span class="code-keyword">in</span> graph[minNode]) {
+            <span class="code-keyword">const</span> <span class="code-variable">weight</span> = graph[minNode][neighbor];
+            <span class="code-keyword">const</span> <span class="code-variable">newDist</span> = dist[minNode] + weight;
+            
+            <span class="code-keyword">if</span> (newDist < dist[neighbor]) {
+                dist[neighbor] = newDist;
+            }
+        }
+    }
+    <span class="code-keyword">return</span> dist;
+}</pre>
+                    </div>
                 </div>
             </div>
         </section>
@@ -443,7 +879,22 @@
                 <a href="greedy-algorithm.html" class="related-card"><div class="related-card-title">→ 贪心算法</div><div class="related-card-desc">Dijkstra贪心思想</div></a>
             </div>
         </section>
+
         <footer><p>学习助手 - 图算法 | Level 3 进阶</p></footer>
     </div>
+
+    <script>
+        function copyCode(button, codeId) {
+            const code = document.getElementById(codeId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '已复制';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '复制代码';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
