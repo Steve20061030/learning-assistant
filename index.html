@@ -1106,11 +1106,20 @@
             </div>
         </header>
 
+        <div class="category-filter">
+            <div class="category-tag active" onclick="filterNodes('all', this)">全部</div>
+            <div class="category-tag" onclick="filterNodes('math', this)">数学基础</div>
+            <div class="category-tag" onclick="filterNodes('ai', this)">机器学习</div>
+            <div class="category-tag" onclick="filterNodes('ds', this)">数据结构</div>
+            <div class="category-tag" onclick="filterNodes('algo', this)">算法设计</div>
+            <div class="category-tag" onclick="filterNodes('sys', this)">计算机系统</div>
+        </div>
+
         <div class="knowledge-graph">
             <div class="graph-header">
                 <div class="graph-title">
                     <span class="graph-title-icon">🧠</span>
-                    <span>知识图谱进化史</span>
+                    <span>知识图谱</span>
                 </div>
                 <div class="legend">
                     <div class="legend-item" onclick="filterNodes('all')">
@@ -1140,15 +1149,6 @@
                 </div>
             </div>
             <div class="graph-container" id="graphContainer"></div>
-        </div>
-
-        <div class="category-filter">
-            <div class="category-tag active" onclick="filterNodes('all', this)">全部</div>
-            <div class="category-tag" onclick="filterNodes('math', this)">数学基础</div>
-            <div class="category-tag" onclick="filterNodes('ai', this)">机器学习</div>
-            <div class="category-tag" onclick="filterNodes('ds', this)">数据结构</div>
-            <div class="category-tag" onclick="filterNodes('algo', this)">算法设计</div>
-            <div class="category-tag" onclick="filterNodes('sys', this)">计算机系统</div>
         </div>
 
         <div class="course-section">
