@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVR - 学习助手</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        
+        .katex { font-size: 1.1em; }
+        .katex-display { margin: 0.5em 0; }
+
+        :root {
+            --bg-primary: #0a0e18;
+            --bg-secondary: #111a28;
+            --bg-card: rgba(30, 40, 60, 0.7);
+            --text-primary: #e0f0ff;
+            --text-secondary: #a0c0e0;
+            --text-muted: #6080a0;
+            --level-color: #60a0e0;
+            --border-subtle: rgba(80, 120, 180, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%);
+            color: var(--text-primary);
+            font-family: 'Noto Sans SC', 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 300;
+        }
+
+        ::selection { background: rgba(96, 160, 224, 0.3); color: #fff; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(10, 20, 40, 0.5); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--level-color), #4080c0); border-radius: 4px; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--level-color);
+            background: rgba(96, 160, 224, 0.1);
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(96, 160, 224, 0.15);
+            border: 1px solid rgba(96, 160, 224, 0.4);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: var(--level-color);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .section-icon { font-size: 24px; }
+
+        .definition-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 2;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .intuition-box {
+            background: linear-gradient(135deg, rgba(96, 160, 224, 0.15), rgba(96, 160, 224, 0.05));
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--level-color);
+            margin-top: 20px;
+        }
+
+        .intuition-box strong { color: var(--level-color); font-weight: 600; }
+
+        .formula-card {
+            background: rgba(0, 0, 0, 0.45);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--level-color);
+            transition: all 0.3s ease;
+        }
+
+        .formula-title {
+            font-size: 16px;
+            color: var(--level-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .formula-content {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 18px;
+            color: #c8e4f8;
+            line-height: 2.4;
+            font-weight: 400;
+            white-space: pre-wrap;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(80, 120, 180, 0.2);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--level-color);
+            transform: translateY(-3px);
+        }
+
+        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
+        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(96, 160, 224, 0.15), rgba(96, 160, 224, 0.05));
+            border: 1px solid rgba(96, 160, 224, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(96, 160, 224, 0.25);
+            border-color: var(--level-color);
+        }
+
+        .related-card-title { font-size: 15px; color: var(--level-color); font-weight: 600; margin-bottom: 6px; }
+        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 300;
+            border-top: 1px solid var(--border-subtle);
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-btn">← 返回知识图谱</a>
+
+        <div class="page-header">
+            <div class="level-badge">Level 3 · 高级</div>
+            <h1 class="page-title">SVR</h1>
+            <p class="page-subtitle">Support Vector Regression</p>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📖</span>
+                什么是 SVR？
+            </h2>
+            <p class="definition-text">
+                <strong>SVR（支持向量回归）</strong>是SVM在回归问题上的扩展。与SVM分类器不同，SVR的目标是找到一个函数，使得大多数数据点落在由ε不敏感损失函数定义的管道内。
+            </p>
+            <p class="definition-text">
+                SVR保持了SVM的核心思想——最大间隔，但将其应用于连续值预测问题。
+            </p>
+            <div class="intuition-box">
+                <strong>💡 核心直觉：</strong>想象一条"管道"，管道宽度由ε控制。SVR的目标是让尽可能多的数据点落在管道内，管道外的点才产生损失。这就像给预测留出一个"容忍区间"。
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📐</span>
+                数学原理
+            </h2>
+
+            <div class="formula-card">
+                <div class="formula-title">ε-不敏感损失函数</div>
+                <div class="formula-content">Lε(y, f(x)) = max(0, |y - f(x)| - ε)</div>
+                <div class="formula-note">当预测误差小于ε时不产生损失，大于ε时才开始计算损失</div>
+            </div>
+
+            <div class="formula-card">
+                <div class="formula-title">优化目标</div>
+                <div class="formula-content">min (1/2)||w||² + CΣξᵢ</div>
+                <div class="formula-note">最小化权重向量的范数（使函数更平滑）同时惩罚超出管道的数据点</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                应用场景
+            </h2>
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-name">时间序列预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">💰</div>
+                    <div class="scenario-name">金融预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">🌡️</div>
+                    <div class="scenario-name">温度预测</div>
+                </div>
+                <div class="scenario-card">
+                    <div class="scenario-icon">⚡</div>
+                    <div class="scenario-name">负荷预测</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                相关算法
+            </h2>
+            <div class="related-grid">
+                <a href="svm.html" class="related-card">
+                    <div class="related-card-title">→ SVM</div>
+                    <div class="related-card-desc">分类版本</div>
+                </a>
+                <a href="linear-regression.html" class="related-card">
+                    <div class="related-card-title">→ 线性回归</div>
+                    <div class="related-card-desc">基础回归</div>
+                </a>
+                <a href="ridge-regression.html" class="related-card">
+                    <div class="related-card-title">→ Ridge回归</div>
+                    <div class="related-card-desc">正则化回归</div>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>学习助手 - SVR | Level 3 高级</p>
+        </footer>
+    </div>
+</body>
+</html>
