@@ -623,6 +623,250 @@ dp[1] = 边界值</div>
             </div>
         </section>
 
+        <!-- 代码实现 -->
+        <section class="section">
+            <h2 class="section-title" style="color: var(--level-color);">
+                <span class="section-icon">💻</span>
+                经典问题代码实现
+            </h2>
+
+            <style>
+                .code-section {
+                    background: #0d1117;
+                    border: 1px solid #304060;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 20px;
+                }
+                .code-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 16px;
+                    background: rgba(0, 0, 0, 0.3);
+                    border-bottom: 1px solid #304060;
+                }
+                .code-lang { font-size: 12px; color: var(--text-muted); }
+                .code-copy-btn {
+                    padding: 6px 12px;
+                    font-size: 11px;
+                    background: rgba(224, 128, 96, 0.2);
+                    border: 1px solid rgba(224, 128, 96, 0.3);
+                    border-radius: 6px;
+                    color: var(--level-color);
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .code-copy-btn:hover { background: rgba(224, 128, 96, 0.3); }
+                .code-copy-btn.copied {
+                    background: rgba(160, 224, 128, 0.2);
+                    border-color: rgba(160, 224, 128, 0.5);
+                    color: #a0e080;
+                }
+                .code-content { padding: 20px; overflow-x: auto; }
+                .code-content pre {
+                    margin: 0;
+                    font-family: 'Fira Code', 'Consolas', monospace;
+                    font-size: 13px;
+                    line-height: 1.7;
+                    color: #d0e0f0;
+                    white-space: pre;
+                }
+                .code-comment { color: #6080a0; }
+                .code-keyword { color: #e080c0; }
+                .code-string { color: #a0e080; }
+                .code-function { color: #80c0e0; }
+                .code-variable { color: #e0c080; }
+                .code-number { color: #c080e0; }
+                .problem-code-title {
+                    font-size: 16px;
+                    color: var(--level-color);
+                    margin-bottom: 15px;
+                    font-weight: 400;
+                    padding-left: 10px;
+                    border-left: 3px solid var(--level-color);
+                }
+            </style>
+
+            <!-- 斐波那契 -->
+            <div class="problem-code-title">📊 斐波那契数列</div>
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-lang">JavaScript - 记忆化递归</span>
+                    <button class="code-copy-btn" onclick="copyCode(this, 'fibMemo')">复制代码</button>
+                </div>
+                <div class="code-content">
+                    <pre id="fibMemo"><span class="code-comment">// 斐波那契 - 记忆化递归</span>
+<span class="code-keyword">function</span> <span class="code-function">fibMemo</span>(n, memo = {}) {
+    <span class="code-keyword">if</span> (n < <span class="code-number">2</span>) <span class="code-keyword">return</span> n;
+    <span class="code-keyword">if</span> (memo[n]) <span class="code-keyword">return</span> memo[n];
+    
+    memo[n] = <span class="code-function">fibMemo</span>(n - <span class="code-number">1</span>, memo) + <span class="code-function">fibMemo</span>(n - <span class="code-number">2</span>, memo);
+    <span class="code-keyword">return</span> memo[n];
+}
+
+<span class="code-comment">// 斐波那契 - 空间优化</span>
+<span class="code-keyword">function</span> <span class="code-function">fibOptimized</span>(n) {
+    <span class="code-keyword">if</span> (n < <span class="code-number">2</span>) <span class="code-keyword">return</span> n;
+    <span class="code-keyword">let</span> <span class="code-variable">prev</span> = <span class="code-number">0</span>, <span class="code-variable">curr</span> = <span class="code-number">1</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">2</span>; <span class="code-variable">i</span> <= n; <span class="code-variable">i</span>++) {
+        [prev, curr] = [curr, prev + curr];
+    }
+    <span class="code-keyword">return</span> curr;
+}
+
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">fibOptimized</span>(<span class="code-number">10</span>)); <span class="code-comment">// 55</span></pre>
+                </div>
+            </div>
+
+            <!-- 爬楼梯 -->
+            <div class="problem-code-title">🪜 爬楼梯问题</div>
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-lang">JavaScript - 经典DP</span>
+                    <button class="code-copy-btn" onclick="copyCode(this, 'climbStairs')">复制代码</button>
+                </div>
+                <div class="code-content">
+                    <pre id="climbStairs"><span class="code-comment">// 爬楼梯 - 每次爬1或2步</span>
+<span class="code-keyword">function</span> <span class="code-function">climbStairs</span>(n) {
+    <span class="code-keyword">if</span> (n <= <span class="code-number">2</span>) <span class="code-keyword">return</span> n;
+    
+    <span class="code-keyword">let</span> <span class="code-variable">dp</span> = <span class="code-keyword">new</span> <span class="code-function">Array</span>(n + <span class="code-number">1</span>).<span class="code-function">fill</span>(<span class="code-number">0</span>);
+    dp[<span class="code-number">1</span>] = <span class="code-number">1</span>;
+    dp[<span class="code-number">2</span>] = <span class="code-number">2</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">3</span>; <span class="code-variable">i</span> <= n; <span class="code-variable">i</span>++) {
+        dp[<span class="code-variable">i</span>] = dp[<span class="code-variable">i</span> - <span class="code-number">1</span>] + dp[<span class="code-variable">i</span> - <span class="code-number">2</span>];
+    }
+    <span class="code-keyword">return</span> dp[n];
+}
+
+<span class="code-comment">// 扩展：每次可爬1、2或3步</span>
+<span class="code-keyword">function</span> <span class="code-function">climbStairsExtended</span>(n) {
+    <span class="code-keyword">let</span> <span class="code-variable">dp</span> = <span class="code-keyword">new</span> <span class="code-function">Array</span>(n + <span class="code-number">1</span>).<span class="code-function">fill</span>(<span class="code-number">0</span>);
+    dp[<span class="code-number">0</span>] = <span class="code-number">1</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= n; <span class="code-variable">i</span>++) {
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">step</span> = <span class="code-number">1</span>; <span class="code-variable">step</span> <= <span class="code-number">3</span>; <span class="code-variable">step</span>++) {
+            <span class="code-keyword">if</span> (<span class="code-variable">i</span> >= <span class="code-variable">step</span>) {
+                dp[<span class="code-variable">i</span>] += dp[<span class="code-variable">i</span> - <span class="code-variable">step</span>];
+            }
+        }
+    }
+    <span class="code-keyword">return</span> dp[n];
+}
+
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">climbStairs</span>(<span class="code-number">5</span>)); <span class="code-comment">// 8</span></pre>
+                </div>
+            </div>
+
+            <!-- 背包问题 -->
+            <div class="problem-code-title">🎒 0-1背包问题</div>
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-lang">JavaScript - 空间优化</span>
+                    <button class="code-copy-btn" onclick="copyCode(this, 'knapsack')">复制代码</button>
+                </div>
+                <div class="code-content">
+                    <pre id="knapsack"><span class="code-comment">// 0-1背包问题 - 空间优化版</span>
+<span class="code-keyword">function</span> <span class="code-function">knapsack</span>(weights, values, capacity) {
+    <span class="code-keyword">const</span> <span class="code-variable">n</span> = weights.length;
+    <span class="code-keyword">let</span> <span class="code-variable">dp</span> = <span class="code-keyword">new</span> <span class="code-function">Array</span>(capacity + <span class="code-number">1</span>).<span class="code-function">fill</span>(<span class="code-number">0</span>);
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < n; <span class="code-variable">i</span>++) {
+        <span class="code-comment">// 逆序遍历确保每个物品只被使用一次</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">w</span> = capacity; <span class="code-variable">w</span> >= weights[<span class="code-variable">i</span>]; <span class="code-variable">w</span>--) {
+            dp[<span class="code-variable">w</span>] = Math.<span class="code-function">max</span>(dp[<span class="code-variable">w</span>], dp[<span class="code-variable">w</span> - weights[<span class="code-variable">i</span>]] + values[<span class="code-variable">i</span>]);
+        }
+    }
+    <span class="code-keyword">return</span> dp[capacity];
+}
+
+<span class="code-comment">// 示例</span>
+<span class="code-keyword">const</span> <span class="code-variable">weights</span> = [<span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>];
+<span class="code-keyword">const</span> <span class="code-variable">values</span> = [<span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>];
+<span class="code-keyword">const</span> <span class="code-variable">capacity</span> = <span class="code-number">5</span>;
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">knapsack</span>(weights, values, capacity)); <span class="code-comment">// 7</span></pre>
+                </div>
+            </div>
+
+            <!-- 编辑距离 -->
+            <div class="problem-code-title">✂️ 编辑距离</div>
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-lang">JavaScript - DP表格</span>
+                    <button class="code-copy-btn" onclick="copyCode(this, 'editDist')">复制代码</button>
+                </div>
+                <div class="code-content">
+                    <pre id="editDist"><span class="code-comment">// 编辑距离 - 插入、删除、替换操作</span>
+<span class="code-keyword">function</span> <span class="code-function">minDistance</span>(word1, word2) {
+    <span class="code-keyword">const</span> <span class="code-variable">m</span> = word1.length;
+    <span class="code-keyword">const</span> <span class="code-variable">n</span> = word2.length;
+    <span class="code-keyword">const</span> <span class="code-variable">dp</span> = <span class="code-keyword">new</span> <span class="code-function">Array2D</span>(m + <span class="code-number">1</span>, n + <span class="code-number">1</span>);
+    
+    <span class="code-comment">// 初始化边界</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> <= m; <span class="code-variable">i</span>++) dp[<span class="code-variable">i</span>][<span class="code-number">0</span>] = <span class="code-variable">i</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">0</span>; <span class="code-variable">j</span> <= n; <span class="code-variable">j</span>++) dp[<span class="code-number">0</span>][<span class="code-variable">j</span>] = <span class="code-variable">j</span>;
+    
+    <span class="code-comment">// 填充表格</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= m; <span class="code-variable">i</span>++) {
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">1</span>; <span class="code-variable">j</span> <= n; <span class="code-variable">j</span>++) {
+            <span class="code-keyword">if</span> (word1[<span class="code-variable">i</span> - <span class="code-number">1</span>] === word2[<span class="code-variable">j</span> - <span class="code-number">1</span>]) {
+                dp[<span class="code-variable">i</span>][<span class="code-variable">j</span>] = dp[<span class="code-variable">i</span> - <span class="code-number">1</span>][<span class="code-variable">j</span> - <span class="code-number">1</span>];
+            } <span class="code-keyword">else</span> {
+                dp[<span class="code-variable">i</span>][<span class="code-variable">j</span>] = <span class="code-number">1</span> + Math.<span class="code-function">min</span>(
+                    dp[<span class="code-variable">i</span> - <span class="code-number">1</span>][<span class="code-variable">j</span>],     <span class="code-comment">// 删除</span>
+                    dp[<span class="code-variable">i</span>][<span class="code-variable">j</span> - <span class="code-number">1</span>],     <span class="code-comment">// 插入</span>
+                    dp[<span class="code-variable">i</span> - <span class="code-number">1</span>][<span class="code-variable">j</span> - <span class="code-number">1</span>]  <span class="code-comment">// 替换</span>
+                );
+            }
+        }
+    }
+    <span class="code-keyword">return</span> dp[<span class="code-variable">m</span>][<span class="code-variable">n</span>];
+}
+
+<span class="code-keyword">function</span> <span class="code-function">Array2D</span>(m, n) {
+    <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-function">Array</span>(m).<span class="code-function">fill</span>(<span class="code-number">0</span>).<span class="code-function">map</span>(() => <span class="code-keyword">new</span> <span class="code-function">Array</span>(n).<span class="code-function">fill</span>(<span class="code-number">0</span>));
+}
+
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">minDistance</span>(<span class="code-string">"horse"</span>, <span class="code-string">"ros"</span>)); <span class="code-comment">// 3</span></pre>
+                </div>
+            </div>
+
+            <!-- 最长公共子序列 -->
+            <div class="problem-code-title">📝 最长公共子序列 (LCS)</div>
+            <div class="code-section">
+                <div class="code-header">
+                    <span class="code-lang">JavaScript - LCS</span>
+                    <button class="code-copy-btn" onclick="copyCode(this, 'lcs')">复制代码</button>
+                </div>
+                <div class="code-content">
+                    <pre id="lcs"><span class="code-comment">// 最长公共子序列</span>
+<span class="code-keyword">function</span> <span class="code-function">longestCommonSubsequence</span>(text1, text2) {
+    <span class="code-keyword">const</span> <span class="code-variable">m</span> = text1.length;
+    <span class="code-keyword">const</span> <span class="code-variable">n</span> = text2.length;
+    <span class="code-keyword">const</span> <span class="code-variable">dp</span> = <span class="code-keyword">new</span> <span class="code-function">Array</span>(m + <span class="code-number">1</span>).<span class="code-function">fill</span>(<span class="code-number">0</span>)
+                        .<span class="code-function">map</span>(() => <span class="code-keyword">new</span> <span class="code-function">Array</span>(n + <span class="code-number">1</span>).<span class="code-function">fill</span>(<span class="code-number">0</span>));
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= m; <span class="code-variable">i</span>++) {
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">1</span>; <span class="code-variable">j</span> <= n; <span class="code-variable">j</span>++) {
+            <span class="code-keyword">if</span> (text1[<span class="code-variable">i</span> - <span class="code-number">1</span>] === text2[<span class="code-variable">j</span> - <span class="code-number">1</span>]) {
+                dp[<span class="code-variable">i</span>][<span class="code-variable">j</span>] = dp[<span class="code-variable">i</span> - <span class="code-number">1</span>][<span class="code-variable">j</span> - <span class="code-number">1</span>] + <span class="code-number">1</span>;
+            } <span class="code-keyword">else</span> {
+                dp[<span class="code-variable">i</span>][<span class="code-variable">j</span>] = Math.<span class="code-function">max</span>(dp[<span class="code-variable">i</span> - <span class="code-number">1</span>][<span class="code-variable">j</span>], dp[<span class="code-variable">i</span>][<span class="code-variable">j</span> - <span class="code-number">1</span>]);
+            }
+        }
+    }
+    <span class="code-keyword">return</span> dp[<span class="code-variable">m</span>][<span class="code-variable">n</span>];
+}
+
+<span class="code-comment">// 示例</span>
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">longestCommonSubsequence</span>(<span class="code-string">"abcde"</span>, <span class="code-string">"ace"</span>)); <span class="code-comment">// 3</span></pre>
+                </div>
+            </div>
+        </section>
+
         <!-- 相关算法 -->
         <section class="section">
             <h2 class="section-title" style="color: var(--level-color);">
@@ -683,6 +927,18 @@ dp[1] = 边界值</div>
 
             interval = setInterval(highlightCell, 500);
         });
+
+        function copyCode(button, codeId) {
+            const code = document.getElementById(codeId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '已复制';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '复制代码';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
     </script>
 </body>
 </html>

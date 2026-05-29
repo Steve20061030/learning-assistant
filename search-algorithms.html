@@ -391,6 +391,213 @@
             </div>
         </section>
 
+        <!-- 代码实现 -->
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">💻</span>
+                经典查找算法代码实现
+            </h2>
+
+            <style>
+                .sa-code-section {
+                    background: #0d1117;
+                    border: 1px solid #304060;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 20px;
+                }
+                .sa-code-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 16px;
+                    background: rgba(0, 0, 0, 0.3);
+                    border-bottom: 1px solid #304060;
+                }
+                .sa-code-lang { font-size: 12px; color: var(--text-muted); }
+                .sa-code-copy-btn {
+                    padding: 6px 12px;
+                    font-size: 11px;
+                    background: rgba(96, 192, 160, 0.2);
+                    border: 1px solid rgba(96, 192, 160, 0.3);
+                    border-radius: 6px;
+                    color: var(--accent-teal);
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .sa-code-copy-btn:hover { background: rgba(96, 192, 160, 0.3); }
+                .sa-code-copy-btn.copied {
+                    background: rgba(160, 224, 128, 0.2);
+                    border-color: rgba(160, 224, 128, 0.5);
+                    color: #a0e080;
+                }
+                .sa-code-content { padding: 20px; overflow-x: auto; }
+                .sa-code-content pre {
+                    margin: 0;
+                    font-family: 'Fira Code', 'Consolas', monospace;
+                    font-size: 13px;
+                    line-height: 1.7;
+                    color: #d0e0f0;
+                    white-space: pre;
+                }
+                .sa-code-comment { color: #6080a0; }
+                .sa-code-keyword { color: #e080c0; }
+                .sa-code-string { color: #a0e080; }
+                .sa-code-function { color: #80c0e0; }
+                .sa-code-variable { color: #e0c080; }
+                .sa-code-number { color: #c080e0; }
+                .sa-problem-title {
+                    font-size: 16px;
+                    color: var(--accent-teal);
+                    margin-bottom: 15px;
+                    font-weight: 400;
+                    padding-left: 10px;
+                    border-left: 3px solid var(--accent-teal);
+                }
+            </style>
+
+            <!-- 二分查找 -->
+            <div class="sa-problem-title">🔍 二分查找 (Binary Search)</div>
+            <div class="sa-code-section">
+                <div class="sa-code-header">
+                    <span class="sa-code-lang">JavaScript - 经典实现</span>
+                    <button class="sa-code-copy-btn" onclick="saCopyCode(this, 'binarySearch')">复制代码</button>
+                </div>
+                <div class="sa-code-content">
+                    <pre id="binarySearch"><span class="sa-code-comment">// 二分查找 - 经典实现</span>
+<span class="sa-code-keyword">function</span> <span class="sa-code-function">binarySearch</span>(arr, target) {
+    <span class="sa-code-keyword">let</span> <span class="sa-code-variable">left</span> = <span class="sa-code-number">0</span>;
+    <span class="sa-code-keyword">let</span> <span class="sa-code-variable">right</span> = arr.length - <span class="sa-code-number">1</span>;
+    
+    <span class="sa-code-keyword">while</span> (<span class="sa-code-variable">left</span> <= <span class="sa-code-variable">right</span>) {
+        <span class="sa-code-keyword">const</span> <span class="sa-code-variable">mid</span> = Math.<span class="sa-code-function">floor</span>((<span class="sa-code-variable">left</span> + <span class="sa-code-variable">right</span>) / <span class="sa-code-number">2</span>);
+        
+        <span class="sa-code-keyword">if</span> (arr[<span class="sa-code-variable">mid</span>] === target) {
+            <span class="sa-code-keyword">return</span> <span class="sa-code-variable">mid</span>;
+        } <span class="sa-code-keyword">else if</span> (arr[<span class="sa-code-variable">mid</span>] < target) {
+            <span class="sa-code-variable">left</span> = <span class="sa-code-variable">mid</span> + <span class="sa-code-number">1</span>;
+        } <span class="sa-code-keyword">else</span> {
+            <span class="sa-code-variable">right</span> = <span class="sa-code-variable">mid</span> - <span class="sa-code-number">1</span>;
+        }
+    }
+    <span class="sa-code-keyword">return</span> -<span class="sa-code-number">1</span>;
+}
+
+<span class="sa-code-comment">// 二分查找 - 左边界</span>
+<span class="sa-code-keyword">function</span> <span class="sa-code-function">lowerBound</span>(arr, target) {
+    <span class="sa-code-keyword">let</span> <span class="sa-code-variable">left</span> = <span class="sa-code-number">0</span>, <span class="sa-code-variable">right</span> = arr.length;
+    
+    <span class="sa-code-keyword">while</span> (<span class="sa-code-variable">left</span> < <span class="sa-code-variable">right</span>) {
+        <span class="sa-code-keyword">const</span> <span class="sa-code-variable">mid</span> = <span class="sa-code-function">floor</span>((<span class="sa-code-variable">left</span> + <span class="sa-code-variable">right</span>) / <span class="sa-code-number">2</span>);
+        <span class="sa-code-keyword">if</span> (arr[<span class="sa-code-variable">mid</span>] < target) {
+            <span class="sa-code-variable">left</span> = <span class="sa-code-variable">mid</span> + <span class="sa-code-number">1</span>;
+        } <span class="sa-code-keyword">else</span> {
+            <span class="sa-code-variable">right</span> = <span class="sa-code-variable">mid</span>;
+        }
+    }
+    <span class="sa-code-keyword">return</span> <span class="sa-code-variable">left</span>;
+}
+
+<span class="sa-code-comment">// 示例</span>
+<span class="sa-code-keyword">const</span> <span class="sa-code-variable">arr</span> = [<span class="sa-code-number">1</span>, <span class="sa-code-number">3</span>, <span class="sa-code-number">5</span>, <span class="sa-code-number">7</span>, <span class="sa-code-number">9</span>, <span class="sa-code-number">11</span>];
+<span class="sa-code-variable">console</span>.<span class="sa-code-function">log</span>(<span class="sa-code-function">binarySearch</span>(<span class="sa-code-variable">arr</span>, <span class="sa-code-number">7</span>)); <span class="sa-code-comment">// 3</span></pre>
+                </div>
+            </div>
+
+            <!-- 二叉搜索树 -->
+            <div class="sa-problem-title">🌳 二叉搜索树 (BST)</div>
+            <div class="sa-code-section">
+                <div class="sa-code-header">
+                    <span class="sa-code-lang">JavaScript - BST实现</span>
+                    <button class="sa-code-copy-btn" onclick="saCopyCode(this, 'bstSearch')">复制代码</button>
+                </div>
+                <div class="sa-code-content">
+                    <pre id="bstSearch"><span class="sa-code-comment">// 二叉搜索树节点</span>
+<span class="sa-code-keyword">class</span> <span class="sa-code-function">TreeNode</span> {
+    <span class="sa-code-function">constructor</span>(val) {
+        <span class="sa-code-keyword">this</span>.val = val;
+        <span class="sa-code-keyword">this</span>.left = <span class="sa-code-keyword">null</span>;
+        <span class="sa-code-keyword">this</span>.right = <span class="sa-code-keyword">null</span>;
+    }
+}
+
+<span class="sa-code-comment">// BST插入</span>
+<span class="sa-code-keyword">function</span> <span class="sa-code-function">bstInsert</span>(root, val) {
+    <span class="sa-code-keyword">if</span> (!root) <span class="sa-code-keyword">return new</span> <span class="sa-code-function">TreeNode</span>(val);
+    
+    <span class="sa-code-keyword">if</span> (val < root.val) {
+        root.left = <span class="sa-code-function">bstInsert</span>(root.left, val);
+    } <span class="sa-code-keyword">else</span> {
+        root.right = <span class="sa-code-function">bstInsert</span>(root.right, val);
+    }
+    <span class="sa-code-keyword">return</span> root;
+}
+
+<span class="sa-code-comment">// BST搜索 - O(log n)</span>
+<span class="sa-code-keyword">function</span> <span class="sa-code-function">bstSearch</span>(root, target) {
+    <span class="sa-code-keyword">if</span> (!root || root.val === target) <span class="sa-code-keyword">return</span> root;
+    
+    <span class="sa-code-keyword">if</span> (target < root.val) {
+        <span class="sa-code-keyword">return</span> <span class="sa-code-function">bstSearch</span>(root.left, target);
+    }
+    <span class="sa-code-keyword">return</span> <span class="sa-code-function">bstSearch</span>(root.right, target);
+}
+
+<span class="sa-code-comment">// BST中序遍历 (有序)</span>
+<span class="sa-code-keyword">function</span> <span class="sa-code-function">inorderTraversal</span>(root, result = []) {
+    <span class="sa-code-keyword">if</span> (root) {
+        <span class="sa-code-function">inorderTraversal</span>(root.left, result);
+        result.<span class="sa-code-function">push</span>(root.val);
+        <span class="sa-code-function">inorderTraversal</span>(root.right, result);
+    }
+    <span class="sa-code-keyword">return</span> result;
+}</pre>
+                </div>
+            </div>
+
+            <!-- 哈希查找 -->
+            <div class="sa-problem-title">🔑 哈希查找 (Hash Search)</div>
+            <div class="sa-code-section">
+                <div class="sa-code-header">
+                    <span class="sa-code-lang">JavaScript - 哈希表</span>
+                    <button class="sa-code-copy-btn" onclick="saCopyCode(this, 'hashSearch')">复制代码</button>
+                </div>
+                <div class="sa-code-content">
+                    <pre id="hashSearch"><span class="sa-code-comment">// 简单哈希表实现</span>
+<span class="sa-code-keyword">class</span> <span class="sa-code-function">HashTable</span> {
+    <span class="sa-code-function">constructor</span>(size = <span class="sa-code-number">100</span>) {
+        <span class="sa-code-keyword">this</span>.size = size;
+        <span class="sa-code-keyword">this</span>.table = <span class="sa-code-keyword">new</span> <span class="sa-code-function">Array</span>(size).<span class="sa-code-function">fill</span>(<span class="sa-code-keyword">null</span>);
+    }
+    
+    <span class="sa-code-function">hash</span>(key) {
+        <span class="sa-code-keyword">let</span> <span class="sa-code-variable">hash</span> = <span class="sa-code-number">0</span>;
+        <span class="sa-code-keyword">for</span> (<span class="sa-code-keyword">let</span> <span class="sa-code-variable">char</span> <span class="sa-code-keyword">of</span> key) {
+            <span class="sa-code-variable">hash</span> = (<span class="sa-code-variable">hash</span> * <span class="sa-code-number">31</span> + char.<span class="sa-code-function">charCodeAt</span>(<span class="sa-code-number">0</span>)) % <span class="sa-code-keyword">this</span>.size;
+        }
+        <span class="sa-code-keyword">return</span> <span class="sa-code-variable">hash</span>;
+    }
+    
+    <span class="sa-code-function">set</span>(key, value) {
+        <span class="sa-code-keyword">const</span> <span class="sa-code-variable">index</span> = <span class="sa-code-keyword">this</span>.<span class="sa-code-function">hash</span>(key);
+        <span class="sa-code-keyword">this</span>.table[<span class="sa-code-variable">index</span>] = value;
+    }
+    
+    <span class="sa-code-function">get</span>(key) {
+        <span class="sa-code-keyword">const</span> <span class="sa-code-variable">index</span> = <span class="sa-code-keyword">this</span>.<span class="sa-code-function">hash</span>(key);
+        <span class="sa-code-keyword">return</span> <span class="sa-code-keyword">this</span>.table[<span class="sa-code-variable">index</span>];
+    }
+}
+
+<span class="sa-code-comment">// 使用示例 - O(1) 平均查找</span>
+<span class="sa-code-keyword">const</span> <span class="sa-code-variable">ht</span> = <span class="sa-code-keyword">new</span> <span class="sa-code-function">HashTable</span>();
+ht.<span class="sa-code-function">set</span>(<span class="sa-code-string">"apple"</span>, <span class="sa-code-number">100</span>);
+ht.<span class="sa-code-function">set</span>(<span class="sa-code-string">"banana"</span>, <span class="sa-code-number">200</span>);
+<span class="sa-code-variable">console</span>.<span class="sa-code-function">log</span>(ht.<span class="sa-code-function">get</span>(<span class="sa-code-string">"apple"</span>)); <span class="sa-code-comment">// 100</span></pre>
+                </div>
+            </div>
+        </section>
+
         <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">🔗</span>
@@ -416,5 +623,19 @@
             <p>学习助手 - 查找算法 | Level 2 进阶</p>
         </footer>
     </div>
+
+    <script>
+        function saCopyCode(button, codeId) {
+            const code = document.getElementById(codeId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '已复制';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '复制代码';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&family=Fira+Code:wght@300;400;500&display=swap');
         
         .katex { font-size: 1.1em; }
         .katex-display { margin: 0.5em 0; }
@@ -22,6 +22,8 @@
             --text-muted: #6080a0;
             --level-color: #e0c080;
             --border-subtle: rgba(80, 120, 180, 0.3);
+            --code-bg: #0d1117;
+            --code-border: #304060;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -275,6 +277,72 @@
         }
         .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
 
+        /* 代码块样式 */
+        .code-section {
+            background: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--code-border);
+        }
+        
+        .code-lang {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        
+        .code-copy-btn {
+            padding: 6px 12px;
+            font-size: 11px;
+            background: rgba(224, 192, 128, 0.2);
+            border: 1px solid rgba(224, 192, 128, 0.3);
+            border-radius: 6px;
+            color: var(--level-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .code-copy-btn:hover {
+            background: rgba(224, 192, 128, 0.3);
+        }
+        
+        .code-copy-btn.copied {
+            background: rgba(160, 224, 128, 0.2);
+            border-color: rgba(160, 224, 128, 0.5);
+            color: #a0e080;
+        }
+        
+        .code-content {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .code-content pre {
+            margin: 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.7;
+            color: #d0e0f0;
+            white-space: pre;
+        }
+        
+        .code-comment { color: #6080a0; }
+        .code-keyword { color: #e080c0; }
+        .code-string { color: #a0e080; }
+        .code-function { color: #80c0e0; }
+        .code-variable { color: #e0c080; }
+        .code-number { color: #c080e0; }
+
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -322,51 +390,264 @@
 
         <section class="section">
             <h2 class="section-title">
-                <span class="section-icon">📊</span>
-                算法复杂度
+                <span class="section-icon">💻</span>
+                经典排序算法代码实现
             </h2>
 
+            <!-- 快速排序 -->
             <div class="formula-section">
-                <div class="formula-section-title">⚡ 比较排序</div>
+                <div class="formula-section-title">🚀 快速排序 (Quick Sort)</div>
                 
                 <div class="formula-card">
                     <div class="formula-header">
-                        <span class="formula-label">快速排序</span>
+                        <span class="formula-label">算法复杂度</span>
                         <span class="formula-tag">O(n log n)</span>
                     </div>
-                    <div class="formula-content">$$T(n) = 2T(n/2) + O(n)$$</div>
-                    <div class="formula-note">平均情况，最坏情况 $O(n^2)$</div>
+                    <div class="formula-note">平均情况，分治策略，选择基准元素划分数组</div>
                 </div>
 
-                <div class="formula-card">
-                    <div class="formula-header">
-                        <span class="formula-label">归并排序</span>
-                        <span class="formula-tag">O(n log n)</span>
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'quickSort')">复制代码</button>
                     </div>
-                    <div class="formula-content">$$T(n) = 2T(n/2) + O(n)$$</div>
-                    <div class="formula-note">最坏情况也是 $O(n log n)$，稳定排序</div>
+                    <div class="code-content">
+                        <pre id="quickSort"><span class="code-comment">// 快速排序 - 分治策略</span>
+<span class="code-keyword">function</span> <span class="code-function">quickSort</span>(arr, low = <span class="code-number">0</span>, high = arr.length - <span class="code-number">1</span>) {
+    <span class="code-keyword">if</span> (low < high) {
+        <span class="code-comment">// 分区，返回基准元素位置</span>
+        <span class="code-keyword">const</span> <span class="code-variable">pi</span> = <span class="code-function">partition</span>(arr, low, high);
+        
+        <span class="code-comment">// 递归排序左右两部分</span>
+        <span class="code-function">quickSort</span>(arr, low, pi - <span class="code-number">1</span>);
+        <span class="code-function">quickSort</span>(arr, pi + <span class="code-number">1</span>, high);
+    }
+    <span class="code-keyword">return</span> arr;
+}
+
+<span class="code-keyword">function</span> <span class="code-function">partition</span>(arr, low, high) {
+    <span class="code-comment">// 选择最右侧元素作为基准</span>
+    <span class="code-keyword">const</span> <span class="code-variable">pivot</span> = arr[high];
+    <span class="code-keyword">let</span> <span class="code-variable">i</span> = low - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = low; <span class="code-variable">j</span> < high; <span class="code-variable">j</span>++) {
+        <span class="code-keyword">if</span> (arr[<span class="code-variable">j</span>] <= pivot) {
+            <span class="code-variable">i</span>++;
+            [arr[<span class="code-variable">i</span>], arr[<span class="code-variable">j</span>]] = [arr[<span class="code-variable">j</span>], arr[<span class="code-variable">i</span>]];
+        }
+    }
+    
+    <span class="code-comment">// 将基准放到正确位置</span>
+    [arr[<span class="code-variable">i</span> + <span class="code-number">1</span>], arr[high]] = [arr[high], arr[<span class="code-variable">i</span> + <span class="code-number">1</span>]];
+    <span class="code-keyword">return</span> <span class="code-variable">i</span> + <span class="code-number">1</span>;
+}
+
+<span class="code-comment">// 测试</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">64</span>, <span class="code-number">34</span>, <span class="code-number">25</span>, <span class="code-number">12</span>, <span class="code-number">22</span>, <span class="code-number">11</span>, <span class="code-number">90</span>];
+<span class="code-function">quickSort</span>(arr);
+<span class="code-variable">console</span>.<span class="code-function">log</span>(arr); <span class="code-comment">// [11, 12, 22, 25, 34, 64, 90]</span></pre>
+                    </div>
                 </div>
             </div>
 
+            <!-- 归并排序 -->
             <div class="formula-section">
-                <div class="formula-section-title">🔄 简单排序</div>
+                <div class="formula-section-title">🔀 归并排序 (Merge Sort)</div>
                 
                 <div class="formula-card">
                     <div class="formula-header">
-                        <span class="formula-label">冒泡排序</span>
+                        <span class="formula-label">算法复杂度</span>
+                        <span class="formula-tag">O(n log n)</span>
+                    </div>
+                    <div class="formula-note">稳定排序，分治策略，先分割再合并</div>
+                </div>
+
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'mergeSort')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="mergeSort"><span class="code-comment">// 归并排序 - 分治策略</span>
+<span class="code-keyword">function</span> <span class="code-function">mergeSort</span>(arr) {
+    <span class="code-keyword">if</span> (arr.length <= <span class="code-number">1</span>) <span class="code-keyword">return</span> arr;
+    
+    <span class="code-comment">// 分割数组</span>
+    <span class="code-keyword">const</span> <span class="code-variable">mid</span> = Math.<span class="code-function">floor</span>(arr.length / <span class="code-number">2</span>);
+    <span class="code-keyword">const</span> <span class="code-variable">left</span> = <span class="code-function">mergeSort</span>(arr.<span class="code-function">slice</span>(<span class="code-number">0</span>, mid));
+    <span class="code-keyword">const</span> <span class="code-variable">right</span> = <span class="code-function">mergeSort</span>(arr.<span class="code-function">slice</span>(mid));
+    
+    <span class="code-comment">// 合并两个有序数组</span>
+    <span class="code-keyword">return</span> <span class="code-function">merge</span>(left, right);
+}
+
+<span class="code-keyword">function</span> <span class="code-function">merge</span>(left, right) {
+    <span class="code-keyword">const</span> <span class="code-variable">result</span> = [];
+    <span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>, <span class="code-variable">j</span> = <span class="code-number">0</span>;
+    
+    <span class="code-keyword">while</span> (<span class="code-variable">i</span> < left.length && <span class="code-variable">j</span> < right.length) {
+        <span class="code-keyword">if</span> (left[<span class="code-variable">i</span>] <= right[<span class="code-variable">j</span>]) {
+            result.<span class="code-function">push</span>(left[<span class="code-variable">i</span>++]);
+        } <span class="code-keyword">else</span> {
+            result.<span class="code-function">push</span>(right[<span class="code-variable">j</span>++]);
+        }
+    }
+    
+    <span class="code-comment">// 连接剩余元素</span>
+    <span class="code-keyword">return</span> result.<span class="code-function">concat</span>(left.<span class="code-function">slice</span>(<span class="code-variable">i</span>)).<span class="code-function">concat</span>(right.<span class="code-function">slice</span>(<span class="code-variable">j</span>));
+}
+
+<span class="code-comment">// 测试</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">38</span>, <span class="code-number">27</span>, <span class="code-number">43</span>, <span class="code-number">3</span>, <span class="code-number">9</span>, <span class="code-number">82</span>, <span class="code-number">10</span>];
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">mergeSort</span>(arr)); <span class="code-comment">// [3, 9, 10, 27, 38, 43, 82]</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 堆排序 -->
+            <div class="formula-section">
+                <div class="formula-section-title">🏔️ 堆排序 (Heap Sort)</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">算法复杂度</span>
+                        <span class="formula-tag">O(n log n)</span>
+                    </div>
+                    <div class="formula-note">原地排序，利用堆的性质进行排序</div>
+                </div>
+
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'heapSort')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="heapSort"><span class="code-comment">// 堆排序 - 利用二叉堆</span>
+<span class="code-keyword">function</span> <span class="code-function">heapSort</span>(arr) {
+    <span class="code-keyword">const</span> <span class="code-variable">n</span> = arr.length;
+    
+    <span class="code-comment">// 构建最大堆</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = Math.<span class="code-function">floor</span>(n / <span class="code-number">2</span>) - <span class="code-number">1</span>; <span class="code-variable">i</span> >= <span class="code-number">0</span>; <span class="code-variable">i</span>--) {
+        <span class="code-function">heapify</span>(arr, n, <span class="code-variable">i</span>);
+    }
+    
+    <span class="code-comment">// 逐个提取元素</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = n - <span class="code-number">1</span>; <span class="code-variable">i</span> > <span class="code-number">0</span>; <span class="code-variable">i</span>--) {
+        <span class="code-comment">// 将堆顶移到末尾</span>
+        [arr[<span class="code-number">0</span>], arr[<span class="code-variable">i</span>]] = [arr[<span class="code-variable">i</span>], arr[<span class="code-number">0</span>]];
+        <span class="code-comment">// 调整堆</span>
+        <span class="code-function">heapify</span>(arr, <span class="code-variable">i</span>, <span class="code-number">0</span>);
+    }
+    <span class="code-keyword">return</span> arr;
+}
+
+<span class="code-keyword">function</span> <span class="code-function">heapify</span>(arr, n, i) {
+    <span class="code-keyword">let</span> <span class="code-variable">largest</span> = i;
+    <span class="code-keyword">const</span> <span class="code-variable">left</span> = <span class="code-number">2</span> * i + <span class="code-number">1</span>;
+    <span class="code-keyword">const</span> <span class="code-variable">right</span> = <span class="code-number">2</span> * i + <span class="code-number">2</span>;
+    
+    <span class="code-keyword">if</span> (left < n && arr[left] > arr[<span class="code-variable">largest</span>]) <span class="code-variable">largest</span> = left;
+    <span class="code-keyword">if</span> (right < n && arr[right] > arr[<span class="code-variable">largest</span>]) <span class="code-variable">largest</span> = right;
+    
+    <span class="code-keyword">if</span> (<span class="code-variable">largest</span> !== i) {
+        [arr[<span class="code-variable">i</span>], arr[<span class="code-variable">largest</span>]] = [arr[<span class="code-variable">largest</span>], arr[<span class="code-variable">i</span>]];
+        <span class="code-function">heapify</span>(arr, n, <span class="code-variable">largest</span>);
+    }
+}
+
+<span class="code-comment">// 测试</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">12</span>, <span class="code-number">11</span>, <span class="code-number">13</span>, <span class="code-number">5</span>, <span class="code-number">6</span>, <span class="code-number">7</span>];
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">heapSort</span>(arr)); <span class="code-comment">// [5, 6, 7, 11, 12, 13]</span></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 冒泡排序 -->
+            <div class="formula-section">
+                <div class="formula-section-title">🫧 冒泡排序 (Bubble Sort)</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">算法复杂度</span>
                         <span class="formula-tag">O(n²)</span>
                     </div>
-                    <div class="formula-content">$$T(n) = \sum_{i=1}^{n-1} (n-i) = O(n^2)$$</div>
-                    <div class="formula-note">相邻元素比较交换</div>
+                    <div class="formula-note">简单直观，相邻元素比较交换，适合初学者</div>
+                </div>
+
+                <div class="code-section">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript</span>
+                        <button class="code-copy-btn" onclick="copyCode(this, 'bubbleSort')">复制代码</button>
+                    </div>
+                    <div class="code-content">
+                        <pre id="bubbleSort"><span class="code-comment">// 冒泡排序 - 优化版</span>
+<span class="code-keyword">function</span> <span class="code-function">bubbleSort</span>(arr) {
+    <span class="code-keyword">const</span> <span class="code-variable">n</span> = arr.length;
+    <span class="code-keyword">let</span> <span class="code-variable">swapped</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < n - <span class="code-number">1</span>; <span class="code-variable">i</span>++) {
+        <span class="code-variable">swapped</span> = <span class="code-keyword">false</span>;
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">0</span>; <span class="code-variable">j</span> < n - <span class="code-variable">i</span> - <span class="code-number">1</span>; <span class="code-variable">j</span>++) {
+            <span class="code-keyword">if</span> (arr[<span class="code-variable">j</span>] > arr[<span class="code-variable">j</span> + <span class="code-number">1</span>]) {
+                [arr[<span class="code-variable">j</span>], arr[<span class="code-variable">j</span> + <span class="code-number">1</span>]] = [arr[<span class="code-variable">j</span> + <span class="code-number">1</span>], arr[<span class="code-variable">j</span>]];
+                <span class="code-variable">swapped</span> = <span class="code-keyword">true</span>;
+            }
+        }
+        
+        <span class="code-comment">// 如果没有交换，说明已经有序</span>
+        <span class="code-keyword">if</span> (!<span class="code-variable">swapped</span>) <span class="code-keyword">break</span>;
+    }
+    <span class="code-keyword">return</span> arr;
+}
+
+<span class="code-comment">// 测试</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">64</span>, <span class="code-number">34</span>, <span class="code-number">25</span>, <span class="code-number">12</span>, <span class="code-number">22</span>, <span class="code-number">11</span>];
+<span class="code-variable">console</span>.<span class="code-function">log</span>(<span class="code-function">bubbleSort</span>(arr)); <span class="code-comment">// [11, 12, 22, 25, 34, 64]</span></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                算法复杂度对比
+            </h2>
+
+            <div class="formula-section">
+                <div class="formula-section-title">⚡ 排序算法复杂度一览</div>
+                
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">快速排序 Quick Sort</span>
+                        <span class="formula-tag">O(n log n)</span>
+                    </div>
+                    <div class="formula-note">平均 O(n log n)，最坏 O(n²)，原地排序，不稳定</div>
                 </div>
 
                 <div class="formula-card">
                     <div class="formula-header">
-                        <span class="formula-label">插入排序</span>
+                        <span class="formula-label">归并排序 Merge Sort</span>
+                        <span class="formula-tag">O(n log n)</span>
+                    </div>
+                    <div class="formula-note">始终 O(n log n)，稳定排序，需要 O(n) 额外空间</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">堆排序 Heap Sort</span>
+                        <span class="formula-tag">O(n log n)</span>
+                    </div>
+                    <div class="formula-note">始终 O(n log n)，原地排序，不稳定</div>
+                </div>
+
+                <div class="formula-card">
+                    <div class="formula-header">
+                        <span class="formula-label">冒泡排序 Bubble Sort</span>
                         <span class="formula-tag">O(n²)</span>
                     </div>
-                    <div class="formula-content">$$T(n) = \sum_{i=1}^{n-1} i = O(n^2)$$</div>
-                    <div class="formula-note">对小规模数据效率高</div>
+                    <div class="formula-note">最坏 O(n²)，优化后对有序数组可达 O(n)，稳定</div>
                 </div>
             </div>
         </section>
@@ -374,7 +655,7 @@
         <section class="section">
             <h2 class="section-title">
                 <span class="section-icon">🎯</span>
-                适用场景
+                经典应用场景
             </h2>
             <div class="scenario-grid">
                 <div class="scenario-card">
@@ -421,5 +702,19 @@
             <p>学习助手 - 排序算法 | Level 2 进阶</p>
         </footer>
     </div>
+
+    <script>
+        function copyCode(button, codeId) {
+            const code = document.getElementById(codeId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = '已复制';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '复制代码';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
