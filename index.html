@@ -1122,27 +1122,27 @@
                     <span>知识图谱</span>
                 </div>
                 <div class="legend">
-                    <div class="legend-item" onclick="filterNodes('all')">
+                    <div class="legend-item" onclick="filterByLevel('all')">
                         <span class="legend-dot" style="background:#fff;color:#fff;"></span>
                         <span>全部</span>
                     </div>
-                    <div class="legend-item" onclick="filterNodes('math')">
+                    <div class="legend-item" onclick="filterByLevel(1)">
                         <span class="legend-dot level-1"></span>
                         <span>Lv1 入门</span>
                     </div>
-                    <div class="legend-item" onclick="filterNodes('ai')">
+                    <div class="legend-item" onclick="filterByLevel(2)">
                         <span class="legend-dot level-2"></span>
                         <span>Lv2 进阶</span>
                     </div>
-                    <div class="legend-item" onclick="filterNodes('ds')">
+                    <div class="legend-item" onclick="filterByLevel(3)">
                         <span class="legend-dot level-3"></span>
                         <span>Lv3 高级</span>
                     </div>
-                    <div class="legend-item" onclick="filterNodes('algo')">
+                    <div class="legend-item" onclick="filterByLevel(4)">
                         <span class="legend-dot level-4"></span>
                         <span>Lv4 专业</span>
                     </div>
-                    <div class="legend-item" onclick="filterNodes('sys')">
+                    <div class="legend-item" onclick="filterByLevel(5)">
                         <span class="legend-dot level-5"></span>
                         <span>Lv5 专家</span>
                     </div>
@@ -1500,6 +1500,17 @@
             nodes.forEach((node, i) => {
                 const data = knowledgeNodes[i];
                 if (category === 'all' || data.category === category) {
+                    node.style.display = 'block';
+                    node.style.animation = 'fadeIn 0.5s ease-out forwards';
+                } else { node.style.display = 'none'; }
+            });
+        }
+
+        function filterByLevel(level) {
+            const nodes = document.querySelectorAll('.graph-node');
+            nodes.forEach((node, i) => {
+                const data = knowledgeNodes[i];
+                if (level === 'all' || data.level === level) {
                     node.style.display = 'block';
                     node.style.animation = 'fadeIn 0.5s ease-out forwards';
                 } else { node.style.display = 'none'; }
