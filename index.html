@@ -1477,34 +1477,35 @@
             });
         }
 
-        function filterNodes(category, element) {
-            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-            if (element) element.classList.add('active');
-            else document.querySelector(`.category-tag:nth-child(1)`).classList.add('active');
-            const nodes = document.querySelectorAll('.graph-node');
-            nodes.forEach((node, i) => {
-                const data = knowledgeNodes[i];
-                if (category === 'all' || data.category === category) {
-                    node.style.display = '';
-                    node.style.animation = 'fadeIn 0.5s ease-out forwards';
-                } else { node.style.display = 'none'; }
-            });
-        }
+        let currentCategory = 'all';
+        let currentLevel = 'all';
 
-        function filterByLevel(level) {
-            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
-            document.querySelector('.category-tag:nth-child(1)').classList.add('active');
-            const targetLevel = level === 'all' ? 'all' : parseInt(level);
+        function applyFilters() {
             const nodes = document.querySelectorAll('.graph-node');
             nodes.forEach((node, i) => {
                 const data = knowledgeNodes[i];
-                if (targetLevel === 'all' || data.level === targetLevel) {
+                const categoryMatch = currentCategory === 'all' || data.category === currentCategory;
+                const levelMatch = currentLevel === 'all' || data.level === parseInt(currentLevel);
+                if (categoryMatch && levelMatch) {
                     node.style.display = '';
                     node.style.animation = 'fadeIn 0.5s ease-out forwards';
                 } else { 
                     node.style.display = 'none'; 
                 }
             });
+        }
+
+        function filterNodes(category, element) {
+            currentCategory = category;
+            document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+            if (element) element.classList.add('active');
+            else document.querySelector(`.category-tag:nth-child(1)`).classList.add('active');
+            applyFilters();
+        }
+
+        function filterByLevel(level) {
+            currentLevel = level;
+            applyFilters();
         }
 
         function showNodeDetail(node) {
