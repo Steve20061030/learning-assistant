@@ -1441,7 +1441,8 @@
 
         function initGraph() {
             const container = document.getElementById('graphContainer');
-            knowledgeNodes.forEach((node, index) => {
+            const sortedNodes = [...knowledgeNodes].sort((a, b) => a.level - b.level);
+            sortedNodes.forEach((node, index) => {
                 const el = document.createElement('div');
                 el.className = `graph-node level-${node.level}`;
                 el.innerHTML = `<div class="node-level">Lv${node.level}</div><div class="node-name">${node.name}</div>`;
@@ -1561,6 +1562,7 @@
         }
 
         function showCourseDetail(course) {
+            window.currentCourse = course;
             document.getElementById('contentDetail').innerHTML = `
                 <div class="content-card">
                     <div class="card-title"><span>${course.icon}</span><span>${course.title}</span></div>
@@ -1639,9 +1641,15 @@
             `).join('');
 
             const content = contentMap[courseId]?.[topic] || '该内容正在整理中...';
+            window.currentCourse = { id: courseId };
             document.getElementById('contentDetail').innerHTML = `
                 <div class="content-card">
-                    <div class="card-title"><span>📖</span><span>${topic}</span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <button class="btn btn-back" onclick="goBackToCourse()">
+                            ← 返回课程
+                        </button>
+                        <div class="card-title"><span>📖</span><span>${topic}</span></div>
+                    </div>
                     <div class="card-content"><p>${content}</p></div>
                     <div class="try-section">
                         <div class="try-title">📝 思考练习</div>
@@ -1742,6 +1750,21 @@
             container.innerHTML = filtered.map(n => `<div class="note-item"><div class="note-title">${n.title}</div><div class="note-content">${n.body || '无内容'}</div><div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${n.time}</div></div>`).join('');
         }
         function updateNotesCount() { document.getElementById('notesCount').textContent = `${notes.length} 篇`; }
+        function goBackToCourse() {
+            if (window.currentCourse && window.currentCourse.id) {
+                const courses = [
+                    { id: 'ai_math', title: '人工智能数学思维', icon: '🤖', desc: '从数学角度解析AI核心原理', topics: ['课程概述', '发展现状', '智能简史', '机器学习', 'DNN深度网络', '卷积神经网络'] },
+                    { id: 'data_struct', title: '数据结构入门', icon: '📊', desc: '掌握常用数据结构与算法', topics: ['C++基础', '栈与队列', '链表', '树与图', '查找与排序', '哈希表'] },
+                    { id: 'discrete_math', title: '离散数学基础', icon: '🧮', desc: '计算机科学的数学基础', topics: ['命题逻辑', '集合与关系', '图论', '树', '组合数学'] },
+                    { id: 'comp_systems', title: '计算机系统', icon: '💻', desc: '理解计算机系统底层原理', topics: ['信息表示', '浮点数', '机器指令', '内存层次', '链接', '异常与信号'] },
+                    { id: 'algorithms', title: '算法设计', icon: '⚡', desc: '经典算法思想与实现', topics: ['排序算法', '搜索算法', '动态规划', '贪心算法', '时间复杂度'] }
+                ];
+                const course = courses.find(c => c.id === window.currentCourse.id);
+                if (course) {
+                    showCourseDetail(course);
+                }
+            }
+        }
         function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
 
         document.addEventListener('DOMContentLoaded', () => { initGraph(); initCourses(); renderNotes(); });
