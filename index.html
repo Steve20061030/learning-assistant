@@ -1449,6 +1449,9 @@
                 el.style.animationDelay = `${index * 30}ms`;
                 el.style.cursor = 'pointer';
                 el.onclick = () => openDetailPage(node.name);
+                el.dataset.name = node.name;
+                el.dataset.level = node.level;
+                el.dataset.category = node.category;
                 container.appendChild(el);
             });
         }
@@ -1482,10 +1485,11 @@
 
         function applyFilters() {
             const nodes = document.querySelectorAll('.graph-node');
-            nodes.forEach((node, i) => {
-                const data = knowledgeNodes[i];
-                const categoryMatch = currentCategory === 'all' || data.category === currentCategory;
-                const levelMatch = currentLevel === 'all' || data.level === parseInt(currentLevel);
+            nodes.forEach((node) => {
+                const nodeCategory = node.dataset.category;
+                const nodeLevel = parseInt(node.dataset.level);
+                const categoryMatch = currentCategory === 'all' || nodeCategory === currentCategory;
+                const levelMatch = currentLevel === 'all' || nodeLevel === parseInt(currentLevel);
                 if (categoryMatch && levelMatch) {
                     node.style.display = '';
                     node.style.animation = 'fadeIn 0.5s ease-out forwards';
