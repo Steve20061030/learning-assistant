@@ -7,48 +7,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
-        .katex { font-size: 1.1em; }
-        :root { --bg-primary: #0a0e18; --bg-secondary: #111a28; --bg-card: rgba(30, 40, 60, 0.7); --text-primary: #e0f0ff; --text-secondary: #a0c0e0; --text-muted: #6080a0; --level-color: #a080e0; --border-subtle: rgba(80, 120, 180, 0.3); }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1321 100%); color: var(--text-primary); font-family: 'Noto Sans SC', 'Segoe UI', sans-serif; min-height: 100vh; line-height: 1.8; -webkit-font-smoothing: antialiased; font-weight: 300; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-size: 14px; padding: 8px 16px; background: rgba(255, 255, 255, 0.05); border-radius: 20px; margin-bottom: 30px; transition: all 0.3s; }
-        .back-btn:hover { color: var(--level-color); background: rgba(160, 128, 224, 0.1); }
-        .page-header { text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid var(--border-subtle); }
-        .level-badge { display: inline-block; padding: 6px 16px; background: rgba(160, 128, 224, 0.15); border: 1px solid rgba(160, 128, 224, 0.4); border-radius: 20px; font-size: 12px; color: var(--level-color); margin-bottom: 15px; letter-spacing: 1px; font-weight: 300; }
-        .page-title { font-size: 48px; font-weight: 400; color: var(--text-primary); margin-bottom: 10px; letter-spacing: 4px; }
-        .page-subtitle { font-size: 18px; color: var(--text-muted); font-weight: 300; }
-        .section { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 35px; margin-bottom: 30px; backdrop-filter: blur(10px); }
-        .section-title { font-size: 22px; color: var(--level-color); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; font-weight: 400; }
-        .section-icon { font-size: 24px; }
-        .definition-text { font-size: 16px; color: var(--text-secondary); line-height: 2; margin-bottom: 20px; font-weight: 300; }
-        .analogy-box { background: linear-gradient(135deg, rgba(160, 128, 224, 0.1), rgba(160, 128, 224, 0.05)); border-radius: 16px; padding: 28px; margin-top: 25px; border-left: 4px solid var(--level-color); }
-        .analogy-title { font-size: 16px; color: var(--level-color); font-weight: 400; margin-bottom: 12px; }
-        .analogy-text { font-size: 15px; color: var(--text-secondary); line-height: 1.9; font-weight: 300; }
-        .formula-section { margin-bottom: 30px; }
-        .formula-section-title { font-size: 16px; color: var(--level-color); margin-bottom: 20px; font-weight: 400; padding-left: 10px; border-left: 3px solid var(--level-color); }
-        .formula-card { background: rgba(0, 0, 0, 0.45); border-radius: 14px; padding: 22px; margin-bottom: 16px; border-left: 4px solid var(--level-color); transition: all 0.3s ease; }
-        .formula-card:hover { transform: translateX(5px); border-left-color: #c0a0f0; box-shadow: 0 8px 25px rgba(160, 128, 224, 0.15); }
-        .formula-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .formula-label { font-size: 14px; color: var(--level-color); font-weight: 400; }
-        .formula-tag { font-size: 11px; padding: 4px 10px; background: rgba(160, 128, 224, 0.2); border-radius: 12px; color: #c0a0f0; font-weight: 300; }
-        .formula-content { font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 18px; color: #c8e4f8; line-height: 2.4; font-weight: 400; white-space: pre-wrap; letter-spacing: 0.5px; }
-        .formula-note { font-size: 13px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(80, 120, 180, 0.2); font-weight: 300; line-height: 1.7; }
-        .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
-        .scenario-card { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s; }
-        .scenario-card:hover { border-color: var(--level-color); transform: translateY(-3px); }
-        .scenario-icon { font-size: 32px; margin-bottom: 10px; }
-        .scenario-name { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
-        .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-        .related-card { background: linear-gradient(135deg, rgba(160, 128, 224, 0.15), rgba(160, 128, 224, 0.05)); border: 1px solid rgba(160, 128, 224, 0.3); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.3s; display: block; }
-        .related-card:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(160, 128, 224, 0.25); border-color: var(--level-color); }
-        .related-card-title { font-size: 15px; color: var(--level-color); font-weight: 400; margin-bottom: 6px; }
-        .related-card-desc { font-size: 12px; color: var(--text-muted); font-weight: 300; }
-        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; font-weight: 300; border-top: 1px solid var(--border-subtle); margin-top: 50px; }
-        @media (max-width: 768px) { .page-title { font-size: 32px; } }
-    </style>
+    
+    <link rel="stylesheet" href="detail-styles.css">
 </head>
 <body>
     <div class="container">
