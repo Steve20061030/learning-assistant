@@ -338,33 +338,34 @@
 
         .graph-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
             justify-items: center;
         }
 
         .graph-node {
-            padding: 14px 16px 14px 14px;
+            padding: 16px;
             cursor: pointer;
             transition: all 0.25s ease;
             font-size: 13px;
-            text-align: left;
+            text-align: center;
             border-top: 2px solid #181c20;
             border-left: 2px solid #181c20;
             border-right: 2px solid #181c20;
             border-bottom: 2px solid #484c50;
             position: relative;
             overflow: hidden;
-            width: 150px;
-            max-width: 150px;
-            min-width: 150px;
-            height: 56px;
+            width: 160px;
+            min-height: 70px;
             animation: fadeIn 0.5s ease-out backwards;
             font-weight: 400;
             letter-spacing: 0.3px;
             background: linear-gradient(90deg, #2a2a2e 0%, #141416 100%);
             display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         @keyframes fadeIn {
@@ -468,6 +469,7 @@
 
         .node-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 8px;
             position: relative;
@@ -478,24 +480,22 @@
         .node-name { 
             font-weight: 600; 
             color: #d0d0d4;
-            line-height: 1.4;
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 90px;
+            line-height: 1.5;
+            font-size: 14px;
+            white-space: normal;
+            word-wrap: break-word;
+            max-width: 140px;
         }
 
         .node-level-indicators {
             display: flex;
-            gap: 2px;
+            gap: 3px;
             align-items: center;
-            flex-shrink: 0;
         }
 
         .level-diamond {
-            width: 5px;
-            height: 12px;
+            width: 6px;
+            height: 14px;
             background: #606060;
             clip-path: polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);
             transition: all 0.2s ease;
