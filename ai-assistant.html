@@ -1,0 +1,127 @@
+<div class="ai-assistant-container" id="ai-assistant">
+    <button class="ai-toggle-btn" id="ai-toggle" title="AI学习助手">
+        <svg class="ai-icon-loop" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 4C12.95 4 4 12.95 4 24C4 35.05 12.95 44 24 44C35.05 44 44 35.05 44 24C44 18.37 41.69 13.28 38.07 9.66L34.5 13.23C37.14 15.87 38.8 19.74 38.8 24C38.8 32.2 32.2 38.8 24 38.8C15.8 38.8 9.2 32.2 9.2 24C9.2 17.84 13.03 12.57 18.4 10.6V16L28 8L18.4 0V6.4C10.36 8.68 4.4 15.64 4.4 24C4.4 34.17 12.83 42.6 24 42.6C35.17 42.6 43.6 34.17 43.6 24C43.6 18.1 40.88 12.82 36.56 9.34L33.22 12.68C36.43 15.26 38.5 19.39 38.5 24C38.5 31.73 32.27 37.96 24.5 37.96C16.73 37.96 10.5 31.73 10.5 24C10.5 18.58 13.94 13.93 18.7 11.92V17.2L28.3 9.2L18.7 1.2V6.08C11.62 8.38 6.3 15.54 6.3 24C6.3 33.39 13.91 41 24.3 41C34.69 41 42.3 33.39 42.3 24C42.3 18.52 39.79 13.63 35.86 10.36Z" fill="currentColor"/>
+            <circle cx="24" cy="24" r="6" fill="currentColor" opacity="0.3"/>
+        </svg>
+    </button>
+    
+    <div class="ai-panel" id="ai-panel">
+        <div class="ai-header">
+            <div>
+                <div class="ai-title">🎓 AI 学习助手</div>
+                <div class="ai-status">
+                    <span class="ai-status-dot"></span>
+                    <span class="status-text">就绪</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <button class="ai-settings-btn" id="ai-settings-btn" title="API设置">⚙️</button>
+                <button class="ai-close-btn" id="ai-close" title="关闭">×</button>
+            </div>
+        </div>
+
+        <div class="ai-api-config" id="ai-api-config">
+            <div class="api-config-header">
+                <span>🔑 API 配置</span>
+                <button class="api-config-toggle" id="api-config-toggle">+</button>
+            </div>
+            
+            <div class="api-config-body collapsed" id="api-config-body">
+                <div class="config-row">
+                    <label class="config-label">提供商</label>
+                    <select class="config-select" id="api-provider">
+                        <option value="deepseek">DeepSeek (推荐)</option>
+                        <option value="openai">OpenAI (GPT-4)</option>
+                        <option value="azure">Azure OpenAI</option>
+                        <option value="anthropic">Anthropic (Claude)</option>
+                        <option value="ollama">本地 Ollama</option>
+                        <option value="custom">自定义 API</option>
+                    </select>
+                </div>
+
+                <div class="config-row" id="api-key-row">
+                    <label class="config-label">API 密钥</label>
+                    <div class="input-with-action">
+                        <input type="password" class="config-input" id="api-key-input" placeholder="sk-...">
+                        <button class="toggle-pwd-btn" id="toggle-pwd" title="显示/隐藏">👁️</button>
+                    </div>
+                </div>
+
+                <div class="config-row" id="api-url-row">
+                    <label class="config-label">API 地址</label>
+                    <input type="text" class="config-input" id="api-url-input" placeholder="https://api.openai.com/v1/chat/completions">
+                </div>
+
+                <div class="config-row" id="model-row">
+                    <label class="config-label">模型</label>
+                    <select class="config-select" id="api-model">
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                    </select>
+                </div>
+
+                <div class="config-actions">
+                    <button class="config-btn test-btn" id="test-api-btn">
+                        <span class="btn-icon">🔌</span>测试连接
+                    </button>
+                    <button class="config-btn save-btn" id="save-api-btn">
+                        <span class="btn-icon">💾</span>保存配置
+                    </button>
+                    <button class="config-btn clear-btn" id="clear-api-btn">
+                        <span class="btn-icon">🗑️</span>清除
+                    </button>
+                </div>
+
+                <div class="api-test-result" id="api-test-result"></div>
+            </div>
+        </div>
+
+        <div class="ai-roles-bar">
+            <button class="ai-role-btn active" data-role="explainer">
+                <span class="ai-role-icon">📖</span>讲解者
+            </button>
+            <button class="ai-role-btn" data-role="questioner">
+                <span class="ai-role-icon">❓</span>提问者
+            </button>
+            <button class="ai-role-btn" data-role="corrector">
+                <span class="ai-role-icon">✨</span>纠错者
+            </button>
+            <button class="ai-role-btn" data-role="planner">
+                <span class="ai-role-icon">🎯</span>规划者
+            </button>
+        </div>
+
+        <div class="ai-messages-container" id="ai-messages"></div>
+        
+        <div class="ai-typing-indicator" id="ai-typing">
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+            <div class="ai-typing-dot"></div>
+        </div>
+
+        <div class="ai-input-area">
+            <div class="ai-tools-bar">
+                <button class="ai-tool-btn" data-action="explain">📖 讲解</button>
+                <button class="ai-tool-btn" data-action="question">❓ 提问</button>
+                <button class="ai-tool-btn" data-action="correct">✨ 纠错</button>
+                <button class="ai-tool-btn" data-action="plan">🎯 规划</button>
+                <button class="ai-tool-btn" data-action="hint">💡 提示</button>
+            </div>
+            
+            <div class="ai-input-wrapper">
+                <textarea class="ai-input-field" id="ai-input" placeholder="输入你的问题或答案..." rows="1"></textarea>
+                <button class="ai-send-btn" id="ai-send" title="发送">➤</button>
+            </div>
+        </div>
+
+        <div class="ai-learning-status">
+            <div class="ai-learning-metrics">
+                <div class="ai-metric">掌握度<span class="ai-metric-value" data-type="mastery">0%</span></div>
+                <div class="ai-metric">问题数<span class="ai-metric-value" data-type="questions">0</span></div>
+                <div class="ai-metric">错误数<span class="ai-metric-value" data-type="errors">0</span></div>
+            </div>
+        </div>
+    </div>
+</div>
