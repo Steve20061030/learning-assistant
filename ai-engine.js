@@ -87,7 +87,7 @@ class AILearningAssistant {
             };
             body = {
                 model: this.model,
-                max_tokens: 1000,
+                max_tokens: 4000,
                 messages: [{ role: 'user', content: userMessage }]
             };
         } else if (provider === 'ollama') {
@@ -107,7 +107,7 @@ class AILearningAssistant {
                 model: this.model,
                 messages: this.getConversationForAPI(),
                 temperature: 0.7,
-                max_tokens: 1000
+                max_tokens: 4000
             };
         }
 
@@ -273,9 +273,23 @@ this.learningState.masteryLevel < 70 ?
     }
 
     formatMessage(text) {
-        return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                   .replace(/`(.*?)`/g, '<code>$1</code>')
-                   .replace(/\n/g, '<br>');
+        if (!text) return '';
+        
+        let result = text;
+        
+        // 先转义HTML特殊字符，防止XSS
+        result = result
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        
+        // 处理Markdown格式
+        result = result
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            .replace(/\n/g, '<br>');
+        
+        return result;
     }
 
     addSystemMessage(text) {
