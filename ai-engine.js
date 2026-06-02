@@ -111,6 +111,8 @@ class AILearningAssistant {
             };
         }
 
+        console.log('[AI] 发送请求:', { url, model: this.model, messages: body.messages?.length });
+        
         const response = await fetch(url, {
             method: 'POST',
             headers: headers,
@@ -118,16 +120,29 @@ class AILearningAssistant {
         });
 
         if (!response.ok) {
-            throw new Error(`API Error: ${response.status}`);
+            let errorMsg = `API Error: ${response.status}`;
+            try {
+                const errData = await response.json();
+                errorMsg += ` - ${errData.error?.message || JSON.stringify(errData)}`;
+            } catch (e) {
+                const errText = await response.text();
+                errorMsg += ` - ${errText}`;
+            }
+            console.error('[AI] 请求失败:', errorMsg);
+            throw new Error(errorMsg);
         }
         
         const data = await response.json();
+        console.log('[AI] 响应数据:', data);
         
         if (provider === 'anthropic') {
             return data.content[0].text;
         } else if (provider === 'ollama') {
             return data.message.content;
         } else {
+            if (!data.choices || !data.choices[0]) {
+                throw new Error('Invalid API response');
+            }
             return data.choices[0].message.content;
         }
     }
@@ -271,6 +286,7 @@ this.learningState.masteryLevel < 70 ?
         div.textContent = text;
         container.appendChild(div);
         container.scrollTop = container.scrollHeight;
+        this.addToHistory({ role: 'assistant', content: text });
     }
 
     addToHistory(msg) {
@@ -282,8 +298,11 @@ this.learningState.masteryLevel < 70 ?
 
     getConversationForAPI() {
         const recent = this.conversationHistory.slice(-15);
-        return [...recent.filter(m => m.role === 'system').slice(-1),
-                ...recent.filter(m => m.role !== 'system')];
+        const filtered = recent.filter(m => m.role === 'user' || m.role === 'assistant');
+        if (filtered.length === 0) {
+            return [{ role: 'user', content: '你好' }];
+        }
+        return filtered;
     }
 
     showTypingIndicator() {
