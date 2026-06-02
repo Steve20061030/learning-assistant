@@ -210,6 +210,110 @@
             bindDragFunctionality();
             bindResizeFunctionality();
 
+            function bindDragFunctionality() {
+                const header = panel.querySelector('.ai-header');
+                if (!header) return;
+
+                let isDragging = false;
+                let startX, startY;
+                let panelX = 0, panelY = 0;
+
+                header.addEventListener('mousedown', e => {
+                    if (e.target.closest('button')) return;
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    
+                    const rect = panel.getBoundingClientRect();
+                    panelX = rect.left;
+                    panelY = rect.top;
+                    
+                    panel.style.transition = 'none';
+                    document.addEventListener('mousemove', onDrag);
+                    document.addEventListener('mouseup', onDragEnd);
+                });
+
+                function onDrag(e) {
+                    if (!isDragging) return;
+                    
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    
+                    let newX = panelX + dx;
+                    let newY = panelY + dy;
+                    
+                    const maxX = window.innerWidth - panel.offsetWidth;
+                    const maxY = window.innerHeight - panel.offsetHeight;
+                    
+                    newX = Math.max(0, Math.min(newX, maxX));
+                    newY = Math.max(0, Math.min(newY, maxY));
+                    
+                    panel.style.left = newX + 'px';
+                    panel.style.right = 'auto';
+                    panel.style.top = newY + 'px';
+                    panel.style.bottom = 'auto';
+                }
+
+                function onDragEnd() {
+                    isDragging = false;
+                    panel.style.transition = '';
+                    document.removeEventListener('mousemove', onDrag);
+                    document.removeEventListener('mouseup', onDragEnd);
+                }
+            }
+
+            function bindResizeFunctionality() {
+                let resizeHandle = panel.querySelector('.ai-resize-handle');
+                if (!resizeHandle) {
+                    resizeHandle = document.createElement('div');
+                    resizeHandle.className = 'ai-resize-handle';
+                    panel.appendChild(resizeHandle);
+                }
+
+                let isResizing = false;
+                let startWidth, startHeight;
+                let startX, startY;
+
+                resizeHandle.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    isResizing = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    startWidth = panel.offsetWidth;
+                    startHeight = panel.offsetHeight;
+                    
+                    document.addEventListener('mousemove', onResize);
+                    document.addEventListener('mouseup', onResizeEnd);
+                });
+
+                function onResize(e) {
+                    if (!isResizing) return;
+                    
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    
+                    let newWidth = startWidth + dx;
+                    let newHeight = startHeight + dy;
+                    
+                    const minWidth = 320;
+                    const minHeight = 400;
+                    const maxWidth = 600;
+                    const maxHeight = window.innerHeight - 100;
+                    
+                    newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+                    newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
+                    
+                    panel.style.width = newWidth + 'px';
+                    panel.style.height = newHeight + 'px';
+                }
+
+                function onResizeEnd() {
+                    isResizing = false;
+                    document.removeEventListener('mousemove', onResize);
+                    document.removeEventListener('mouseup', onResizeEnd);
+                }
+            }
+
             bindRoleButtons();
             bindToolButtons();
             bindAPIConfig();
@@ -620,110 +724,6 @@
         }
 
         window.getAIAssistant = () => aiInstance;
-    }
-
-    function bindDragFunctionality() {
-        const header = panel.querySelector('.ai-header');
-        if (!header) return;
-
-        let isDragging = false;
-        let startX, startY;
-        let panelX = 0, panelY = 0;
-
-        header.addEventListener('mousedown', e => {
-            if (e.target.closest('button')) return;
-            isDragging = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            
-            const rect = panel.getBoundingClientRect();
-            panelX = rect.left;
-            panelY = rect.top;
-            
-            panel.style.transition = 'none';
-            document.addEventListener('mousemove', onDrag);
-            document.addEventListener('mouseup', onDragEnd);
-        });
-
-        function onDrag(e) {
-            if (!isDragging) return;
-            
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            
-            let newX = panelX + dx;
-            let newY = panelY + dy;
-            
-            const maxX = window.innerWidth - panel.offsetWidth;
-            const maxY = window.innerHeight - panel.offsetHeight;
-            
-            newX = Math.max(0, Math.min(newX, maxX));
-            newY = Math.max(0, Math.min(newY, maxY));
-            
-            panel.style.left = newX + 'px';
-            panel.style.right = 'auto';
-            panel.style.top = newY + 'px';
-            panel.style.bottom = 'auto';
-        }
-
-        function onDragEnd() {
-            isDragging = false;
-            panel.style.transition = '';
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('mouseup', onDragEnd);
-        }
-    }
-
-    function bindResizeFunctionality() {
-        let resizeHandle = panel.querySelector('.ai-resize-handle');
-        if (!resizeHandle) {
-            resizeHandle = document.createElement('div');
-            resizeHandle.className = 'ai-resize-handle';
-            panel.appendChild(resizeHandle);
-        }
-
-        let isResizing = false;
-        let startWidth, startHeight;
-        let startX, startY;
-
-        resizeHandle.addEventListener('mousedown', e => {
-            e.preventDefault();
-            isResizing = true;
-            startX = e.clientX;
-            startY = e.clientY;
-            startWidth = panel.offsetWidth;
-            startHeight = panel.offsetHeight;
-            
-            document.addEventListener('mousemove', onResize);
-            document.addEventListener('mouseup', onResizeEnd);
-        });
-
-        function onResize(e) {
-            if (!isResizing) return;
-            
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            
-            let newWidth = startWidth + dx;
-            let newHeight = startHeight + dy;
-            
-            const minWidth = 320;
-            const minHeight = 400;
-            const maxWidth = 600;
-            const maxHeight = window.innerHeight - 100;
-            
-            newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
-            newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
-            
-            panel.style.width = newWidth + 'px';
-            panel.style.height = newHeight + 'px';
-        }
-
-        function onResizeEnd() {
-            isResizing = false;
-            document.removeEventListener('mousemove', onResize);
-            document.removeEventListener('mouseup', onResizeEnd);
-        }
     }
 
     if (document.readyState === 'loading') {
