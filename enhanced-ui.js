@@ -167,12 +167,17 @@
         function createAssistant() {
             try {
                 if (typeof AILearningAssistant !== 'undefined') {
+                    const savedKey = localStorage.getItem('ai_api_key') || '';
+                    const savedUrl = localStorage.getItem('ai_api_url') || 'https://api.deepseek.com/v1/chat/completions';
+                    const savedModel = localStorage.getItem('ai_api_model') || 'deepseek-chat';
+                    
                     aiInstance = new AILearningAssistant({
-                        apiKey: localStorage.getItem('ai_api_key') || '',
-                        apiUrl: localStorage.getItem('ai_api_url') || '',
-                        model: localStorage.getItem('ai_model') || 'deepseek-chat'
+                        apiKey: savedKey,
+                        apiUrl: savedUrl,
+                        model: savedModel
                     });
-                    console.log('[AI] 助手实例已创建');
+                    
+                    console.log('[AI] 助手实例已创建', { url: savedUrl, model: savedModel });
                 } else {
                     console.warn('[AI] 使用本地模式（无引擎）');
                 }
@@ -288,7 +293,7 @@
 
             const presets = {
                 deepseek: {
-                    url: 'https://api.deepseek.com/chat/completions',
+                    url: 'https://api.deepseek.com/v1/chat/completions',
                     models: ['deepseek-chat', 'deepseek-coder', 'deepseek-reasoner']
                 },
                 openai: {
@@ -492,7 +497,7 @@
                 try {
                     const key = localStorage.getItem('ai_api_key');
                     const url = localStorage.getItem('ai_api_url');
-                    const model = localStorage.getItem('ai_model') || 'deepseek-chat';
+                    const model = localStorage.getItem('ai_api_model') || 'deepseek-chat';
 
                     if (key && apiKeyInput) apiKeyInput.value = key;
                     if (url && apiUrlInput) apiUrlInput.value = url;

@@ -1,7 +1,7 @@
 class AILearningAssistant {
     constructor(options = {}) {
         this.apiKey = options.apiKey || '';
-        this.apiUrl = options.apiUrl || 'https://api.deepseek.com/chat/completions';
+        this.apiUrl = options.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
         this.model = options.model || 'deepseek-chat';
         
         this.currentRole = 'explainer';
