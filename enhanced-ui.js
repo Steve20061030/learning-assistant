@@ -211,15 +211,15 @@
             bindResizeFunctionality();
 
             function bindDragFunctionality() {
-                const header = panel.querySelector('.ai-header');
-                if (!header) return;
-
                 let isDragging = false;
                 let startX, startY;
                 let panelX = 0, panelY = 0;
+                let panelStartWidth, panelStartHeight;
 
-                header.addEventListener('mousedown', e => {
-                    if (e.target.closest('button')) return;
+                panel.addEventListener('mousedown', e => {
+                    if (e.target.closest('button, input, textarea, select, #ai-input, .ai-role-btn, .ai-tool-btn')) {
+                        return;
+                    }
                     isDragging = true;
                     startX = e.clientX;
                     startY = e.clientY;
@@ -227,10 +227,13 @@
                     const rect = panel.getBoundingClientRect();
                     panelX = rect.left;
                     panelY = rect.top;
+                    panelStartWidth = panel.offsetWidth;
+                    panelStartHeight = panel.offsetHeight;
                     
                     panel.style.transition = 'none';
                     document.addEventListener('mousemove', onDrag);
                     document.addEventListener('mouseup', onDragEnd);
+                    document.addEventListener('mouseleave', onDragEnd);
                 });
 
                 function onDrag(e) {
@@ -242,8 +245,8 @@
                     let newX = panelX + dx;
                     let newY = panelY + dy;
                     
-                    const maxX = window.innerWidth - panel.offsetWidth;
-                    const maxY = window.innerHeight - panel.offsetHeight;
+                    const maxX = window.innerWidth - panelStartWidth;
+                    const maxY = window.innerHeight - panelStartHeight;
                     
                     newX = Math.max(0, Math.min(newX, maxX));
                     newY = Math.max(0, Math.min(newY, maxY));
@@ -252,6 +255,7 @@
                     panel.style.right = 'auto';
                     panel.style.top = newY + 'px';
                     panel.style.bottom = 'auto';
+                    panel.style.position = 'fixed';
                 }
 
                 function onDragEnd() {
@@ -259,58 +263,137 @@
                     panel.style.transition = '';
                     document.removeEventListener('mousemove', onDrag);
                     document.removeEventListener('mouseup', onDragEnd);
+                    document.removeEventListener('mouseleave', onDragEnd);
                 }
             }
 
             function bindResizeFunctionality() {
-                let resizeHandle = panel.querySelector('.ai-resize-handle');
-                if (!resizeHandle) {
-                    resizeHandle = document.createElement('div');
-                    resizeHandle.className = 'ai-resize-handle';
-                    panel.appendChild(resizeHandle);
-                }
-
                 let isResizing = false;
+                let resizeEdge = '';
                 let startWidth, startHeight;
                 let startX, startY;
+                let startPanelX, startPanelY;
 
-                resizeHandle.addEventListener('mousedown', e => {
-                    e.preventDefault();
+                panel.addEventListener('mousedown', e => {
+                    if (isDragging || e.target.closest('button, input, textarea, select')) {
+                        return;
+                    }
+
+                    const rect = panel.getBoundingClientRect();
+                    const edgeSize = 8;
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    if (x < edgeSize && y < edgeSize) {
+                        resizeEdge = 'top-left';
+                    } else if (x > rect.width - edgeSize && y < edgeSize) {
+                        resizeEdge = 'top-right';
+                    } else if (x < edgeSize && y > rect.height - edgeSize) {
+                        resizeEdge = 'bottom-left';
+                    } else if (x > rect.width - edgeSize && y > rect.height - edgeSize) {
+                        resizeEdge = 'bottom-right';
+                    } else if (x < edgeSize) {
+                        resizeEdge = 'left';
+                    } else if (x > rect.width - edgeSize) {
+                        resizeEdge = 'right';
+                    } else if (y < edgeSize) {
+                        resizeEdge = 'top';
+                    } else if (y > rect.height - edgeSize) {
+                        resizeEdge = 'bottom';
+                    } else {
+                        return;
+                    }
+
                     isResizing = true;
                     startX = e.clientX;
                     startY = e.clientY;
-                    startWidth = panel.offsetWidth;
-                    startHeight = panel.offsetHeight;
-                    
+                    startWidth = rect.width;
+                    startHeight = rect.height;
+                    startPanelX = rect.left;
+                    startPanelY = rect.top;
+
+                    panel.style.transition = 'none';
                     document.addEventListener('mousemove', onResize);
                     document.addEventListener('mouseup', onResizeEnd);
+                    document.addEventListener('mouseleave', onResizeEnd);
+                });
+
+                panel.addEventListener('mousemove', e => {
+                    if (isResizing) return;
+                    
+                    const rect = panel.getBoundingClientRect();
+                    const edgeSize = 8;
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    let cursor = 'default';
+                    if (x < edgeSize && y < edgeSize) {
+                        cursor = 'nwse-resize';
+                    } else if (x > rect.width - edgeSize && y < edgeSize) {
+                        cursor = 'nesw-resize';
+                    } else if (x < edgeSize && y > rect.height - edgeSize) {
+                        cursor = 'nesw-resize';
+                    } else if (x > rect.width - edgeSize && y > rect.height - edgeSize) {
+                        cursor = 'nwse-resize';
+                    } else if (x < edgeSize || x > rect.width - edgeSize) {
+                        cursor = 'ew-resize';
+                    } else if (y < edgeSize || y > rect.height - edgeSize) {
+                        cursor = 'ns-resize';
+                    }
+                    
+                    panel.style.cursor = cursor;
                 });
 
                 function onResize(e) {
                     if (!isResizing) return;
-                    
+
                     const dx = e.clientX - startX;
                     const dy = e.clientY - startY;
-                    
-                    let newWidth = startWidth + dx;
-                    let newHeight = startHeight + dy;
-                    
+
+                    let newWidth = startWidth;
+                    let newHeight = startHeight;
+                    let newX = startPanelX;
+                    let newY = startPanelY;
+
                     const minWidth = 320;
                     const minHeight = 400;
-                    const maxWidth = 600;
+                    const maxWidth = window.innerWidth - 20;
                     const maxHeight = window.innerHeight - 100;
-                    
+
+                    if (resizeEdge.includes('right')) {
+                        newWidth = startWidth + dx;
+                    }
+                    if (resizeEdge.includes('bottom')) {
+                        newHeight = startHeight + dy;
+                    }
+                    if (resizeEdge.includes('left')) {
+                        newWidth = startWidth - dx;
+                        newX = startPanelX + dx;
+                    }
+                    if (resizeEdge.includes('top')) {
+                        newHeight = startHeight - dy;
+                        newY = startPanelY + dy;
+                    }
+
                     newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
                     newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
-                    
+
                     panel.style.width = newWidth + 'px';
                     panel.style.height = newHeight + 'px';
+                    
+                    if (resizeEdge.includes('left') || resizeEdge.includes('top')) {
+                        panel.style.left = newX + 'px';
+                        panel.style.top = newY + 'px';
+                    }
                 }
 
                 function onResizeEnd() {
                     isResizing = false;
+                    resizeEdge = '';
+                    panel.style.transition = '';
                     document.removeEventListener('mousemove', onResize);
                     document.removeEventListener('mouseup', onResizeEnd);
+                    document.removeEventListener('mouseleave', onResizeEnd);
                 }
             }
 
