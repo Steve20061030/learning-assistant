@@ -1,7 +1,7 @@
 window.AI_CONFIG = {
     api: {
         provider: 'deepseek',
-        apiKey: 'sk-891f3d1035e14a858f59ddc61bb6b886',
+        apiKey: '',
         apiUrl: 'https://api.deepseek.com/v1/chat/completions',
         model: 'deepseek-chat'
     }
