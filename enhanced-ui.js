@@ -167,9 +167,10 @@
         function createAssistant() {
             try {
                 if (typeof AILearningAssistant !== 'undefined') {
-                    const savedKey = localStorage.getItem('ai_api_key') || '';
-                    const savedUrl = localStorage.getItem('ai_api_url') || 'https://api.deepseek.com/v1/chat/completions';
-                    const savedModel = localStorage.getItem('ai_api_model') || 'deepseek-chat';
+                    // 优先级：localStorage > window.AI_CONFIG > 硬编码默认值
+                    const savedKey = localStorage.getItem('ai_api_key') || window.AI_CONFIG?.api?.apiKey || '';
+                    const savedUrl = localStorage.getItem('ai_api_url') || window.AI_CONFIG?.api?.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
+                    const savedModel = localStorage.getItem('ai_api_model') || window.AI_CONFIG?.api?.model || 'deepseek-chat';
                     
                     aiInstance = new AILearningAssistant({
                         apiKey: savedKey,
@@ -177,7 +178,7 @@
                         model: savedModel
                     });
                     
-                    console.log('[AI] 助手实例已创建', { url: savedUrl, model: savedModel });
+                    console.log('[AI] 助手实例已创建', { url: savedUrl, model: savedModel, hasKey: !!savedKey });
                 } else {
                     console.warn('[AI] 使用本地模式（无引擎）');
                 }

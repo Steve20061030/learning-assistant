@@ -1,9 +1,9 @@
 window.AI_CONFIG = {
     api: {
-        provider: 'openai',
-        apiKey: '',
-        apiUrl: 'https://api.openai.com/v1/chat/completions',
-        model: 'gpt-4'
+        provider: 'deepseek',
+        apiKey: 'sk-891f3d1035e14a858f59ddc61bb6b886',
+        apiUrl: 'https://api.deepseek.com/v1/chat/completions',
+        model: 'deepseek-chat'
     }
 };
 

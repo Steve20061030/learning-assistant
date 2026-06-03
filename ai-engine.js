@@ -1,8 +1,11 @@
 class AILearningAssistant {
     constructor(options = {}) {
-        this.apiKey = options.apiKey || '';
-        this.apiUrl = options.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
-        this.model = options.model || 'deepseek-chat';
+        // 优先级：options > window.AI_CONFIG > 硬编码默认值
+        const config = window.AI_CONFIG?.api || {};
+        
+        this.apiKey = options.apiKey || config.apiKey || '';
+        this.apiUrl = options.apiUrl || config.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
+        this.model = options.model || config.model || 'deepseek-chat';
         
         this.currentRole = 'explainer';
         this.conversationHistory = [];
