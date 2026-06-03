@@ -167,7 +167,6 @@
         function createAssistant() {
             try {
                 if (typeof AILearningAssistant !== 'undefined') {
-                    // 优先级：localStorage > window.AI_CONFIG > 硬编码默认值
                     const savedKey = localStorage.getItem('ai_api_key') || window.AI_CONFIG?.api?.apiKey || '';
                     const savedUrl = localStorage.getItem('ai_api_url') || window.AI_CONFIG?.api?.apiUrl || 'https://api.deepseek.com/v1/chat/completions';
                     const savedModel = localStorage.getItem('ai_api_model') || window.AI_CONFIG?.api?.model || 'deepseek-chat';
@@ -179,12 +178,31 @@
                     });
                     
                     console.log('[AI] 助手实例已创建', { url: savedUrl, model: savedModel, hasKey: !!savedKey });
+                    
+                    initializeWithPageContext();
                 } else {
                     console.warn('[AI] 使用本地模式（无引擎）');
                 }
             } catch(e) {
                 console.error('[AI] 创建实例失败:', e);
             }
+        }
+
+        function initializeWithPageContext() {
+            if (!aiInstance) return;
+            
+            const pageTitle = document.querySelector('h1.page-title, h1, .hero-title');
+            const topic = pageTitle ? pageTitle.textContent.trim() : '当前页面内容';
+            
+            aiInstance.initialize(topic, 'medium');
+            console.log('[AI] 已使用页面上下文初始化:', topic);
+        }
+
+        function refreshPageContext() {
+            if (!aiInstance) return;
+            
+            aiInstance.capturePageContext();
+            console.log('[AI] 页面上下文已刷新:', aiInstance.pageContext);
         }
 
         function bindEvents() {
@@ -195,6 +213,7 @@
                 toggleBtn.style.display = panel.classList.contains('active') ? 'none' : '';
                 
                 if (panel.classList.contains('active')) {
+                    refreshPageContext();
                     const input = panel.querySelector('#ai-input');
                     if (input) setTimeout(() => input.focus(), 150);
                 }
